@@ -1,0 +1,1852 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="forest">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>POF 熱縮膜內部作業台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#f1f4f0;
+        --surface:#ffffff;
+        --surface-2:#e9efe9;
+        --ink:#1e2620;
+        --muted:#5d6a60;
+        --line:#d8e0d7;
+        --amber-bg:#fdf0d5;
+        --amber-ink:#7a5200;
+        --danger:#b3352b;
+        --danger-soft:#fbeae8;
+        --good:#0e7a46;
+        --panel:#212b26;
+        --panel-ink:#eef4ef;
+        --panel-muted:#a7b8ab;
+        --panel-soft:rgba(255,255,255,.07);
+        --panel-line:rgba(255,255,255,.16);
+        --panel-good:#4ade80;
+        --panel-bad:#fda4af;
+        --shadow:0 1px 2px rgba(24,40,28,.06),0 8px 24px -12px rgba(24,40,28,.18);
+        --radius:14px;
+      }
+      :root[data-theme="forest"]{--accent:#14684a;--accent-ink:#ffffff;--accent-soft:#e2f0e7}
+      :root[data-theme="ocean"]{--accent:#0f6396;--accent-ink:#ffffff;--accent-soft:#e0eef8}
+      :root[data-theme="clay"]{--accent:#b04a24;--accent-ink:#ffffff;--accent-soft:#fae9df}
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#121613;
+          --surface:#1c221d;
+          --surface-2:#242c25;
+          --ink:#e9ede9;
+          --muted:#9fb0a2;
+          --line:#333d34;
+          --amber-bg:#3d3011;
+          --amber-ink:#f2cd7e;
+          --danger:#e08a80;
+          --danger-soft:#3d2320;
+          --good:#57c98a;
+          --panel:#1a211c;
+          --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+        }
+        :root[data-theme="forest"]{--accent:#3fae7d;--accent-ink:#0d1511;--accent-soft:#22392c}
+        :root[data-theme="ocean"]{--accent:#5bb5e8;--accent-ink:#081a26;--accent-soft:#1d3442}
+        :root[data-theme="clay"]{--accent:#e58f66;--accent-ink:#221109;--accent-soft:#3d2718}
+      }
+      *{box-sizing:border-box}
+      html{-webkit-text-size-adjust:100%}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+        font-size:16px;line-height:1.55;
+      }
+      .wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+      /* ---------- header ---------- */
+      .head-row{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+      h1{
+        font-family:"Noto Serif TC",serif;font-weight:900;
+        font-size:clamp(25px,5vw,34px);line-height:1.2;margin:4px 0 6px;letter-spacing:.02em;
+      }
+      .lede{color:var(--muted);margin:0 0 14px;font-size:15px;max-width:640px}
+      .theme-box{margin-left:auto;text-align:right}
+      .theme-box .tl{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;justify-content:flex-end}
+      .theme-box .tl svg{width:14px;height:14px}
+      .theme-btns{display:flex;gap:6px}
+      .theme-btn{
+        appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+        font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:5px 12px 5px 8px;
+        cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+      }
+      .theme-btn .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid rgba(0,0,0,.08)}
+      .theme-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+      .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+      .chip{
+        background:var(--surface);border:1px solid var(--line);border-radius:999px;
+        padding:4px 12px;font-size:13px;font-weight:500;color:var(--ink);
+        display:inline-flex;align-items:center;gap:6px;
+      }
+      .chip svg{width:14px;height:14px;color:var(--accent)}
+      .chip b{color:var(--accent)}
+      /* ---------- tabs ---------- */
+      .tabs{
+        display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);
+        border-radius:14px;padding:6px;box-shadow:var(--shadow);margin-bottom:20px;
+      }
+      .tab{
+        flex:1;appearance:none;border:0;background:transparent;color:var(--muted);
+        font:inherit;cursor:pointer;border-radius:10px;padding:10px 14px;
+        display:flex;align-items:center;gap:10px;text-align:left;min-width:0;
+      }
+      .tab svg{width:22px;height:22px;flex:none}
+      .tab .tt{font-size:16.5px;font-weight:900;line-height:1.25;color:inherit;white-space:nowrap}
+      .tab .ts{font-size:12px;font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .tab.active{background:var(--accent);color:var(--accent-ink)}
+      .tab:not(.active):hover{background:var(--surface-2);color:var(--ink)}
+      @media (max-width:560px){.tab .ts{display:none}.tab{justify-content:center}.tab .tt{font-size:15.5px}}
+      /* ---------- cards & headings ---------- */
+      .card{
+        background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+        box-shadow:var(--shadow);padding:20px;margin-bottom:20px;
+      }
+      .sec-head{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+      .sec-ic{
+        width:36px;height:36px;flex:none;border-radius:10px;background:var(--accent-soft);
+        color:var(--accent);display:flex;align-items:center;justify-content:center;
+      }
+      .sec-ic svg{width:20px;height:20px}
+      .card h2{font-size:18px;font-weight:900;margin:0}
+      .card .sub{color:var(--muted);font-size:13.5px;margin:0 0 16px 47px}
+      @media (max-width:560px){.card .sub{margin-left:0}}
+      /* ---------- forms ---------- */
+      .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .field{display:flex;flex-direction:column;gap:5px}
+      .field.full{grid-column:1/-1}
+      .field label{font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:5px}
+      .field label svg{width:14px;height:14px;flex:none}
+      .field .hint{font-size:12px;color:var(--muted);font-weight:400}
+      .input-row{display:flex;align-items:center;gap:6px}
+      input[type="number"],input[type="text"],select{
+        width:100%;min-width:0;padding:10px 12px;font:inherit;font-size:16.5px;
+        font-variant-numeric:tabular-nums;
+        background:var(--surface);color:var(--ink);
+        border:1.5px solid var(--line);border-radius:10px;outline:none;
+      }
+      input:focus,select:focus{border-color:var(--accent)}
+      .unit{font-size:14px;color:var(--muted);white-space:nowrap}
+      .btn{
+        appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+        font:inherit;font-size:14.5px;font-weight:700;border-radius:10px;
+        padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+        transition:background .15s,border-color .15s;white-space:nowrap;
+      }
+      .btn:hover{border-color:var(--accent)}
+      .btn svg{width:16px;height:16px;flex:none}
+      .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+      .btn.primary:hover{filter:brightness(1.07)}
+      .btn.ghost{border-color:transparent;color:var(--muted)}
+      .btn.ghost:hover{color:var(--ink);border-color:var(--line)}
+      .btn.small{padding:6px 12px;font-size:13.5px;border-radius:8px}
+      .btn.danger{color:var(--danger)}
+      .btn.danger:hover{border-color:var(--danger);background:var(--danger-soft)}
+      .badge{
+        display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;vertical-align:2px;
+      }
+      .badge.measured{background:var(--amber-bg);color:var(--amber-ink)}
+      .badge.auto{background:var(--accent-soft);color:var(--accent)}
+      /* ---------- calculator ---------- */
+      .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+      @media (max-width:760px){.calc-grid{grid-template-columns:1fr}}
+      .calc-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+      .result-box{background:var(--surface-2);border-radius:12px;padding:18px}
+      .result-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+      .result-num{font-size:44px;font-weight:900;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+      .result-unit{font-size:17px;font-weight:700}
+      .result-range{font-size:14.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+      .result-meta{margin-top:6px;font-size:14px;color:var(--muted)}
+      .result-note{margin-top:8px;font-size:13.5px}
+      .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:16px}
+      .detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+      .detail .k{font-size:12px;color:var(--muted);font-weight:500}
+      .detail .v{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
+      .coef-wrap{margin-top:16px}
+      .coef-track{position:relative;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--accent) 0%,var(--line) 100%);margin:22px 4px 6px}
+      .coef-marker{
+        position:absolute;top:50%;width:18px;height:18px;border-radius:50%;
+        background:var(--surface);border:3px solid var(--accent);
+        transform:translate(-50%,-50%);transition:left .2s;
+      }
+      .coef-marker span{
+        position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+        font-size:12.5px;font-weight:900;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums;
+      }
+      .coef-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+      /* ---------- new-size detection (calculator) ---------- */
+      .btn .new-badge{
+        font-size:11px;font-weight:900;line-height:1;letter-spacing:.04em;
+        background:var(--amber-bg);color:var(--amber-ink);
+        border:1px solid currentColor;border-radius:999px;padding:3px 7px;margin-left:2px;
+      }
+      @keyframes newSizePulse{
+        0%,100%{transform:scale(1);background:var(--accent-soft);color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+        50%{transform:scale(1.045);background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:0 0 0 7px var(--accent-soft),0 8px 20px -8px var(--accent)}
+      }
+      @keyframes newBadgePop{
+        0%,100%{transform:scale(1) rotate(0deg)}
+        50%{transform:scale(1.18) rotate(-4deg)}
+      }
+      #btnAdd.is-new{
+        animation:newSizePulse 1.05s ease-in-out infinite;
+        border-width:2px;font-weight:900;
+      }
+      #btnAdd.is-new .new-badge{animation:newBadgePop 1.05s ease-in-out infinite;background:#fff;color:var(--accent);border-color:transparent}
+      .size-hint{
+        margin-top:12px;font-size:13.5px;line-height:1.55;border-radius:10px;
+        padding:9px 12px;display:flex;align-items:flex-start;gap:8px;font-variant-numeric:tabular-nums;
+      }
+      .size-hint svg{width:17px;height:17px;flex:none;margin-top:1px}
+      .size-hint.is-new{background:var(--accent-soft);border:1.5px dashed var(--accent);color:var(--ink)}
+      .size-hint.is-new svg{color:var(--accent)}
+      .size-hint.is-new b{color:var(--accent)}
+      .size-hint.exists{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+      .size-hint.exists svg{color:var(--good)}
+      .size-hint.exists b{color:var(--ink)}
+      /* ---------- quick sizes ---------- */
+      .quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+      .quick{
+        border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;
+        cursor:pointer;text-align:left;font:inherit;color:var(--ink);transition:border-color .15s,background .15s;
+      }
+      .quick:hover{border-color:var(--accent)}
+      .quick.active{border-color:var(--accent);background:var(--accent-soft)}
+      .quick .qs{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+      .quick .qn{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+      /* ---------- table ---------- */
+      .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+      .toolbar .spacer{flex:1}
+      .format-sample{
+        background:var(--surface-2);border-radius:10px;padding:12px 14px;margin-bottom:16px;
+        font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-all;
+      }
+      .format-sample .fk{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:2px}
+      .rows{display:flex;flex-direction:column;gap:12px}
+      .row-card{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)}
+      .row-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+      .row-size{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.25}
+      .row-main{margin-left:auto;text-align:right}
+      .row-main .n{font-size:24px;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2}
+      .row-main .r{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+      .row-detail{font-size:13.5px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+      .row-bottom{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;margin-top:12px}
+      .row-measured{display:flex;flex-direction:column;gap:4px;min-width:150px}
+      .row-measured label{font-size:12px;font-weight:700;color:var(--muted)}
+      .row-measured input{padding:7px 10px;font-size:15px}
+      .row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+      .empty-note{color:var(--muted);text-align:center;padding:28px 0;font-size:14.5px}
+      .import-box{
+        border:1.5px dashed var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:16px;background:var(--accent-soft);
+      }
+      .import-box p{margin:0 0 10px;font-size:14.5px}
+      .import-box .btns{display:flex;gap:8px;flex-wrap:wrap}
+      /* ---------- how ---------- */
+      .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      @media (max-width:760px){.steps{grid-template-columns:1fr}}
+      .step{background:var(--surface-2);border-radius:12px;padding:14px 16px}
+      .step .sn{font-weight:900;color:var(--accent);font-size:14px;display:flex;align-items:center;gap:6px}
+      .step .sn svg{width:16px;height:16px}
+      .step h3{margin:2px 0 6px;font-size:16px}
+      .step p{margin:0;font-size:14px;color:var(--muted)}
+      .formula{
+        margin-top:14px;font-size:14px;background:var(--surface-2);border-radius:12px;padding:12px 16px;
+        font-variant-numeric:tabular-nums;
+      }
+      /* ---------- pricing ---------- */
+      .price-grid{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:20px;align-items:start}
+      @media (max-width:1020px){.price-grid{grid-template-columns:1fr 1fr}}
+      @media (max-width:680px){.price-grid{grid-template-columns:1fr}}
+      .price-grid .card{margin-bottom:0}
+      .pick-box{background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+      .pick-info{font-size:13px;color:var(--muted);margin-top:10px;font-variant-numeric:tabular-nums}
+      .pick-info b{color:var(--ink)}
+      .cross-ref{
+        margin-top:8px;font-size:13px;background:var(--surface);border:1px solid var(--line);
+        border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums;
+      }
+      .cross-ref svg{width:15px;height:15px;color:var(--accent);flex:none}
+      .seg{display:flex;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+      .seg button{
+        flex:1;appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;
+        font-size:13px;font-weight:700;border-radius:7px;padding:7px 6px;cursor:pointer;
+        display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;
+      }
+      .seg button svg{width:14px;height:14px}
+      .seg button.active{background:var(--accent);color:var(--accent-ink)}
+      .seg-note{font-size:12px;color:var(--accent);text-align:center;margin-top:6px;font-weight:700}
+      .ship-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+      .ship-btn{
+        appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);
+        font:inherit;border-radius:10px;padding:8px 2px;cursor:pointer;text-align:center;
+      }
+      .ship-btn .sl{font-size:13.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}
+      .ship-btn .sl svg{width:14px;height:14px}
+      .ship-btn .sr{font-size:11.5px;font-variant-numeric:tabular-nums}
+      .ship-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+      .mini-meta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums;flex-wrap:wrap}
+      .pack-out{
+        background:var(--surface);border:1.5px solid var(--line);border-radius:10px;
+        padding:9px 12px;font-size:16.5px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--accent);
+      }
+      .pack-split{
+        margin-top:12px;border:1.5px dashed var(--accent);border-radius:10px;padding:10px 12px;
+        display:flex;align-items:center;gap:9px;font-size:14px;background:var(--surface);
+      }
+      .pack-split svg{width:18px;height:18px;color:var(--accent);flex:none}
+      .pack-split .pv{margin-left:auto;text-align:right;line-height:1.3}
+      .pack-split .pv b{font-size:18px;color:var(--accent);font-variant-numeric:tabular-nums}
+      .pack-split .pv span{display:block;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+      input[type="range"]{width:100%;accent-color:var(--accent);margin:2px 0 14px;cursor:pointer}
+      .price-row{display:flex;gap:10px;align-items:flex-end}
+      .price-row .field{flex:1}
+      .suggest-btn{
+        appearance:none;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--accent);
+        font:inherit;border-radius:10px;padding:8px 12px;cursor:pointer;text-align:center;line-height:1.3;white-space:nowrap;
+      }
+      .suggest-btn .sk{display:block;font-size:11px;font-weight:700;opacity:.75}
+      .suggest-btn .sv{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+      .per-sheet{
+        background:var(--surface-2);border-radius:10px;padding:8px 12px;text-align:center;
+        font-size:13px;color:var(--muted);margin-top:12px;font-variant-numeric:tabular-nums;
+      }
+      .per-sheet b{color:var(--ink);font-size:15px}
+      .fee-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+      /* dashboard */
+      .dash{
+        background:var(--panel);color:var(--panel-ink);border-radius:var(--radius);
+        box-shadow:var(--shadow);padding:0;overflow:hidden;
+      }
+      .dash-tiers{padding:16px 18px 14px;border-bottom:1px solid var(--panel-line)}
+      .dash-tiers .dt{font-size:13px;color:var(--panel-muted);display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:700}
+      .dash-tiers .dt svg{width:15px;height:15px}
+      .tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .tier{
+        appearance:none;border:1.5px solid var(--panel-line);background:var(--panel-soft);color:var(--panel-muted);
+        font:inherit;font-size:13px;font-weight:700;border-radius:9px;padding:9px 11px;cursor:pointer;
+        display:flex;align-items:center;justify-content:space-between;gap:6px;text-align:left;
+      }
+      .tier .td{font-size:11px;background:rgba(255,255,255,.14);border-radius:5px;padding:1px 6px;font-variant-numeric:tabular-nums}
+      .tier.active{border-color:var(--panel-ink);color:#fff;background:rgba(255,255,255,.14)}
+      .dash-body{padding:18px}
+      .dash-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}
+      .dash-top .k{font-size:12px;color:var(--panel-muted);margin-bottom:3px}
+      .dash-price{font-size:32px;font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums}
+      .dash-note{font-size:12px;color:var(--panel-good);margin-top:4px;font-variant-numeric:tabular-nums}
+      .dash-profit{text-align:right}
+      .dash-profit .v{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums}
+      .pos{color:var(--panel-good)} .neg{color:var(--panel-bad)}
+      .break-box{border:1px solid var(--panel-line);border-radius:10px;overflow:hidden}
+      .break-btn{
+        width:100%;appearance:none;border:0;background:var(--panel-soft);color:var(--panel-ink);
+        font:inherit;font-size:13px;font-weight:700;padding:10px 12px;cursor:pointer;
+        display:flex;align-items:center;gap:7px;
+      }
+      .break-btn svg{width:15px;height:15px}
+      .break-btn .chev{margin-left:auto;transition:transform .2s}
+      .break-btn.open .chev{transform:rotate(180deg)}
+      .break-body{padding:4px 12px 12px;font-size:12.5px}
+      .break-body .bt{display:flex;justify-content:space-between;font-weight:700;margin-top:8px;font-variant-numeric:tabular-nums}
+      .break-body .bi{display:flex;justify-content:space-between;color:var(--panel-muted);padding-left:10px;margin-top:3px;font-variant-numeric:tabular-nums}
+      .break-body .bn{color:var(--panel-muted);font-size:11px;padding-left:10px;opacity:.8;font-variant-numeric:tabular-nums}
+      .margin-row{display:flex;justify-content:space-between;font-size:12.5px;margin:16px 0 6px}
+      .margin-row .mv{font-weight:900;font-variant-numeric:tabular-nums}
+      .margin-track{height:7px;border-radius:99px;background:var(--panel-soft);overflow:hidden}
+      .margin-fill{height:100%;border-radius:99px;transition:width .25s}
+      .dash-status{
+        padding:11px 14px;text-align:center;font-size:13.5px;font-weight:900;
+        display:flex;align-items:center;justify-content:center;gap:7px;
+      }
+      .dash-status svg{width:16px;height:16px;flex:none}
+      .dash-status.ok{background:rgba(74,222,128,.16);color:var(--panel-good)}
+      .dash-status.warn{background:rgba(250,204,21,.14);color:#facc15}
+      .dash-status.bad{background:rgba(253,164,175,.16);color:var(--panel-bad)}
+      /* ---------- urgent profit alerts ---------- */
+      @keyframes statusWarnPulse{
+        0%,100%{background:rgba(250,204,21,.14)}
+        50%{background:rgba(250,204,21,.42)}
+      }
+      @keyframes statusBadFlash{
+        0%,100%{background:rgba(253,164,175,.16);color:var(--panel-bad)}
+        50%{background:rgba(185,28,28,.75);color:#ffffff}
+      }
+      @keyframes alertIconWiggle{
+        0%,100%{transform:rotate(0deg) scale(1)}
+        25%{transform:rotate(-14deg) scale(1.25)}
+        75%{transform:rotate(14deg) scale(1.25)}
+      }
+      .dash-status.warn{animation:statusWarnPulse 1.1s ease-in-out infinite}
+      .dash-status.bad{animation:statusBadFlash .85s ease-in-out infinite}
+      .dash-status.warn svg,.dash-status.bad svg{animation:alertIconWiggle .55s ease-in-out infinite}
+      @keyframes suggestPulse{
+        0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(179,53,43,0)}
+        50%{transform:scale(1.05);box-shadow:0 0 0 6px rgba(179,53,43,.18)}
+      }
+      .suggest-btn.attention{
+        animation:suggestPulse 1s ease-in-out infinite;
+        border-color:var(--danger);color:var(--danger);background:var(--danger-soft);
+      }
+      .suggest-btn.attention .sk{opacity:1;font-weight:900}
+      /* ---------- sort bar ---------- */
+      .sort-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px 47px}
+      @media (max-width:560px){.sort-bar{margin-left:0}}
+      .sort-label{font-size:13px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+      .sort-label svg{width:15px;height:15px;color:var(--accent)}
+      .sort-group{
+        display:inline-flex;gap:4px;background:var(--surface-2);
+        border:1px solid var(--line);border-radius:999px;padding:4px;
+      }
+      .sort-btn{
+        appearance:none;border:0;background:transparent;color:var(--muted);
+        font:inherit;font-size:14.5px;font-weight:700;line-height:1.2;
+        border-radius:999px;padding:6px 7px 6px 15px;cursor:pointer;
+        display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
+        transition:background .15s,color .15s;
+      }
+      .sort-btn:hover{color:var(--ink)}
+      .sort-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+      .sort-btn.active{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px -3px rgba(0,0,0,.35)}
+      .sort-state{
+        display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+        font-size:12px;font-weight:700;padding:3px 8px 3px 6px;border-radius:999px;
+        background:var(--surface);border:1px solid var(--line);color:var(--muted);
+      }
+      .sort-btn.active .sort-state{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+      .sort-arrow{width:13px;height:13px;flex:none;transition:transform .2s}
+      .sort-btn[data-dir="desc"] .sort-arrow{transform:rotate(180deg)}
+      .sort-note{font-size:12.5px;color:var(--muted)}
+      /* ---------- quote copy (dashboard) ---------- */
+      .dash-actions{padding:14px 18px 18px;border-top:1px solid var(--panel-line)}
+      .quote-preview{
+        background:var(--panel-soft);border:1px solid var(--panel-line);border-radius:10px;
+        padding:10px 12px;font-size:13.5px;line-height:1.65;white-space:pre-line;
+        color:var(--panel-ink);font-variant-numeric:tabular-nums;margin-bottom:10px;
+      }
+      .quote-preview .qk{font-size:11px;font-weight:700;color:var(--panel-muted);display:block;margin-bottom:6px}
+      .q-line{display:flex;align-items:baseline;gap:7px;padding:2.5px 0;font-size:14.5px}
+      .q-line .q-em{font-size:15px;line-height:1;flex:none;transform:translateY(1px)}
+      .q-line b{font-variant-numeric:tabular-nums}
+      .q-tier{font-weight:700}
+      .q-tier b{margin-left:2px}
+      .q-cost b{font-size:17px;font-weight:900}
+      .q-fees{
+        font-size:12.5px;color:var(--panel-muted);line-height:1.6;
+        margin:1px 0 3px 10px;padding:5px 9px;
+        background:rgba(255,255,255,.05);border:1px dashed var(--panel-line);border-radius:8px;
+        display:block;
+      }
+      .q-fees b{color:var(--panel-ink);font-weight:700}
+      .q-cust b{font-size:17px;font-weight:900;color:var(--panel-good)}
+      .dash-copy{
+        width:100%;appearance:none;border:1.5px solid var(--panel-line);background:rgba(255,255,255,.14);
+        color:#fff;font:inherit;font-size:15px;font-weight:900;border-radius:10px;padding:11px 12px;
+        cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+      }
+      .dash-copy:hover{border-color:#fff;background:rgba(255,255,255,.22)}
+      .dash-copy svg{width:17px;height:17px;flex:none}
+      footer{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+      /* toast */
+      .toast{
+        position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,80px);
+        background:var(--ink);color:var(--bg);font-size:14.5px;font-weight:700;
+        padding:11px 20px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.3);
+        opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;max-width:92vw;text-align:center;
+      }
+      .toast.show{opacity:1;transform:translate(-50%,0)}
+      @media (prefers-reduced-motion: reduce){
+        .toast,.coef-marker,.margin-fill,.break-btn .chev,.sort-btn,.sort-arrow{transition:none}
+        .dash-status.warn,.dash-status.bad,.dash-status.warn svg,.dash-status.bad svg,.suggest-btn.attention,#btnAdd.is-new,#btnAdd.is-new .new-badge{animation:none}
+        #btnAdd.is-new{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="head-row">
+        <div>
+          <h1>POF 熱縮膜內部作業台</h1>
+          <p class="lede">尺寸換算和定價試算放在一起：先秤重算出一包幾張，再接著算成本、售價和利潤，同尺寸資料兩邊互相帶入。</p>
+        </div>
+        <div class="theme-box">
+          <div class="tl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>佈景主題</div>
+          <div class="theme-btns" role="group" aria-label="佈景主題配色">
+            <button type="button" class="theme-btn" data-theme-set="forest" aria-pressed="true"><span class="dot" style="background:#14684a"></span>翠綠</button>
+            <button type="button" class="theme-btn" data-theme-set="ocean" aria-pressed="false"><span class="dot" style="background:#0f6396"></span>海洋</button>
+            <button type="button" class="theme-btn" data-theme-set="clay" aria-pressed="false"><span class="dot" style="background:#b04a24"></span>暖陶</button>
+          </div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>內部人員使用</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 17.5 17.5"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>一包 <b>500g</b></span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M5.6 5.6l2.2 2.2m8.4 8.4 2.2 2.2M3 12h3m12 0h3M5.6 18.4l2.2-2.2m8.4-8.4 2.2-2.2"/></svg>誤差 <b>±5 張</b></span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><b>實測優先</b>，沒實測才用自動換算</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist" aria-label="功能分頁">
+        <button type="button" class="tab active" id="tabBtnConv" role="tab" aria-selected="true" aria-controls="panelConv">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 15.3 2.7a1 1 0 0 0-1.4 0l-11.2 11.2a1 1 0 0 0 0 1.4l6 6a1 1 0 0 0 1.4 0L21.3 10a1 1 0 0 0 0-1.3Z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/></svg>
+          <span><span class="tt">尺寸換算</span><span class="ts">秤重 → 一包張數 · 對照表</span></span>
+        </button>
+        <button type="button" class="tab" id="tabBtnPrice" role="tab" aria-selected="false" aria-controls="panelPrice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>
+          <span><span class="tt">POF 定價試算</span><span class="ts">進貨成本 → 售價 · 利潤</span></span>
+        </button>
+      </div>
+
+      <!-- ============ Panel: conversion ============ -->
+      <div id="panelConv" role="tabpanel" aria-labelledby="tabBtnConv">
+      <!-- Calculator -->
+      <section class="card" aria-label="換算器">
+        <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg></span><h2>換算器</h2></div>
+        <p class="sub">輸入尺寸和秤重，右邊即時換算；系統會即時比對對照表，全新尺寸時「加入對照表」會閃爍提醒備存。</p>
+        <div class="calc-grid">
+          <div>
+            <div class="fields">
+              <div class="field">
+                <label for="inW">寬度</label>
+                <div class="input-row"><input type="number" id="inW" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
+              </div>
+              <div class="field">
+                <label for="inH">長度</label>
+                <div class="input-row"><input type="number" id="inH" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
+              </div>
+              <div class="field">
+                <label for="inCount">秤了幾張 <span class="hint">（建議 10 張以上）</span></label>
+                <div class="input-row"><input type="number" id="inCount" inputmode="numeric" step="1" min="0" value="10" /><span class="unit">張</span></div>
+              </div>
+              <div class="field">
+                <label for="inTotal">秤到的總重量 <span class="hint">（電子秤讀數）</span></label>
+                <div class="input-row"><input type="number" id="inTotal" inputmode="decimal" step="0.1" min="0" value="6.7" /><span class="unit">g</span></div>
+              </div>
+              <div class="field">
+                <label for="inPack">一包重量</label>
+                <div class="input-row"><input type="number" id="inPack" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g / 包</span></div>
+              </div>
+              <div class="field">
+                <label for="inMeasured">實測一包張數 <span class="hint">（有填就用它）</span></label>
+                <div class="input-row"><input type="number" id="inMeasured" inputmode="numeric" step="1" min="0" placeholder="例：641" /><span class="unit">張</span></div>
+              </div>
+            </div>
+            <div class="calc-actions">
+              <button class="btn" id="btnAdd" type="button" data-state="exists">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                <span id="btnAddLabel">加入對照表</span>
+                <span class="new-badge" id="addNewBadge" hidden>全新 · 建議加入</span>
+              </button>
+              <button class="btn primary" id="btnCopyCalc" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                複製這筆結果
+              </button>
+              <button class="btn" id="btnToPrice" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                帶入定價
+              </button>
+              <button class="btn ghost" id="btnReset" type="button">重設</button>
+            </div>
+            <div class="size-hint exists" id="sizeHint" role="status" aria-live="polite" hidden></div>
+          </div>
+          <div class="result-box" aria-live="polite">
+            <div class="result-main">
+              <span class="result-num" id="resMain">—</span>
+              <span class="result-unit">張 / 包</span>
+              <span class="badge auto" id="resBadge">自動換算</span>
+            </div>
+            <div class="result-range" id="resRange">—</div>
+            <div class="result-meta" id="resMeta">—</div>
+            <p class="result-note" id="resNote">還沒填實測，先用單張重量自動換算。</p>
+            <div class="detail-grid">
+              <div class="detail"><div class="k">單張重量</div><div class="v" id="resSingle">—</div></div>
+              <div class="detail"><div class="k">自動係數</div><div class="v" id="resCoef">—</div></div>
+              <div class="detail"><div class="k">理論張數（未打折）</div><div class="v" id="resTheory">—</div></div>
+              <div class="detail"><div class="k">換算張數（已打折）</div><div class="v" id="resConverted">—</div></div>
+              <div class="detail"><div class="k">實測係數</div><div class="v" id="resMCoef">—</div></div>
+              <div class="detail"><div class="k">主結果來源</div><div class="v" id="resSource" style="font-size:16px;padding-top:3px">—</div></div>
+            </div>
+            <div class="coef-wrap">
+              <div class="coef-track"><div class="coef-marker" id="coefMarker" style="left:0%"><span id="coefMarkerLabel">0.86</span></div></div>
+              <div class="coef-labels"><span>0.67g → 0.86</span><span>中間內插</span><span>1.00g → 1.00</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick sizes -->
+      <section class="card" aria-label="常用尺寸">
+        <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><h2>常用尺寸</h2></div>
+        <p class="sub">點一張卡片，就把那個尺寸和秤重帶進換算器。</p>
+        <div class="sort-bar">
+          <span class="sort-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/></svg>排序依據</span>
+          <div class="sort-group" id="sortGroup" role="group" aria-label="排序依據，點同一個按鈕可反向排序">
+            <button type="button" class="sort-btn active" data-sort-key="width" data-dir="asc" aria-pressed="true">
+              <span class="sort-name">寬</span>
+              <span class="sort-state"><svg class="sort-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg><span class="sort-dir-label">小 → 大</span></span>
+            </button>
+            <button type="button" class="sort-btn" data-sort-key="sum" data-dir="asc" aria-pressed="false">
+              <span class="sort-name">寬＋長總和</span>
+              <span class="sort-state"><svg class="sort-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg><span class="sort-dir-label">小 → 大</span></span>
+            </button>
+          </div>
+          <span class="sort-note" id="sortNote">目前：寬 · 小 → 大，對照表同步</span>
+        </div>
+        <div class="quick-grid" id="quickGrid"></div>
+      </section>
+
+      <!-- Table -->
+      <section class="card" aria-label="對照表">
+        <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></span><h2>對照表</h2></div>
+        <p class="sub" id="tableSub">共 11 筆 · 一包 500g</p>
+        <div class="toolbar">
+          <label class="btn small" for="fileImport" style="cursor:pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+            匯入 CSV / JSON
+          </label>
+          <input type="file" id="fileImport" accept=".csv,.json,text/csv,application/json" hidden />
+          <button class="btn small" id="btnTemplate" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+            下載範本
+          </button>
+          <button class="btn small" id="btnCsv" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            匯出 CSV
+          </button>
+          <button class="btn small" id="btnJson" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            匯出 JSON
+          </button>
+          <span class="spacer"></span>
+          <button class="btn small primary" id="btnCopyAll" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            複製全部
+          </button>
+        </div>
+        <div class="format-sample" aria-label="複製格式範例"><span class="fk">按「複製」會複製成這樣（以 15 × 15 為例）</span>尺寸：15 x 15 (單位cm)
+重量：500g / 包 (袋裝)
+張數：約 641 張 (636～646)</div>
+        <div class="import-box" id="importBox" hidden>
+          <p id="importText"></p>
+          <div class="btns">
+            <button class="btn small primary" id="btnImportOk" type="button">確認匯入</button>
+            <button class="btn small" id="btnImportCancel" type="button">取消</button>
+          </div>
+        </div>
+        <div class="rows" id="rows"></div>
+      </section>
+
+      <!-- How it works -->
+      <section class="card" aria-label="換算說明">
+        <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><h2>怎麼換算</h2></div>
+        <p class="sub">三個步驟：先秤重，再套自動係數，有實測就用實測蓋過。</p>
+        <div class="steps">
+          <div class="step">
+            <div class="sn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>步驟 1</div>
+            <h3>秤重</h3>
+            <p>拿 10 張以上放上電子秤，張數越多、單張重量越準。</p>
+          </div>
+          <div class="step">
+            <div class="sn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14v3"/><path d="M12 9v8"/><path d="M17 5v12"/></svg>步驟 2</div>
+            <h3>自動係數</h3>
+            <p>單張 0.67g 以下係數 0.86，1.00g 以上係數 1.00，中間按重量內插，最高不超過 1.00。</p>
+          </div>
+          <div class="step">
+            <div class="sn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>步驟 3</div>
+            <h3>實測覆寫</h3>
+            <p>填了「實測一包張數」後，主結果改用實測值，並算出實測係數供對照。</p>
+          </div>
+        </div>
+        <div class="formula">公式：單張重量 ＝ 總重量 ÷ 張數；理論張數 ＝ 一包重量 ÷ 單張重量（無條件捨去）；換算張數 ＝ 理論張數 × 自動係數（無條件捨去）。例如 15 × 15 cm：500 ÷ 0.67 ≈ 746 張（理論），× 0.86 ≈ 641 張。</div>
+      </section>
+      </div><!-- /panelConv -->
+
+      <!-- ============ Panel: pricing ============ -->
+      <div id="panelPrice" role="tabpanel" aria-labelledby="tabBtnPrice" hidden>
+      <div class="price-grid">
+
+        <!-- Product & purchasing -->
+        <section class="card" aria-label="產品與進貨">
+          <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span><h2>產品與進貨</h2></div>
+          <p class="sub">先從資料庫選尺寸，單價和單重會自動帶入。</p>
+
+          <div class="pick-box">
+            <div class="field">
+              <label for="pSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜尋尺寸</label>
+              <div class="input-row"><input type="text" id="pSearch" placeholder="例：15 或 30*45" /></div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <label for="pProduct">快速選取尺寸（定價資料庫 53 筆＋換算表）</label>
+              <select id="pProduct"></select>
+            </div>
+            <div class="field" style="margin-top:12px">
+              <label>膜料類型</label>
+              <div class="seg" role="group" aria-label="膜料類型">
+                <button type="button" id="filmStd" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>標準膜 0.02</button>
+                <button type="button" id="filmLow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>低溫膜 0.015</button>
+              </div>
+              <div class="seg-note" id="filmNote" hidden>低溫膜已自動加價 +0.025 RMB</div>
+            </div>
+            <div class="pick-info" id="prodInfo">尚未選尺寸，可直接手動輸入單價與單重；在「尺寸換算」新增的尺寸也會出現在上方選單，選了就自動帶入單張重量。</div>
+            <div class="cross-ref" id="crossRef" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span id="crossRefText"></span>
+            </div>
+          </div>
+
+          <div class="fields">
+            <div class="field full">
+              <label for="pRate">匯率（人民幣 → 台幣）</label>
+              <div class="input-row"><input type="number" id="pRate" inputmode="decimal" step="0.1" min="0" value="4.6" /><span class="unit">TWD</span></div>
+            </div>
+            <div class="field">
+              <label for="pRmb">單價（人民幣）</label>
+              <div class="input-row"><input type="number" id="pRmb" inputmode="decimal" step="0.001" min="0" value="0.5" /><span class="unit">¥</span></div>
+            </div>
+            <div class="field">
+              <label for="pWeight">單張重量 <span class="hint">（選換算表尺寸會自動帶入）</span></label>
+              <div class="input-row"><input type="number" id="pWeight" inputmode="decimal" step="0.001" min="0" value="7" /><span class="unit">g</span></div>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:14px">
+            <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>國際物流（人民幣 / kg）</label>
+            <div class="ship-grid" id="shipGrid">
+              <button type="button" class="ship-btn" data-ship="air"><span class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>空運</span><span class="sr">¥13.6</span></button>
+              <button type="button" class="ship-btn" data-ship="sea_express"><span class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6-.5 1.2-1 2.5-1 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg>海特</span><span class="sr">¥15</span></button>
+              <button type="button" class="ship-btn active" data-ship="sea_fast"><span class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6-.5 1.2-1 2.5-1 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg>海快</span><span class="sr">¥10</span></button>
+              <button type="button" class="ship-btn" data-ship="sea"><span class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6-.5 1.2-1 2.5-1 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M4 18 3 11h18l-1 7"/><path d="M3 11l9-7 9 7"/><path d="M10 4V2h4v2"/></svg>海運</span><span class="sr">¥9.5</span></button>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:14px">
+            <label for="pTotalQty">採購總庫存</label>
+            <div class="input-row"><input type="number" id="pTotalQty" inputmode="numeric" step="1" min="0" value="1000" /><span class="unit">張</span></div>
+            <div class="mini-meta"><span id="pTotalWeight">總重 7.0 kg</span><span id="pTotalInvest">總投入 NT$ 0</span></div>
+          </div>
+        </section>
+
+        <!-- Packaging & pricing -->
+        <section class="card" aria-label="銷售與包裝">
+          <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><h2>銷售與包裝</h2></div>
+          <p class="sub">設定一包賣幾張、目標淨利和標準售價。</p>
+
+          <div class="pick-box">
+            <div class="field">
+              <label>銷售包裝設定</label>
+              <div class="seg" role="group" aria-label="包裝換算方式">
+                <button type="button" id="modeWeight" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>重量換算</button>
+                <button type="button" id="modeDirect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>直接輸入</button>
+              </div>
+            </div>
+            <div id="packWeightRow" style="margin-top:12px">
+              <div class="fields">
+                <div class="field">
+                  <label for="pPackTarget">目標重量</label>
+                  <div class="input-row"><input type="number" id="pPackTarget" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g</span></div>
+                </div>
+                <div class="field">
+                  <label>自動換算</label>
+                  <div class="pack-out" id="pAutoQty">71 張</div>
+                </div>
+              </div>
+            </div>
+            <div id="packDirectRow" style="margin-top:12px" hidden>
+              <div class="field">
+                <label for="pSellQty">每組銷售張數</label>
+                <div class="input-row"><input type="number" id="pSellQty" inputmode="numeric" step="1" min="0" value="71" /><span class="unit">張</span></div>
+              </div>
+            </div>
+            <div class="pack-split">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8A2 2 0 0 0 22 17.87v-3.24a2 2 0 0 0-.97-1.71l-4.03-2.42-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/></svg>
+              <span>庫存可分</span>
+              <div class="pv"><b id="pPacks">14 包</b><span id="pLeftover">餘 6 張</span></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pMargin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>期望淨利 <span class="badge auto" id="pMarginLabel">20%</span></label>
+            <input type="range" id="pMargin" min="0" max="100" step="1" value="20" />
+          </div>
+
+          <div class="price-row">
+            <div class="field">
+              <label for="pBasePrice">標準售價（每包 <span id="pPriceQtyLabel">71</span> 張）</label>
+              <div class="input-row"><input type="number" id="pBasePrice" inputmode="decimal" step="1" min="0" value="250" /><span class="unit">元</span></div>
+            </div>
+            <button type="button" class="suggest-btn" id="btnSuggest"><span class="sk">建議售價</span><span class="sv" id="pSuggested">NT$ 0</span></button>
+          </div>
+          <div class="per-sheet">換算單張單價 <b id="pPerSheet">3.52</b> 元 / 張</div>
+
+          <div class="fee-grid" style="margin-top:16px">
+            <div class="field">
+              <label for="pFeeRate">平台費 %</label>
+              <input type="number" id="pFeeRate" inputmode="decimal" step="0.1" min="0" value="8.5" />
+            </div>
+            <div class="field">
+              <label for="pTaxRate">稅率 %</label>
+              <input type="number" id="pTaxRate" inputmode="decimal" step="0.1" min="0" value="5" />
+            </div>
+            <div class="field">
+              <label for="pLocalShip">台灣運費</label>
+              <input type="number" id="pLocalShip" inputmode="decimal" step="1" min="0" value="60" />
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label>售價含稅（稅額內含）</label>
+            <div class="seg" role="group" aria-label="售價含稅">
+              <button type="button" id="taxOn" class="active">含稅</button>
+              <button type="button" id="taxOff">未稅</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dashboard -->
+        <div class="dash" aria-label="利潤儀表板">
+          <div class="dash-tiers">
+            <div class="dt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>客戶等級試算</div>
+            <div class="tier-grid" id="tierGrid">
+              <button type="button" class="tier active" data-tier="standard">標準售價</button>
+              <button type="button" class="tier" data-tier="general">一般<span class="td">95折</span></button>
+              <button type="button" class="tier" data-tier="member">會員<span class="td">85折</span></button>
+              <button type="button" class="tier" data-tier="corporate">企業<span class="td">8折</span></button>
+            </div>
+          </div>
+          <div class="dash-body">
+            <div class="dash-top">
+              <div>
+                <div class="k">實際成交價</div>
+                <div class="dash-price" id="dEffective">NT$ 250</div>
+                <div class="dash-note" id="dEffectiveNote" hidden></div>
+              </div>
+              <div class="dash-profit">
+                <div class="k">預估淨利</div>
+                <div class="v pos" id="dProfit">NT$ 0</div>
+              </div>
+            </div>
+            <div class="break-box">
+              <button type="button" class="break-btn open" id="btnBreak" aria-expanded="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
+                成本結構詳情
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+              </button>
+              <div class="break-body" id="breakBody">
+                <div class="bt"><span>硬成本合計</span><span id="dHardTotal">NT$ 0</span></div>
+                <div class="bi"><span>進貨成本（<span id="dQtyLabel">71</span> 張）</span><span id="dUnitCost">NT$ 0</span></div>
+                <div class="bn" id="dUnitCostNote"></div>
+                <div class="bi"><span>台灣運費</span><span id="dLocalShip">NT$ 60</span></div>
+                <div class="bt"><span>交易成本</span><span id="dDynTotal">NT$ 0</span></div>
+                <div class="bi"><span>平台手續費（<span id="dFeeLabel">8.5</span>%）</span><span id="dFee">NT$ 0</span></div>
+                <div class="bi" id="dTaxRow"><span>營業稅（<span id="dTaxLabel">5</span>%）</span><span id="dTax">NT$ 0</span></div>
+              </div>
+            </div>
+            <div class="margin-row"><span style="color:var(--panel-muted)">淨利率</span><span class="mv pos" id="dMarginPct">0.0%</span></div>
+            <div class="margin-track"><div class="margin-fill" id="dMarginBar" style="width:0%;background:var(--panel-good)"></div></div>
+          </div>
+          <div class="dash-status ok" id="dStatus"></div>
+          <div class="dash-actions">
+            <div class="quote-preview"><span class="qk">報價複製內容（給員工報價用）</span><span id="quotePreview"></span></div>
+            <button type="button" class="dash-copy" id="btnCopyQuote">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              複製報價
+            </button>
+          </div>
+        </div>
+
+      </div>
+      </div><!-- /panelPrice -->
+
+      <footer>換算表的匯入與修改、定價試算的數字都只在這次開啟有效，重新整理會回到預設值；換算表匯出的 CSV / JSON 可以直接再匯回來。</footer>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      (function(){
+        "use strict";
+
+        /* ---------------- helpers ---------------- */
+        function $(id){ return document.getElementById(id); }
+        function num(v){ var n = parseFloat(v); return isFinite(n) ? n : NaN; }
+        function fmtDim(n){ return isFinite(n) ? String(parseFloat(n.toFixed(4))) : "—"; }
+        function fmt2(n){ return isFinite(n) ? n.toFixed(2) : "—"; }
+        function fmtInt(n){ return isFinite(n) ? String(Math.round(n)) : "—"; }
+        function fmtMoney(v){
+          if (!isFinite(v)) return "—";
+          return "NT$ " + Math.round(v).toLocaleString("en-US");
+        }
+        function esc(s){
+          return String(s).replace(/[&<>"']/g, function(c){
+            return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+          });
+        }
+        var toastTimer = null;
+        function toast(msg){
+          var t = $("toast");
+          t.textContent = msg;
+          t.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2200);
+        }
+
+        /* ---------------- theme ---------------- */
+        var themeBtns = document.querySelectorAll("[data-theme-set]");
+        themeBtns.forEach(function(b){
+          b.addEventListener("click", function(){
+            document.documentElement.setAttribute("data-theme", b.getAttribute("data-theme-set"));
+            themeBtns.forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+          });
+        });
+
+        /* ---------------- tabs ---------------- */
+        function switchTab(which){
+          var conv = which === "conv";
+          $("panelConv").hidden = !conv;
+          $("panelPrice").hidden = conv;
+          $("tabBtnConv").classList.toggle("active", conv);
+          $("tabBtnPrice").classList.toggle("active", !conv);
+          $("tabBtnConv").setAttribute("aria-selected", conv ? "true" : "false");
+          $("tabBtnPrice").setAttribute("aria-selected", conv ? "false" : "true");
+          window.scrollTo({top: 0, behavior: "smooth"});
+        }
+        $("tabBtnConv").addEventListener("click", function(){ switchTab("conv"); });
+        $("tabBtnPrice").addEventListener("click", function(){ switchTab("price"); });
+
+        /* ================= conversion data ================= */
+        var DEFAULT_ROWS = [
+          {w:14.5, h:24, count:10, total:10,  pack:500, measured:499},
+          {w:15,   h:15, count:10, total:6.7, pack:500, measured:641},
+          {w:15,   h:20, count:10, total:10,  pack:500, measured:null},
+          {w:15,   h:25, count:10, total:15,  pack:500, measured:null},
+          {w:17,   h:25, count:10, total:15,  pack:500, measured:375},
+          {w:19,   h:30, count:10, total:21,  pack:500, measured:null},
+          {w:20,   h:30, count:10, total:21,  pack:500, measured:null},
+          {w:23,   h:35, count:10, total:28,  pack:500, measured:null},
+          {w:27,   h:35, count:10, total:34,  pack:500, measured:null},
+          {w:34,   h:40, count:10, total:42,  pack:500, measured:null},
+          {w:40,   h:50, count:10, total:70,  pack:500, measured:null}
+        ];
+        var rows = DEFAULT_ROWS.map(function(r){ return Object.assign({}, r); });
+        var pendingImport = null;
+        var sortKey = "width";
+        var sortDir = 1;
+
+        /* ---------------- conversion math ---------------- */
+        function autoCoef(single){
+          if (!isFinite(single) || single <= 0) return NaN;
+          if (single <= 0.67) return 0.86;
+          if (single >= 1.00) return 1.00;
+          return 0.86 + (single - 0.67) / (1.00 - 0.67) * (1.00 - 0.86);
+        }
+        function compute(r){
+          var single = (r.count > 0 && r.total > 0) ? r.total / r.count : NaN;
+          var theory = (isFinite(single) && single > 0 && r.pack > 0) ? Math.floor(r.pack / single) : NaN;
+          var coef = autoCoef(single);
+          var converted = (isFinite(theory) && isFinite(coef)) ? Math.floor(theory * coef) : NaN;
+          var hasMeasured = (r.measured !== null && r.measured !== undefined && isFinite(r.measured) && r.measured > 0);
+          var main = hasMeasured ? Math.round(r.measured) : converted;
+          var mCoef = (hasMeasured && isFinite(theory) && theory > 0) ? r.measured / theory : NaN;
+          return {single:single, theory:theory, coef:coef, converted:converted, hasMeasured:hasMeasured, main:main, mCoef:mCoef};
+        }
+        function findRow(w, h){
+          for (var i = 0; i < rows.length; i++){
+            if (rows[i].w === w && rows[i].h === h) return i;
+          }
+          return -1;
+        }
+
+        /* ---------------- copy format (fixed spec) ---------------- */
+        function copyTextFor(w, h, pack, main){
+          return "尺寸：" + fmtDim(w) + " x " + fmtDim(h) + " (單位cm)\n" +
+                 "重量：" + fmtDim(pack) + "g / 包 (袋裝)\n" +
+                 "張數：約 " + main + " 張 (" + (main - 5) + "～" + (main + 5) + ")";
+        }
+        function copyText(text, okMsg){
+          function done(){ toast(okMsg); }
+          function fallback(){
+            var ta = document.createElement("textarea");
+            ta.value = text;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand("copy"); done(); }
+            catch(e){ toast("複製失敗，請再試一次"); }
+            document.body.removeChild(ta);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(text).then(done, fallback);
+          } else {
+            fallback();
+          }
+        }
+
+        /* ---------------- calculator ---------------- */
+        function readCalc(){
+          var m = num($("inMeasured").value);
+          return {
+            w: num($("inW").value),
+            h: num($("inH").value),
+            count: num($("inCount").value),
+            total: num($("inTotal").value),
+            pack: num($("inPack").value),
+            measured: (isFinite(m) && m > 0) ? m : null
+          };
+        }
+        var ICON_SPARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>';
+        var ICON_CHECK_CIRCLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+        function updateAddState(r, c){
+          var btn = $("btnAdd");
+          var badge = $("addNewBadge");
+          var hint = $("sizeHint");
+          var label = $("btnAddLabel");
+          if (!btn) return;
+          var validSize = isFinite(r.w) && isFinite(r.h) && r.w > 0 && r.h > 0;
+          if (!validSize){
+            btn.classList.remove("is-new");
+            btn.setAttribute("data-state", "invalid");
+            btn.removeAttribute("title");
+            if (badge) badge.hidden = true;
+            if (label) label.textContent = "加入對照表";
+            if (hint){ hint.hidden = true; hint.innerHTML = ""; }
+            return;
+          }
+          var idx = findRow(r.w, r.h);
+          var isNew = idx < 0;
+          btn.classList.toggle("is-new", isNew);
+          btn.setAttribute("data-state", isNew ? "new" : "exists");
+          if (badge) badge.hidden = !isNew;
+          if (label) label.textContent = isNew ? "加入對照表" : "更新對照表";
+          btn.title = isNew
+            ? "全新尺寸：" + fmtDim(r.w) + " × " + fmtDim(r.h) + " 還不在對照表，建議加入備存"
+            : "這個尺寸已在對照表，按了會更新那一筆";
+          if (!hint) return;
+          hint.hidden = false;
+          if (isNew){
+            hint.className = "size-hint is-new";
+            var packTxt = isFinite(r.pack) && r.pack > 0 ? fmtDim(r.pack) + "g" : "500g";
+            var countTxt = isFinite(c.main) ? " · " + packTxt + " 約 <b>" + esc(fmtInt(c.main)) + " 張</b>" : "";
+            hint.innerHTML = ICON_SPARK + "<span><b>全新尺寸</b>：" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + " 還不在對照表" + countTxt + "，建議按閃爍的「加入對照表」備存，下次報價可直接反查。</span>";
+          } else {
+            var saved = rows[idx];
+            var sc = compute(saved);
+            hint.className = "size-hint exists";
+            hint.innerHTML = ICON_CHECK_CIRCLE + "<span><b>已在對照表</b>：" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + " 已備存" + (isFinite(sc.main) ? "（" + esc(fmtDim(saved.pack)) + "g 約 " + esc(fmtInt(sc.main)) + " 張）" : "") + "，再按按鈕會更新那一筆，不會重複新增。</span>";
+          }
+        }
+        function renderCalc(){
+          var r = readCalc();
+          var c = compute(r);
+          $("resMain").textContent = fmtInt(c.main);
+          $("resRange").textContent = isFinite(c.main)
+            ? "約 " + (c.main - 5) + " ～ " + (c.main + 5) + " 張"
+            : "—";
+          $("resMeta").textContent =
+            fmtDim(r.w) + " × " + fmtDim(r.h) + " cm · " + fmtDim(r.pack) + "g / 包";
+          var badge = $("resBadge");
+          if (c.hasMeasured){
+            badge.textContent = "實測";
+            badge.className = "badge measured";
+            $("resNote").textContent = "已填實測，主結果用實測值。";
+            $("resSource").textContent = "實測";
+          } else {
+            badge.textContent = "自動換算";
+            badge.className = "badge auto";
+            $("resNote").textContent = "還沒填實測，先用單張重量自動換算。";
+            $("resSource").textContent = isFinite(c.converted) ? "自動換算" : "—";
+          }
+          $("resSingle").textContent = isFinite(c.single) ? fmt2(c.single) + "g" : "—";
+          $("resCoef").textContent = fmt2(c.coef);
+          $("resTheory").textContent = isFinite(c.theory) ? fmtInt(c.theory) + " 張" : "—";
+          $("resConverted").textContent = isFinite(c.converted) ? fmtInt(c.converted) + " 張" : "—";
+          $("resMCoef").textContent = fmt2(c.mCoef);
+          var pct = 0;
+          if (isFinite(c.single)){
+            var clamped = Math.min(1.00, Math.max(0.67, c.single));
+            pct = (clamped - 0.67) / (1.00 - 0.67) * 100;
+          }
+          $("coefMarker").style.left = pct + "%";
+          $("coefMarkerLabel").textContent = fmt2(c.coef);
+          markActiveQuick(r);
+          updateAddState(r, c);
+        }
+        ["inW","inH","inCount","inTotal","inPack","inMeasured"].forEach(function(id){
+          $(id).addEventListener("input", renderCalc);
+        });
+
+        function loadIntoCalc(r){
+          $("inW").value = fmtDim(r.w);
+          $("inH").value = fmtDim(r.h);
+          $("inCount").value = fmtDim(r.count);
+          $("inTotal").value = fmtDim(r.total);
+          $("inPack").value = fmtDim(r.pack);
+          $("inMeasured").value = (r.measured !== null && r.measured !== undefined) ? fmtDim(r.measured) : "";
+          renderCalc();
+        }
+
+        $("btnReset").addEventListener("click", function(){
+          loadIntoCalc({w:15, h:15, count:10, total:6.7, pack:500, measured:null});
+          toast("已重設");
+        });
+
+        $("btnCopyCalc").addEventListener("click", function(){
+          var r = readCalc();
+          var c = compute(r);
+          if (!isFinite(c.main) || !isFinite(r.w) || !isFinite(r.h)){
+            toast("先輸入有效的尺寸和秤重數字");
+            return;
+          }
+          copyText(copyTextFor(r.w, r.h, r.pack, c.main), "已複製這筆結果");
+        });
+
+        $("btnAdd").addEventListener("click", function(){
+          var r = readCalc();
+          var c = compute(r);
+          if (!isFinite(c.main) || !isFinite(r.w) || !isFinite(r.h) || !isFinite(r.count) || !isFinite(r.total)){
+            toast("先輸入有效的尺寸和秤重數字");
+            return;
+          }
+          var idx = findRow(r.w, r.h);
+          if (idx >= 0){
+            rows[idx] = r;
+            toast("已更新對照表裡的 " + fmtDim(r.w) + " × " + fmtDim(r.h));
+          } else {
+            rows.push(r);
+            toast("全新尺寸已備存：" + fmtDim(r.w) + " × " + fmtDim(r.h) + " · " + fmtDim(r.pack) + "g 約 " + fmtInt(c.main) + " 張");
+          }
+          renderTable();
+        });
+
+        /* ---------------- quick sizes + table ---------------- */
+        function markActiveQuick(r){
+          var cards = $("quickGrid").children;
+          for (var i = 0; i < cards.length; i++){
+            var idx = parseInt(cards[i].getAttribute("data-idx"), 10);
+            var row = rows[idx];
+            var active = row && row.w === r.w && row.h === r.h && row.count === r.count && row.total === r.total;
+            cards[i].classList.toggle("active", !!active);
+          }
+        }
+
+        var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        var ICON_PRICE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+        var ICON_LOAD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>';
+        var ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+
+        function sortedIndices(){
+          var idx = rows.map(function(_, i){ return i; });
+          idx.sort(function(a, b){
+            var x = rows[a], y = rows[b], c;
+            if (sortKey === "sum"){
+              c = ((x.w + x.h) - (y.w + y.h)) || (x.w - y.w) || (x.h - y.h);
+            } else {
+              c = (x.w - y.w) || (x.h - y.h);
+            }
+            return c * sortDir;
+          });
+          return idx;
+        }
+
+        function updateSortUI(){
+          $("sortGroup").querySelectorAll("[data-sort-key]").forEach(function(b){
+            var active = b.getAttribute("data-sort-key") === sortKey;
+            var dir = active ? sortDir : 1;
+            b.classList.toggle("active", active);
+            b.setAttribute("aria-pressed", active ? "true" : "false");
+            b.setAttribute("data-dir", dir === 1 ? "asc" : "desc");
+            var lbl = b.querySelector(".sort-dir-label");
+            if (lbl) lbl.textContent = dir === 1 ? "小 → 大" : "大 → 小";
+          });
+          var keyName = sortKey === "sum" ? "寬＋長總和" : "寬";
+          $("sortNote").textContent = "目前：" + keyName + " · " + (sortDir === 1 ? "小 → 大" : "大 → 小") + "，對照表同步";
+        }
+
+        function renderTable(){
+          var order = sortedIndices();
+          var qh = "";
+          order.forEach(function(i){
+            var r = rows[i];
+            var c = compute(r);
+            qh += '<button type="button" class="quick" data-idx="' + i + '">' +
+                  '<div class="qs">' + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + '</div>' +
+                  '<div class="qn">約 ' + esc(fmtInt(c.main)) + ' 張 / 包</div></button>';
+          });
+          $("quickGrid").innerHTML = qh || '<p class="empty-note">目前沒有任何尺寸。</p>';
+
+          if (!rows.length){
+            $("rows").innerHTML = '<p class="empty-note">對照表是空的，用上面的換算器加一筆，或匯入 CSV / JSON。</p>';
+          } else {
+            var html = "";
+            order.forEach(function(i){
+              var r = rows[i];
+              var c = compute(r);
+              html += '<article class="row-card" data-idx="' + i + '">' +
+                '<div class="row-top">' +
+                  '<div><div class="row-size">' + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + ' cm</div>' +
+                  (c.hasMeasured
+                    ? '<span class="badge measured">實測</span>'
+                    : '<span class="badge auto">自動換算</span>') +
+                  '</div>' +
+                  '<div class="row-main"><div class="n">約 ' + esc(fmtInt(c.main)) + ' 張</div>' +
+                  '<div class="r">' + (isFinite(c.main) ? (c.main - 5) + " ～ " + (c.main + 5) + " 張 · " : "") + esc(fmtDim(r.pack)) + 'g / 包</div></div>' +
+                '</div>' +
+                '<div class="row-detail">單張 ' + esc(fmt2(c.single)) + 'g · 理論 ' + esc(fmtInt(c.theory)) + ' 張 · 換算 ' + esc(fmtInt(c.converted)) + ' 張 · 自動係數 ' + esc(fmt2(c.coef)) +
+                  (c.hasMeasured ? ' · 實測係數 ' + esc(fmt2(c.mCoef)) : '') +
+                  ' · 秤重 ' + esc(fmtDim(r.count)) + ' 張共 ' + esc(fmtDim(r.total)) + 'g</div>' +
+                '<div class="row-bottom">' +
+                  '<div class="row-measured"><label for="m-' + i + '">實測一包張數</label>' +
+                  '<input type="number" id="m-' + i + '" data-measured="' + i + '" inputmode="numeric" step="1" min="0" placeholder="未填" value="' + (r.measured !== null && r.measured !== undefined ? esc(fmtDim(r.measured)) : "") + '" /></div>' +
+                  '<div class="row-actions">' +
+                    (c.hasMeasured ? '<button type="button" class="btn small" data-act="clear" data-idx="' + i + '">清除實測</button>' : '') +
+                    '<button type="button" class="btn small primary" data-act="copy" data-idx="' + i + '">' + ICON_COPY + '複製</button>' +
+                    '<button type="button" class="btn small" data-act="load" data-idx="' + i + '">' + ICON_LOAD + '帶入換算</button>' +
+                    '<button type="button" class="btn small" data-act="price" data-idx="' + i + '">' + ICON_PRICE + '帶入定價</button>' +
+                    '<button type="button" class="btn small danger" data-act="del" data-idx="' + i + '">' + ICON_TRASH + '刪除</button>' +
+                  '</div>' +
+                '</div>' +
+              '</article>';
+            });
+            $("rows").innerHTML = html;
+          }
+          $("tableSub").textContent = "共 " + rows.length + " 筆 · 一包 500g";
+          renderCalc();
+          renderProductOptions();
+        }
+
+        $("sortGroup").addEventListener("click", function(e){
+          var b = e.target.closest("[data-sort-key]");
+          if (!b) return;
+          var key = b.getAttribute("data-sort-key");
+          if (key === sortKey){
+            sortDir = -sortDir;
+          } else {
+            sortKey = key;
+            sortDir = 1;
+          }
+          updateSortUI();
+          renderTable();
+        });
+        updateSortUI();
+
+        $("quickGrid").addEventListener("click", function(e){
+          var btn = e.target.closest("[data-idx]");
+          if (!btn) return;
+          var r = rows[parseInt(btn.getAttribute("data-idx"), 10)];
+          if (r) loadIntoCalc(r);
+        });
+
+        $("rows").addEventListener("click", function(e){
+          var btn = e.target.closest("[data-act]");
+          if (!btn) return;
+          var i = parseInt(btn.getAttribute("data-idx"), 10);
+          var r = rows[i];
+          if (!r) return;
+          var act = btn.getAttribute("data-act");
+          if (act === "copy"){
+            var c = compute(r);
+            if (!isFinite(c.main)){ toast("這筆還沒有有效的換算結果"); return; }
+            copyText(copyTextFor(r.w, r.h, r.pack, c.main), "已複製這筆");
+          } else if (act === "load"){
+            loadIntoCalc(r);
+            window.scrollTo({top: 0, behavior: "smooth"});
+          } else if (act === "price"){
+            applyRowToPricing(r);
+          } else if (act === "del"){
+            rows.splice(i, 1);
+            renderTable();
+            toast("已刪除這筆");
+          } else if (act === "clear"){
+            rows[i].measured = null;
+            renderTable();
+            toast("已清除實測");
+          }
+        });
+
+        $("rows").addEventListener("change", function(e){
+          var input = e.target.closest("[data-measured]");
+          if (!input) return;
+          var i = parseInt(input.getAttribute("data-measured"), 10);
+          var v = num(input.value);
+          rows[i].measured = (isFinite(v) && v > 0) ? Math.round(v) : null;
+          renderTable();
+          toast(rows[i].measured ? "已更新實測張數" : "已清除實測");
+        });
+
+        $("btnCopyAll").addEventListener("click", function(){
+          if (!rows.length){ toast("對照表是空的"); return; }
+          var parts = [];
+          for (var i = 0; i < rows.length; i++){
+            var c = compute(rows[i]);
+            if (!isFinite(c.main)){ toast("有一筆還沒有有效的換算結果"); return; }
+            parts.push(copyTextFor(rows[i].w, rows[i].h, rows[i].pack, c.main));
+          }
+          copyText(parts.join("\n\n"), "已複製全部 " + rows.length + " 筆");
+        });
+
+        /* ---------------- export / import ---------------- */
+        function download(name, text, mime){
+          var blob = new Blob([text], {type: mime});
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 500);
+        }
+        var CSV_HEADER = "寬度(cm),長度(cm),秤重張數,秤重總重量(g),一包重量(g),實測一包張數";
+        function toCsv(list){
+          var lines = [CSV_HEADER];
+          list.forEach(function(r){
+            lines.push([fmtDim(r.w), fmtDim(r.h), fmtDim(r.count), fmtDim(r.total), fmtDim(r.pack),
+                        (r.measured !== null && r.measured !== undefined ? fmtDim(r.measured) : "")].join(","));
+          });
+          return "﻿" + lines.join("\r\n");
+        }
+        $("btnCsv").addEventListener("click", function(){
+          download("尺寸重量對照表.csv", toCsv(rows), "text/csv;charset=utf-8");
+          toast("已匯出 CSV");
+        });
+        $("btnJson").addEventListener("click", function(){
+          download("尺寸重量對照表.json", JSON.stringify(rows, null, 2), "application/json");
+          toast("已匯出 JSON");
+        });
+        $("btnTemplate").addEventListener("click", function(){
+          download("尺寸重量對照表_範本.csv",
+            toCsv([{w:15, h:15, count:10, total:6.7, pack:500, measured:null}]),
+            "text/csv;charset=utf-8");
+          toast("已下載範本");
+        });
+
+        function normalizeImported(obj){
+          if (!obj || typeof obj !== "object") return null;
+          var r = {
+            w: num(obj.w !== undefined ? obj.w : obj["寬度"]),
+            h: num(obj.h !== undefined ? obj.h : obj["長度"]),
+            count: num(obj.count !== undefined ? obj.count : obj["秤重張數"]),
+            total: num(obj.total !== undefined ? obj.total : obj["秤重總重量"]),
+            pack: num(obj.pack !== undefined ? obj.pack : obj["一包重量"]),
+            measured: num(obj.measured !== undefined ? obj.measured : obj["實測一包張數"])
+          };
+          if (!isFinite(r.w) || !isFinite(r.h) || !isFinite(r.count) || !isFinite(r.total)) return null;
+          if (!isFinite(r.pack) || r.pack <= 0) r.pack = 500;
+          r.measured = (isFinite(r.measured) && r.measured > 0) ? Math.round(r.measured) : null;
+          return r;
+        }
+        function parseCsv(text){
+          var lines = text.replace(/^﻿/, "").split(/\r?\n/).filter(function(l){ return l.trim() !== ""; });
+          if (!lines.length) return [];
+          var start = /[^\d.,\s]/.test(lines[0]) ? 1 : 0;
+          var out = [];
+          for (var i = start; i < lines.length; i++){
+            var cells = lines[i].split(",").map(function(s){ return s.trim(); });
+            if (cells.length < 4) continue;
+            var r = normalizeImported({
+              w: cells[0], h: cells[1], count: cells[2], total: cells[3],
+              pack: cells[4], measured: cells[5]
+            });
+            if (r) out.push(r);
+          }
+          return out;
+        }
+        $("fileImport").addEventListener("change", function(){
+          var file = this.files && this.files[0];
+          this.value = "";
+          if (!file) return;
+          var reader = new FileReader();
+          reader.onload = function(){
+            var list = [];
+            try {
+              var text = String(reader.result || "");
+              if (/\.json$/i.test(file.name) || text.trim().charAt(0) === "["){
+                var data = JSON.parse(text);
+                if (Array.isArray(data)) list = data.map(normalizeImported).filter(Boolean);
+              } else {
+                list = parseCsv(text);
+              }
+            } catch(e){ list = []; }
+            if (!list.length){ toast("這個檔案讀不到可用的資料"); return; }
+            pendingImport = list;
+            var names = list.map(function(r){ return fmtDim(r.w) + " × " + fmtDim(r.h); }).join("、");
+            $("importText").textContent = "讀到 " + list.length + " 筆：" + names + "。已有的尺寸會更新，不會重複新增。";
+            $("importBox").hidden = false;
+            $("importBox").scrollIntoView({behavior:"smooth", block:"center"});
+          };
+          reader.readAsText(file);
+        });
+        $("btnImportOk").addEventListener("click", function(){
+          if (!pendingImport) return;
+          pendingImport.forEach(function(r){
+            var idx = findRow(r.w, r.h);
+            if (idx >= 0) rows[idx] = r; else rows.push(r);
+          });
+          var n = pendingImport.length;
+          pendingImport = null;
+          $("importBox").hidden = true;
+          renderTable();
+          toast("已匯入 " + n + " 筆");
+        });
+        $("btnImportCancel").addEventListener("click", function(){
+          pendingImport = null;
+          $("importBox").hidden = true;
+        });
+
+        /* ================= pricing data (from POF 定價系統) ================= */
+        var PRODUCT_DB = [
+          {sum:30, weight:0.648, size:"15*15", cost:0.03},
+          {sum:30.8, weight:0.517, size:"23*7.8", cost:0.04},
+          {sum:31, weight:0.605, size:"10*21", cost:0.03},
+          {sum:32, weight:0.691, size:"20*12", cost:0.30},
+          {sum:35, weight:0.864, size:"15*20", cost:0.04},
+          {sum:37, weight:0.927, size:"14*23", cost:0.03},
+          {sum:39, weight:1.008, size:"14*25", cost:0.04},
+          {sum:41, weight:1.200, size:"16*25", cost:0.043},
+          {sum:41.5, weight:1.240, size:"20.5*21", cost:0.04},
+          {sum:42, weight:1.220, size:"17*25", cost:0.05},
+          {sum:44, weight:1.394, size:"22*22", cost:0.05},
+          {sum:44, weight:1.267, size:"16*28", cost:0.045},
+          {sum:45, weight:1.440, size:"20*25", cost:0.05},
+          {sum:46, weight:1.325, size:"16*30", cost:0.05},
+          {sum:47, weight:1.354, size:"12*35", cost:0.05},
+          {sum:48, weight:1.480, size:"16.5*31.5", cost:0.06},
+          {sum:50, weight:1.440, size:"15*35", cost:0.05},
+          {sum:51, weight:1.680, size:"19*32", cost:0.06},
+          {sum:52, weight:1.613, size:"16*36", cost:0.06},
+          {sum:53, weight:1.526, size:"15*38", cost:0.05},
+          {sum:55, weight:1.760, size:"20*35", cost:0.06},
+          {sum:55, weight:1.584, size:"15*40", cost:0.06},
+          {sum:56, weight:1.958, size:"26*30", cost:0.07},
+          {sum:58, weight:1.670, size:"15*43", cost:0.06},
+          {sum:60, weight:1.728, size:"15*45", cost:0.06},
+          {sum:60, weight:2.160, size:"25*35", cost:0.08},
+          {sum:61, weight:2.190, size:"26*35", cost:0.08},
+          {sum:64, weight:2.227, size:"24*40", cost:0.08},
+          {sum:65, weight:2.520, size:"30*35", cost:0.09},
+          {sum:65, weight:2.160, size:"20*45", cost:0.08},
+          {sum:65, weight:1.872, size:"15*50", cost:0.07},
+          {sum:66, weight:2.419, size:"26*40", cost:0.09},
+          {sum:70, weight:2.520, size:"25*45", cost:0.09},
+          {sum:72, weight:2.592, size:"24*48", cost:0.09},
+          {sum:73, weight:2.534, size:"22*51", cost:0.09},
+          {sum:75, weight:3.240, size:"30*45", cost:0.12},
+          {sum:76, weight:2.189, size:"15*61", cost:0.08},
+          {sum:78, weight:2.918, size:"27*51", cost:0.10},
+          {sum:80, weight:3.456, size:"30*50", cost:0.12},
+          {sum:85, weight:3.312, size:"30*55", cost:0.12},
+          {sum:85, weight:3.060, size:"25*60", cost:0.11},
+          {sum:90, weight:3.888, size:"30*60", cost:0.14},
+          {sum:90, weight:3.240, size:"25*65", cost:0.12},
+          {sum:95, weight:3.420, size:"25*70", cost:0.12},
+          {sum:97, weight:4.884, size:"37*60", cost:0.18},
+          {sum:100, weight:4.320, size:"30*70", cost:0.16},
+          {sum:100, weight:5.040, size:"35*65", cost:0.18},
+          {sum:105, weight:5.400, size:"35*70", cost:0.19},
+          {sum:110, weight:4.752, size:"30*80", cost:0.17},
+          {sum:110, weight:5.760, size:"35*75", cost:0.21},
+          {sum:115, weight:6.120, size:"35*80", cost:0.22},
+          {sum:120, weight:5.184, size:"30*90", cost:0.19},
+          {sum:125, weight:6.840, size:"35*90", cost:0.25}
+        ];
+        var SHIP_RATES = {air:13.6, sea_express:15, sea_fast:10, sea:9.5};
+        var TIERS = {standard:1.0, general:0.95, member:0.85, corporate:0.80};
+
+        var P = {
+          size: "", film: "standard", rmbBase: 0.5, weight: 7,
+          rate: 4.6, ship: "sea_fast", totalQty: 1000,
+          weightMode: true, packTarget: 500, sellQty: 71,
+          margin: 20, basePrice: 250,
+          fee: 8.5, tax: 5, includeTax: true, localShip: 60,
+          tier: "standard"
+        };
+
+        function finalRmb(){ return P.rmbBase + (P.film === "low_temp" ? 0.025 : 0); }
+
+        function calcPricing(){
+          var shipRmbPerSheet = (P.weight / 1000) * SHIP_RATES[P.ship];
+          var singleTWD = (finalRmb() + shipRmbPerSheet) * P.rate;
+          var unitCost = singleTWD * P.sellQty;
+          var totalInvest = singleTWD * P.totalQty;
+          var hard = unitCost + P.localShip;
+          var denom = 1 - P.fee / 100 - (P.includeTax ? P.tax / 100 : 0) - P.margin / 100;
+          var suggested = denom > 0 ? hard / denom : NaN;
+          var effective = P.basePrice * TIERS[P.tier];
+          var feeAmt = effective * P.fee / 100;
+          var taxAmt = P.includeTax
+            ? (effective / (1 + P.tax / 100)) * (P.tax / 100)
+            : effective * P.tax / 100;
+          var profit = effective - unitCost - P.localShip - feeAmt - (P.includeTax ? taxAmt : 0);
+          var marginPct = effective > 0 ? profit / effective * 100 : 0;
+          var packs = (P.totalQty > 0 && P.sellQty > 0) ? Math.floor(P.totalQty / P.sellQty) : 0;
+          var leftover = (P.totalQty > 0 && P.sellQty > 0) ? P.totalQty % P.sellQty : 0;
+          return {
+            shipRmbPerSheet: shipRmbPerSheet, singleTWD: singleTWD, unitCost: unitCost,
+            totalInvest: totalInvest, hard: hard, suggested: suggested,
+            effective: effective, feeAmt: feeAmt, taxAmt: taxAmt,
+            profit: profit, marginPct: marginPct, packs: packs, leftover: leftover
+          };
+        }
+
+        function findProduct(size){ 
+          for (var i = 0; i < PRODUCT_DB.length; i++) if (PRODUCT_DB[i].size === size) return PRODUCT_DB[i];
+          return null;
+        }
+        function sizeParts(size){
+          var p = String(size).split("*");
+          return {w: parseFloat(p[0]), h: parseFloat(p[1])};
+        }
+
+        function renderProductOptions(){
+          var term = $("pSearch").value.trim();
+          var sel = $("pProduct");
+          var dbHtml = "";
+          PRODUCT_DB.forEach(function(p){
+            if (term && p.size.indexOf(term) === -1 && String(p.sum).indexOf(term) === -1) return;
+            dbHtml += '<option value="' + esc(p.size) + '">' +
+                      esc(p.size) + "（總和 " + esc(fmtDim(p.sum)) + "cm）</option>";
+          });
+          var convHtml = "";
+          rows.forEach(function(r){
+            var sizeStr = fmtDim(r.w) + "*" + fmtDim(r.h);
+            if (findProduct(sizeStr)) return;
+            if (term && sizeStr.indexOf(term) === -1) return;
+            var c = compute(r);
+            convHtml += '<option value="conv:' + esc(sizeStr) + '">' +
+                        esc(sizeStr) + "（換算表 · 單重 " + esc(fmt2(c.single)) + "g）</option>";
+          });
+          var html = '<option value="">-- 手動輸入或選擇 --</option>';
+          if (dbHtml) html += '<optgroup label="定價資料庫">' + dbHtml + "</optgroup>";
+          if (convHtml) html += '<optgroup label="尺寸換算表（選了自動帶入單張重量）">' + convHtml + "</optgroup>";
+          sel.innerHTML = html;
+          if (P.size && findProduct(P.size)){
+            sel.value = P.size;
+          } else if (P.size){
+            var sp = sizeParts(P.size);
+            sel.value = findRow(sp.w, sp.h) >= 0 ? "conv:" + P.size : "";
+          } else {
+            sel.value = "";
+          }
+        }
+
+        function renderCrossRef(){
+          var box = $("crossRef");
+          if (!P.size){ box.hidden = true; return; }
+          var sp = sizeParts(P.size);
+          var w = sp.w, h = sp.h;
+          if (!isFinite(w) || !isFinite(h)){ box.hidden = true; return; }
+          var idx = findRow(w, h);
+          if (idx < 0){ box.hidden = true; return; }
+          var r = rows[idx];
+          var c = compute(r);
+          if (!isFinite(c.main)){ box.hidden = true; return; }
+          $("crossRefText").textContent =
+            "換算表同尺寸 " + fmtDim(w) + " × " + fmtDim(h) + "：約 " + c.main + " 張 / 包（" +
+            (c.hasMeasured ? "實測" : "自動換算") + "，" + fmtDim(r.pack) + "g / 包）";
+          box.hidden = false;
+        }
+
+        function renderPricing(){
+          var c = calcPricing();
+          /* inputs that mirror state */
+          $("pRmb").value = String(parseFloat(finalRmb().toFixed(4)));
+          /* dashboard */
+          $("dEffective").textContent = fmtMoney(c.effective);
+          var note = $("dEffectiveNote");
+          if (P.tier !== "standard"){
+            note.hidden = false;
+            note.textContent = "原價 " + fmtMoney(P.basePrice) + " × " + TIERS[P.tier];
+          } else { note.hidden = true; }
+          var profitEl = $("dProfit");
+          profitEl.textContent = fmtMoney(c.profit);
+          profitEl.className = "v " + (c.profit > 0 ? "pos" : "neg");
+          $("dHardTotal").textContent = fmtMoney(c.hard);
+          $("dUnitCost").textContent = fmtMoney(c.unitCost);
+          $("dQtyLabel").textContent = fmtInt(P.sellQty);
+          $("dUnitCostNote").textContent =
+            "└（單價 ¥" + finalRmb().toFixed(3) + " + 物流 ¥" + c.shipRmbPerSheet.toFixed(2) + "）× 匯率 " + fmtDim(P.rate);
+          $("dLocalShip").textContent = fmtMoney(P.localShip);
+          $("dDynTotal").textContent = fmtMoney(c.feeAmt + (P.includeTax ? c.taxAmt : 0));
+          $("dFee").textContent = fmtMoney(c.feeAmt);
+          $("dFeeLabel").textContent = fmtDim(P.fee);
+          $("dTaxRow").style.display = P.includeTax ? "" : "none";
+          $("dTax").textContent = fmtMoney(c.taxAmt);
+          $("dTaxLabel").textContent = fmtDim(P.tax);
+          var mp = $("dMarginPct");
+          mp.textContent = isFinite(c.marginPct) ? c.marginPct.toFixed(1) + "%" : "—";
+          mp.className = "mv " + (c.profit > 0 ? "pos" : "neg");
+          var bar = $("dMarginBar");
+          bar.style.width = Math.min(Math.max(c.marginPct, 0), 100) + "%";
+          bar.style.background = c.profit > 0 ? "var(--panel-good)" : "var(--panel-bad)";
+          var st = $("dStatus");
+          var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+          var warnSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
+          if (c.profit < 0){
+            st.className = "dash-status bad";
+            st.innerHTML = warnSvg + "<span>虧損警示：請調整售價或折扣</span>";
+          } else if (c.marginPct >= P.margin){
+            st.className = "dash-status ok";
+            st.innerHTML = checkSvg + "<span>利潤達標，建議報價</span>";
+          } else {
+            st.className = "dash-status warn";
+            st.innerHTML = warnSvg + "<span>低於目標獲利（" + fmtDim(P.margin) + "%）</span>";
+          }
+          renderQuotePreview(c);
+          $("btnSuggest").classList.toggle("attention",
+            isFinite(c.suggested) && (c.profit < 0 || c.marginPct < P.margin));
+          /* leftovers */
+          $("pSuggested").textContent = fmtMoney(c.suggested);
+          $("pPerSheet").textContent = (P.sellQty > 0 && isFinite(P.basePrice)) ? (P.basePrice / P.sellQty).toFixed(2) : "—";
+          $("pPriceQtyLabel").textContent = fmtInt(P.sellQty);
+          $("pMarginLabel").textContent = fmtDim(P.margin) + "%";
+          $("pTotalWeight").textContent = "總重 " + (P.weight * P.totalQty / 1000).toFixed(1) + " kg";
+          $("pTotalInvest").textContent = "總投入 " + fmtMoney(c.totalInvest);
+          $("pPacks").textContent = fmtInt(c.packs) + " 包";
+          $("pLeftover").textContent = "餘 " + fmtInt(c.leftover) + " 張";
+          $("pAutoQty").textContent = fmtInt(P.sellQty) + " 張";
+          renderCrossRef();
+        }
+
+        function syncSellQtyFromWeight(){
+          if (P.weightMode && P.weight > 0 && P.packTarget > 0){
+            P.sellQty = Math.floor(P.packTarget / P.weight);
+            $("pSellQty").value = String(P.sellQty);
+          }
+        }
+
+        /* pricing events */
+        $("pSearch").addEventListener("input", renderProductOptions);
+        $("pProduct").addEventListener("change", function(){
+          var val = this.value;
+          if (val.indexOf("conv:") === 0){
+            var sizeStr = val.slice(5);
+            var sp = sizeParts(sizeStr);
+            var idx = findRow(sp.w, sp.h);
+            if (idx >= 0){
+              var r = rows[idx];
+              var cc = compute(r);
+              P.size = sizeStr;
+              if (isFinite(cc.single) && cc.single > 0){
+                P.weight = cc.single;
+                $("pWeight").value = String(parseFloat(cc.single.toFixed(4)));
+              }
+              P.packTarget = r.pack;
+              $("pPackTarget").value = String(r.pack);
+              $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：單張重量 <b>" + esc(fmt2(cc.single)) + " g</b> · 一包約 <b>" + esc(fmtInt(cc.main)) + " 張</b>（" + esc(fmtDim(r.pack)) + "g / 包）；單價請手動輸入。";
+              setPackMode(true);
+              return;
+            }
+          }
+          P.size = val;
+          var prod = findProduct(P.size);
+          if (prod){
+            P.rmbBase = prod.cost;
+            P.weight = prod.weight;
+            $("pWeight").value = String(prod.weight);
+            $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 進貨單價 <b>¥" + esc(fmtDim(prod.cost)) + "</b>";
+          } else {
+            $("prodInfo").textContent = "尚未選尺寸，可直接手動輸入單價與單重；在「尺寸換算」新增的尺寸也會出現在上方選單，選了就自動帶入單張重量。";
+          }
+          syncSellQtyFromWeight();
+          renderPricing();
+        });
+        function setFilm(f){
+          P.film = f;
+          $("filmStd").classList.toggle("active", f === "standard");
+          $("filmLow").classList.toggle("active", f === "low_temp");
+          $("filmNote").hidden = f !== "low_temp";
+          renderPricing();
+        }
+        $("filmStd").addEventListener("click", function(){ setFilm("standard"); });
+        $("filmLow").addEventListener("click", function(){ setFilm("low_temp"); });
+
+        $("pRate").addEventListener("input", function(){ P.rate = num(this.value) || 0; renderPricing(); });
+        $("pRmb").addEventListener("input", function(){
+          var v = num(this.value);
+          P.rmbBase = isFinite(v) ? v - (P.film === "low_temp" ? 0.025 : 0) : 0;
+          renderPricingNoRmb();
+        });
+        $("pWeight").addEventListener("input", function(){
+          P.weight = num(this.value) || 0;
+          syncSellQtyFromWeight();
+          renderPricing();
+        });
+        function renderPricingNoRmb(){
+          /* same as renderPricing but keep the RMB input as typed */
+          var keep = $("pRmb").value;
+          renderPricing();
+          $("pRmb").value = keep;
+        }
+        $("shipGrid").addEventListener("click", function(e){
+          var b = e.target.closest("[data-ship]");
+          if (!b) return;
+          P.ship = b.getAttribute("data-ship");
+          this.querySelectorAll(".ship-btn").forEach(function(x){ x.classList.toggle("active", x === b); });
+          renderPricing();
+        });
+        $("pTotalQty").addEventListener("input", function(){ P.totalQty = num(this.value) || 0; renderPricing(); });
+
+        function setPackMode(weightMode){
+          P.weightMode = weightMode;
+          $("modeWeight").classList.toggle("active", weightMode);
+          $("modeDirect").classList.toggle("active", !weightMode);
+          $("packWeightRow").hidden = !weightMode;
+          $("packDirectRow").hidden = weightMode;
+          syncSellQtyFromWeight();
+          renderPricing();
+        }
+        $("modeWeight").addEventListener("click", function(){ setPackMode(true); });
+        $("modeDirect").addEventListener("click", function(){ setPackMode(false); });
+        $("pPackTarget").addEventListener("input", function(){
+          P.packTarget = num(this.value) || 0;
+          syncSellQtyFromWeight();
+          renderPricing();
+        });
+        $("pSellQty").addEventListener("input", function(){ P.sellQty = num(this.value) || 0; renderPricing(); });
+
+        $("pMargin").addEventListener("input", function(){ P.margin = num(this.value) || 0; renderPricing(); });
+        $("pBasePrice").addEventListener("input", function(){
+          var v = num(this.value);
+          P.basePrice = isFinite(v) ? v : 0;
+          /* reverse-sync margin slider, as in the original system */
+          if (P.basePrice > 0){
+            var c = calcPricing();
+            var feeAmt = P.basePrice * P.fee / 100;
+            var taxAmt = P.includeTax ? (P.basePrice / (1 + P.tax / 100)) * (P.tax / 100) : 0;
+            var net = P.basePrice - c.hard - feeAmt - (P.includeTax ? taxAmt : 0);
+            var nm = net / P.basePrice * 100;
+            if (isFinite(nm)){
+              P.margin = Math.min(Math.max(0, Math.round(nm)), 100);
+              $("pMargin").value = String(P.margin);
+            }
+          }
+          renderPricing();
+        });
+        $("btnSuggest").addEventListener("click", function(){
+          var c = calcPricing();
+          if (!isFinite(c.suggested)){ toast("目前參數算不出建議售價"); return; }
+          P.basePrice = Math.ceil(c.suggested);
+          $("pBasePrice").value = String(P.basePrice);
+          renderPricing();
+          toast("已套用建議售價");
+        });
+        $("pFeeRate").addEventListener("input", function(){ P.fee = num(this.value) || 0; renderPricing(); });
+        $("pTaxRate").addEventListener("input", function(){ P.tax = num(this.value) || 0; renderPricing(); });
+        $("pLocalShip").addEventListener("input", function(){ P.localShip = num(this.value) || 0; renderPricing(); });
+        function setTax(on){
+          P.includeTax = on;
+          $("taxOn").classList.toggle("active", on);
+          $("taxOff").classList.toggle("active", !on);
+          renderPricing();
+        }
+        $("taxOn").addEventListener("click", function(){ setTax(true); });
+        $("taxOff").addEventListener("click", function(){ setTax(false); });
+
+        $("tierGrid").addEventListener("click", function(e){
+          var b = e.target.closest("[data-tier]");
+          if (!b) return;
+          P.tier = b.getAttribute("data-tier");
+          this.querySelectorAll(".tier").forEach(function(x){ x.classList.toggle("active", x === b); });
+          renderPricing();
+        });
+
+        /* -------- quote copy (staff-facing, compact) -------- */
+        function tierName(){
+          return {standard:"標準售價", general:"一般", member:"會員", corporate:"企業"}[P.tier];
+        }
+        function discountText(){
+          if (P.tier === "standard") return "";
+          var pct = Math.round(TIERS[P.tier] * 100);
+          return (pct % 10 === 0) ? (pct / 10) + "折" : pct + "折";
+        }
+        function quoteParts(c){
+          c = c || calcPricing();
+          var taxInCost = P.includeTax ? c.taxAmt : 0;
+          return {
+            tier: tierName() + discountText(),
+            totalCost: Math.round(c.hard + c.feeAmt + taxInCost),
+            localShip: Math.round(P.localShip),
+            tax: Math.round(taxInCost),
+            fee: Math.round(c.feeAmt),
+            basePrice: Math.round(P.basePrice),
+            effective: Math.round(c.effective)
+          };
+        }
+        function quoteText(c){
+          var q = quoteParts(c);
+          return "👑 客戶等級-" + q.tier + "\n" +
+                 "💰 成本" + q.totalCost + "含稅\n" +
+                 "※包含(🚚 台灣運費" + q.localShip + " 🧾 稅金" + q.tax + " 🏪 平台費" + q.fee + ")\n" +
+                 "🏷️ 原價" + q.basePrice + "\n" +
+                 "🤝 客戶價" + q.effective + "未稅";
+        }
+        function renderQuotePreview(c){
+          var q = quoteParts(c);
+          $("quotePreview").innerHTML =
+            '<span class="q-line q-tier"><span class="q-em">👑</span><span>客戶等級-</span><b>' + esc(q.tier) + '</b></span>' +
+            '<span class="q-line q-cost"><span class="q-em">💰</span><span>成本</span><b>' + esc(fmtInt(q.totalCost)) + '</b><span>含稅</span></span>' +
+            '<span class="q-fees">※包含(🚚 台灣運費<b>' + esc(fmtInt(q.localShip)) + '</b> 🧾 稅金<b>' + esc(fmtInt(q.tax)) + '</b> 🏪 平台費<b>' + esc(fmtInt(q.fee)) + '</b>)</span>' +
+            '<span class="q-line"><span class="q-em">🏷️</span><span>原價</span><b>' + esc(fmtInt(q.basePrice)) + '</b></span>' +
+            '<span class="q-line q-cust"><span class="q-em">🤝</span><span>客戶價</span><b>' + esc(fmtInt(q.effective)) + '</b><span>未稅</span></span>';
+        }
+        $("btnCopyQuote").addEventListener("click", function(){
+          copyText(quoteText(), "已複製報價");
+        });
+        $("btnBreak").addEventListener("click", function(){
+          var body = $("breakBody");
+          var open = body.style.display !== "none";
+          body.style.display = open ? "none" : "";
+          this.classList.toggle("open", !open);
+          this.setAttribute("aria-expanded", open ? "false" : "true");
+        });
+
+        /* -------- cross-system: conversion -> pricing -------- */
+        function applyRowToPricing(r){
+          var c = compute(r);
+          var sizeStr = fmtDim(r.w) + "*" + fmtDim(r.h);
+          var prod = findProduct(sizeStr);
+          P.packTarget = r.pack;
+          $("pPackTarget").value = String(r.pack);
+          if (prod){
+            P.size = prod.size;
+            P.rmbBase = prod.cost;
+            P.weight = prod.weight;
+            $("pWeight").value = String(prod.weight);
+            $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 進貨單價 <b>¥" + esc(fmtDim(prod.cost)) + "</b>（由換算表帶入）";
+          } else {
+            P.size = "";
+            if (isFinite(c.single) && c.single > 0){
+              P.weight = c.single;
+              $("pWeight").value = String(parseFloat(c.single.toFixed(4)));
+            }
+            $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：定價資料庫沒有這個尺寸，單重用換算表的單張重量 <b>" + esc(fmt2(c.single)) + " g</b>，單價請手動輸入。";
+          }
+          renderProductOptions();
+          setPackMode(true);
+          switchTab("price");
+          toast("已帶入定價試算：" + fmtDim(r.w) + " × " + fmtDim(r.h));
+        }
+        $("btnToPrice").addEventListener("click", function(){
+          var r = readCalc();
+          if (!isFinite(r.w) || !isFinite(r.h) || !isFinite(r.count) || !isFinite(r.total)){
+            toast("先輸入有效的尺寸和秤重數字");
+            return;
+          }
+          applyRowToPricing(r);
+        });
+
+        /* ---------------- init ---------------- */
+        renderTable();
+        renderProductOptions();
+        syncSellQtyFromWeight();
+        renderPricing();
+      })();
+    </script>
+  </body>
+</html>
