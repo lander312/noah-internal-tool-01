@@ -584,7 +584,7 @@
       <!-- Table -->
       <section class="card" aria-label="對照表">
         <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></span><h2>對照表</h2></div>
-        <p class="sub" id="tableSub">共 11 筆 · 一包 500g</p>
+        <p class="sub" id="tableSub">共 16 筆 · 一包 500g</p>
         <div class="toolbar">
           <label class="btn small" for="fileImport" style="cursor:pointer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
@@ -904,12 +904,17 @@
           {w:15,   h:15, count:10, total:6.7, pack:500, measured:641},
           {w:15,   h:20, count:10, total:10,  pack:500, measured:null},
           {w:15,   h:25, count:10, total:15,  pack:500, measured:null},
+          {w:16,   h:25, count:10, total:15,  pack:500, measured:343},
           {w:17,   h:25, count:10, total:15,  pack:500, measured:375},
+          {w:18,   h:26, count:10, total:17,  pack:500, measured:298},
           {w:19,   h:30, count:10, total:21,  pack:500, measured:null},
           {w:20,   h:30, count:10, total:21,  pack:500, measured:null},
+          {w:22,   h:22, count:10, total:16,  pack:500, measured:303},
           {w:23,   h:35, count:10, total:28,  pack:500, measured:null},
           {w:27,   h:35, count:10, total:34,  pack:500, measured:null},
           {w:34,   h:40, count:10, total:42,  pack:500, measured:null},
+          {w:35,   h:45, count:10, total:50,  pack:500, measured:100},
+          {w:38,   h:55, count:10, total:73,  pack:500, measured:68},
           {w:40,   h:50, count:10, total:70,  pack:500, measured:null}
         ];
         var rows = DEFAULT_ROWS.map(function(r){ return Object.assign({}, r); });
@@ -1308,14 +1313,36 @@
 
         function normalizeImported(obj){
           if (!obj || typeof obj !== "object") return null;
+          /* Accept both the page's own export shape (w/h/count/total/pack/measured,
+             plus the Chinese CSV headers) and the external records shape:
+             {size, width_cm, length_cm, sample_count, sample_weight_g,
+              single_weight_g, pack_weight_g, measured_pack_count, theory, adjusted, main}. */
+          var sizeW = NaN, sizeH = NaN;
+          if (typeof obj.size === "string"){
+            var sm = obj.size.match(/([\d.]+)\s*[*x×]\s*([\d.]+)/i);
+            if (sm){ sizeW = parseFloat(sm[1]); sizeH = parseFloat(sm[2]); }
+          }
+          var countRaw = obj.count !== undefined ? obj.count
+            : (obj.sample_count !== undefined ? obj.sample_count : obj["秤重張數"]);
+          var totalRaw = obj.total !== undefined ? obj.total
+            : (obj.sample_weight_g !== undefined ? obj.sample_weight_g : obj["秤重總重量"]);
+          var totalVal = num(totalRaw);
+          var singleVal = num(obj.single_weight_g);
+          if (!isFinite(totalVal) && isFinite(singleVal) && isFinite(num(countRaw))){
+            totalVal = singleVal * num(countRaw);
+          }
+          var measuredRaw = obj.measured !== undefined ? obj.measured
+            : (obj.measured_pack_count !== undefined ? obj.measured_pack_count : obj["實測一包張數"]);
           var r = {
-            w: num(obj.w !== undefined ? obj.w : obj["寬度"]),
-            h: num(obj.h !== undefined ? obj.h : obj["長度"]),
-            count: num(obj.count !== undefined ? obj.count : obj["秤重張數"]),
-            total: num(obj.total !== undefined ? obj.total : obj["秤重總重量"]),
-            pack: num(obj.pack !== undefined ? obj.pack : obj["一包重量"]),
-            measured: num(obj.measured !== undefined ? obj.measured : obj["實測一包張數"])
+            w: num(obj.w !== undefined ? obj.w : (obj.width_cm !== undefined ? obj.width_cm : obj["寬度"])),
+            h: num(obj.h !== undefined ? obj.h : (obj.length_cm !== undefined ? obj.length_cm : obj["長度"])),
+            count: num(countRaw),
+            total: totalVal,
+            pack: num(obj.pack !== undefined ? obj.pack : (obj.pack_weight_g !== undefined ? obj.pack_weight_g : obj["一包重量"])),
+            measured: num(measuredRaw)
           };
+          if (!isFinite(r.w) && isFinite(sizeW)) r.w = sizeW;
+          if (!isFinite(r.h) && isFinite(sizeH)) r.h = sizeH;
           if (!isFinite(r.w) || !isFinite(r.h) || !isFinite(r.count) || !isFinite(r.total)) return null;
           if (!isFinite(r.pack) || r.pack <= 0) r.pack = 500;
           r.measured = (isFinite(r.measured) && r.measured > 0) ? Math.round(r.measured) : null;
@@ -1346,9 +1373,15 @@
             var list = [];
             try {
               var text = String(reader.result || "");
-              if (/\.json$/i.test(file.name) || text.trim().charAt(0) === "["){
+              var firstChar = text.trim().charAt(0);
+              if (/\.json$/i.test(file.name) || firstChar === "[" || firstChar === "{"){
                 var data = JSON.parse(text);
-                if (Array.isArray(data)) list = data.map(normalizeImported).filter(Boolean);
+                var arr = null;
+                if (Array.isArray(data)) arr = data;
+                else if (data && Array.isArray(data.records)) arr = data.records;
+                else if (data && typeof data === "object") arr = [data];
+                if (arr) list = arr.map(normalizeImported).filter(Boolean);
+                else list = parseCsv(text);
               } else {
                 list = parseCsv(text);
               }
