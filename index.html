@@ -32,9 +32,9 @@
         --shadow:0 1px 2px rgba(24,40,28,.06),0 8px 24px -12px rgba(24,40,28,.18);
         --radius:14px;
       }
-      :root[data-theme="forest"]{--accent:#14684a;--accent-ink:#ffffff;--accent-soft:#e2f0e7}
-      :root[data-theme="ocean"]{--accent:#0f6396;--accent-ink:#ffffff;--accent-soft:#e0eef8}
-      :root[data-theme="clay"]{--accent:#b04a24;--accent-ink:#ffffff;--accent-soft:#fae9df}
+      :root[data-theme="forest"]{--accent:#14684a;--accent-ink:#ffffff;--accent-soft:#e2f0e7;--accent-2:#b7791f;--accent-2-dark:#8a5f14;--accent-2-soft:#fdf0d5}
+      :root[data-theme="ocean"]{--accent:#0f6396;--accent-ink:#ffffff;--accent-soft:#e0eef8;--accent-2:#c25e3e;--accent-2-dark:#9a4526;--accent-2-soft:#fbe9e1;--bg:#eef3f6;--panel:#1e2c38}
+      :root[data-theme="clay"]{--accent:#b04a24;--accent-ink:#ffffff;--accent-soft:#fae9df;--accent-2:#66713f;--accent-2-dark:#4a5527;--accent-2-soft:#ecefdc;--surface-2:#f6ead9;--panel:#2c231c}
       *{box-sizing:border-box}
       html{-webkit-text-size-adjust:100%}
       body{
@@ -60,15 +60,16 @@
         cursor:pointer;display:inline-flex;align-items:center;gap:6px;
       }
       .theme-btn .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid rgba(0,0,0,.08)}
-      .theme-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+      .theme-btn .dot2{width:10px;height:10px;margin-left:-4px;border-width:1.5px}
+      .theme-btn[aria-pressed="true"]{border-color:var(--ink);background:var(--surface-2);color:var(--ink)}
       .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
       .chip{
         background:var(--surface);border:1px solid var(--line);border-radius:999px;
         padding:4px 12px;font-size:13px;font-weight:500;color:var(--ink);
         display:inline-flex;align-items:center;gap:6px;
       }
-      .chip svg{width:14px;height:14px;color:var(--accent)}
-      .chip b{color:var(--accent)}
+      .chip svg{width:14px;height:14px;color:var(--muted)}
+      .chip b{color:var(--ink)}
       /* ---------- tabs ---------- */
       .tabs{
         display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);
@@ -92,8 +93,8 @@
       }
       .sec-head{display:flex;align-items:center;gap:11px;margin-bottom:4px}
       .sec-ic{
-        width:36px;height:36px;flex:none;border-radius:10px;background:var(--accent-soft);
-        color:var(--accent);display:flex;align-items:center;justify-content:center;
+        width:36px;height:36px;flex:none;border-radius:10px;background:var(--surface-2);
+        color:var(--ink);display:flex;align-items:center;justify-content:center;
       }
       .sec-ic svg{width:20px;height:20px}
       .card h2{font-size:18px;font-weight:900;margin:0}
@@ -124,6 +125,8 @@
       .btn:hover{border-color:var(--accent)}
       .btn svg{width:16px;height:16px;flex:none}
       .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+      .btn.alt2{border-color:var(--accent-2);background:var(--accent-2-soft);color:var(--accent-2-dark)}
+      .btn.alt2:hover{border-color:var(--accent-2-dark)}
       .btn.primary:hover{filter:brightness(1.07)}
       .btn.ghost{border-color:transparent;color:var(--muted)}
       .btn.ghost:hover{color:var(--ink);border-color:var(--line)}
@@ -133,15 +136,15 @@
       .badge{
         display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;vertical-align:2px;
       }
-      .badge.measured{background:var(--amber-bg);color:var(--amber-ink)}
-      .badge.auto{background:var(--accent-soft);color:var(--accent)}
+      .badge.measured{background:var(--accent-2-soft);color:var(--accent-2-dark)}
+      .badge.auto{background:var(--line);color:var(--ink)}
       /* ---------- calculator ---------- */
       .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
       @media (max-width:760px){.calc-grid{grid-template-columns:1fr}}
       .calc-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
       .result-box{background:var(--surface-2);border-radius:12px;padding:18px}
       .result-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-      .result-num{font-size:44px;font-weight:900;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+      .result-num{font-size:44px;font-weight:900;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
       .result-unit{font-size:17px;font-weight:700}
       .result-range{font-size:14.5px;color:var(--muted);font-variant-numeric:tabular-nums}
       .result-meta{margin-top:6px;font-size:14px;color:var(--muted)}
@@ -151,7 +154,7 @@
       .detail .k{font-size:12px;color:var(--muted);font-weight:500}
       .detail .v{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
       .coef-wrap{margin-top:16px}
-      .coef-track{position:relative;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--accent) 0%,var(--line) 100%);margin:22px 4px 6px}
+      .coef-track{position:relative;height:8px;border-radius:99px;background:var(--line);margin:22px 4px 6px}
       .coef-marker{
         position:absolute;top:50%;width:18px;height:18px;border-radius:50%;
         background:var(--surface);border:3px solid var(--accent);
@@ -159,13 +162,13 @@
       }
       .coef-marker span{
         position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
-        font-size:12.5px;font-weight:900;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums;
+        font-size:12.5px;font-weight:900;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;
       }
       .coef-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
       /* ---------- new-size detection (calculator) ---------- */
       .btn .new-badge{
         font-size:11px;font-weight:900;line-height:1;letter-spacing:.04em;
-        background:var(--amber-bg);color:var(--amber-ink);
+        background:var(--accent-2-soft);color:var(--accent-2-dark);
         border:1px solid currentColor;border-radius:999px;padding:3px 7px;margin-left:2px;
       }
       @keyframes newSizePulse{
@@ -186,9 +189,9 @@
         padding:9px 12px;display:flex;align-items:flex-start;gap:8px;font-variant-numeric:tabular-nums;
       }
       .size-hint svg{width:17px;height:17px;flex:none;margin-top:1px}
-      .size-hint.is-new{background:var(--accent-soft);border:1.5px dashed var(--accent);color:var(--ink)}
-      .size-hint.is-new svg{color:var(--accent)}
-      .size-hint.is-new b{color:var(--accent)}
+      .size-hint.is-new{background:var(--surface-2);border:1.5px dashed var(--muted);color:var(--ink)}
+      .size-hint.is-new svg{color:var(--ink)}
+      .size-hint.is-new b{color:var(--ink)}
       .size-hint.exists{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
       .size-hint.exists svg{color:var(--good)}
       .size-hint.exists b{color:var(--ink)}
@@ -199,7 +202,7 @@
         cursor:pointer;text-align:left;font:inherit;color:var(--ink);transition:border-color .15s,background .15s;
       }
       .quick:hover{border-color:var(--accent)}
-      .quick.active{border-color:var(--accent);background:var(--accent-soft)}
+      .quick.active{border-color:var(--ink);background:var(--surface-2)}
       .quick .qs{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
       .quick .qn{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
       /* ---------- table ---------- */
@@ -215,7 +218,7 @@
       .row-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
       .row-size{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.25}
       .row-main{margin-left:auto;text-align:right}
-      .row-main .n{font-size:24px;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2}
+      .row-main .n{font-size:24px;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2}
       .row-main .r{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
       .row-detail{font-size:13.5px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
       .row-bottom{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -225,7 +228,7 @@
       .row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
       .empty-note{color:var(--muted);text-align:center;padding:28px 0;font-size:14.5px}
       .import-box{
-        border:1.5px dashed var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:16px;background:var(--accent-soft);
+        border:1.5px dashed var(--muted);border-radius:12px;padding:14px 16px;margin-bottom:16px;background:var(--surface-2);
       }
       .import-box p{margin:0 0 10px;font-size:14.5px}
       .import-box .btns{display:flex;gap:8px;flex-wrap:wrap}
@@ -233,7 +236,7 @@
       .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
       @media (max-width:760px){.steps{grid-template-columns:1fr}}
       .step{background:var(--surface-2);border-radius:12px;padding:14px 16px}
-      .step .sn{font-weight:900;color:var(--accent);font-size:14px;display:flex;align-items:center;gap:6px}
+      .step .sn{font-weight:900;color:var(--accent-2-dark);font-size:14px;display:flex;align-items:center;gap:6px}
       .step .sn svg{width:16px;height:16px}
       .step h3{margin:2px 0 6px;font-size:16px}
       .step p{margin:0;font-size:14px;color:var(--muted)}
@@ -246,14 +249,14 @@
       @media (max-width:1020px){.price-grid{grid-template-columns:1fr 1fr}}
       @media (max-width:680px){.price-grid{grid-template-columns:1fr}}
       .price-grid .card{margin-bottom:0}
-      .pick-box{background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+      .pick-box{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
       .pick-info{font-size:13px;color:var(--muted);margin-top:10px;font-variant-numeric:tabular-nums}
       .pick-info b{color:var(--ink)}
       .cross-ref{
         margin-top:8px;font-size:13px;background:var(--surface);border:1px solid var(--line);
         border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums;
       }
-      .cross-ref svg{width:15px;height:15px;color:var(--accent);flex:none}
+      .cross-ref svg{width:15px;height:15px;color:var(--muted);flex:none}
       .seg{display:flex;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:3px;gap:3px}
       .seg button{
         flex:1;appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;
@@ -261,8 +264,8 @@
         display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;
       }
       .seg button svg{width:14px;height:14px}
-      .seg button.active{background:var(--accent);color:var(--accent-ink)}
-      .seg-note{font-size:12px;color:var(--accent);text-align:center;margin-top:6px;font-weight:700}
+      .seg button.active{background:var(--ink);color:var(--surface)}
+      .seg-note{font-size:12px;color:var(--accent-2-dark);text-align:center;margin-top:6px;font-weight:700}
       .ship-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
       .ship-btn{
         appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);
@@ -271,25 +274,25 @@
       .ship-btn .sl{font-size:13.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}
       .ship-btn .sl svg{width:14px;height:14px}
       .ship-btn .sr{font-size:11.5px;font-variant-numeric:tabular-nums}
-      .ship-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+      .ship-btn.active{border-color:var(--ink);background:var(--surface-2);color:var(--ink)}
       .mini-meta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums;flex-wrap:wrap}
       .pack-out{
         background:var(--surface);border:1.5px solid var(--line);border-radius:10px;
-        padding:9px 12px;font-size:16.5px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--accent);
+        padding:9px 12px;font-size:16.5px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink);
       }
       .pack-split{
-        margin-top:12px;border:1.5px dashed var(--accent);border-radius:10px;padding:10px 12px;
+        margin-top:12px;border:1.5px dashed var(--muted);border-radius:10px;padding:10px 12px;
         display:flex;align-items:center;gap:9px;font-size:14px;background:var(--surface);
       }
-      .pack-split svg{width:18px;height:18px;color:var(--accent);flex:none}
+      .pack-split svg{width:18px;height:18px;color:var(--muted);flex:none}
       .pack-split .pv{margin-left:auto;text-align:right;line-height:1.3}
-      .pack-split .pv b{font-size:18px;color:var(--accent);font-variant-numeric:tabular-nums}
+      .pack-split .pv b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
       .pack-split .pv span{display:block;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-      input[type="range"]{width:100%;accent-color:var(--accent);margin:2px 0 14px;cursor:pointer}
+      input[type="range"]{width:100%;accent-color:var(--ink);margin:2px 0 14px;cursor:pointer}
       .price-row{display:flex;gap:10px;align-items:flex-end}
       .price-row .field{flex:1}
       .suggest-btn{
-        appearance:none;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--accent);
+        appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
         font:inherit;border-radius:10px;padding:8px 12px;cursor:pointer;text-align:center;line-height:1.3;white-space:nowrap;
       }
       .suggest-btn .sk{display:block;font-size:11px;font-weight:700;opacity:.75}
@@ -315,7 +318,7 @@
         display:flex;align-items:center;justify-content:space-between;gap:6px;text-align:left;
       }
       .tier .td{font-size:11px;background:rgba(255,255,255,.14);border-radius:5px;padding:1px 6px;font-variant-numeric:tabular-nums}
-      .tier.active{border-color:var(--panel-ink);color:#fff;background:rgba(255,255,255,.14)}
+      .tier.active{border-color:rgba(255,255,255,.55);color:#fff;background:rgba(255,255,255,.14)}
       .dash-body{padding:18px}
       .dash-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}
       .dash-top .k{font-size:12px;color:var(--panel-muted);margin-bottom:3px}
@@ -379,7 +382,7 @@
       .sort-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px 47px}
       @media (max-width:560px){.sort-bar{margin-left:0}}
       .sort-label{font-size:13px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
-      .sort-label svg{width:15px;height:15px;color:var(--accent)}
+      .sort-label svg{width:15px;height:15px;color:var(--muted)}
       .sort-group{
         display:inline-flex;gap:4px;background:var(--surface-2);
         border:1px solid var(--line);border-radius:999px;padding:4px;
@@ -393,13 +396,13 @@
       }
       .sort-btn:hover{color:var(--ink)}
       .sort-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-      .sort-btn.active{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px -3px rgba(0,0,0,.35)}
+      .sort-btn.active{background:var(--ink);color:#fff;box-shadow:0 2px 8px -3px rgba(0,0,0,.35)}
       .sort-state{
         display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
         font-size:12px;font-weight:700;padding:3px 8px 3px 6px;border-radius:999px;
         background:var(--surface);border:1px solid var(--line);color:var(--muted);
       }
-      .sort-btn.active .sort-state{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+      .sort-btn.active .sort-state{background:rgba(255,255,255,.16);border-color:transparent;color:#fff}
       .sort-arrow{width:13px;height:13px;flex:none;transition:transform .2s}
       .sort-btn[data-dir="desc"] .sort-arrow{transform:rotate(180deg)}
       .sort-note{font-size:12.5px;color:var(--muted)}
@@ -458,9 +461,9 @@
         <div class="theme-box">
           <div class="tl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>佈景主題</div>
           <div class="theme-btns" role="group" aria-label="佈景主題配色">
-            <button type="button" class="theme-btn" data-theme-set="forest" aria-pressed="true"><span class="dot" style="background:#14684a"></span>翠綠</button>
-            <button type="button" class="theme-btn" data-theme-set="ocean" aria-pressed="false"><span class="dot" style="background:#0f6396"></span>海洋</button>
-            <button type="button" class="theme-btn" data-theme-set="clay" aria-pressed="false"><span class="dot" style="background:#b04a24"></span>暖陶</button>
+            <button type="button" class="theme-btn" data-theme-set="forest" aria-pressed="true"><span class="dot" style="background:#14684a"></span><span class="dot dot2" style="background:#b7791f"></span>翠綠</button>
+            <button type="button" class="theme-btn" data-theme-set="ocean" aria-pressed="false"><span class="dot" style="background:#0f6396"></span><span class="dot dot2" style="background:#c25e3e"></span>海洋</button>
+            <button type="button" class="theme-btn" data-theme-set="clay" aria-pressed="false"><span class="dot" style="background:#b04a24"></span><span class="dot dot2" style="background:#66713f"></span>暖陶</button>
           </div>
         </div>
       </div>
@@ -527,7 +530,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 複製這筆結果
               </button>
-              <button class="btn" id="btnToPrice" type="button">
+              <button class="btn alt2" id="btnToPrice" type="button">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 帶入定價
               </button>
@@ -604,7 +607,7 @@
             匯出 JSON
           </button>
           <span class="spacer"></span>
-          <button class="btn small primary" id="btnCopyAll" type="button">
+          <button class="btn small" id="btnCopyAll" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             複製全部
           </button>
@@ -1190,7 +1193,7 @@
                   '<input type="number" id="m-' + i + '" data-measured="' + i + '" inputmode="numeric" step="1" min="0" placeholder="未填" value="' + (r.measured !== null && r.measured !== undefined ? esc(fmtDim(r.measured)) : "") + '" /></div>' +
                   '<div class="row-actions">' +
                     (c.hasMeasured ? '<button type="button" class="btn small" data-act="clear" data-idx="' + i + '">清除實測</button>' : '') +
-                    '<button type="button" class="btn small primary" data-act="copy" data-idx="' + i + '">' + ICON_COPY + '複製</button>' +
+                    '<button type="button" class="btn small" data-act="copy" data-idx="' + i + '">' + ICON_COPY + '複製</button>' +
                     '<button type="button" class="btn small" data-act="load" data-idx="' + i + '">' + ICON_LOAD + '帶入換算</button>' +
                     '<button type="button" class="btn small" data-act="price" data-idx="' + i + '">' + ICON_PRICE + '帶入定價</button>' +
                     '<button type="button" class="btn small danger" data-act="del" data-idx="' + i + '">' + ICON_TRASH + '刪除</button>' +
