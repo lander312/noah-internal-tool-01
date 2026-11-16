@@ -373,8 +373,19 @@
       .fwd-contact{font-size:13px;color:var(--muted);margin-bottom:3px;font-variant-numeric:tabular-nums}
       .fwd-contact[hidden]{display:none}
       /* ---------- forwarder conditions ---------- */
-      .fwd-cond-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-      .fwd-cond-head{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
+      .fwd-cond-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0;overflow:hidden}
+      .fwd-cond-head{
+        appearance:none;border:0;background:transparent;color:var(--muted);
+        font:inherit;font-size:12.5px;font-weight:700;line-height:1.4;
+        width:100%;padding:10px 12px;cursor:pointer;
+        display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;
+      }
+      .fwd-cond-head:hover{color:var(--ink)}
+      .fwd-cond-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+      .fwd-cond-chev{width:16px;height:16px;flex:none;transition:transform .2s}
+      .fwd-cond-box.is-open .fwd-cond-chev{transform:rotate(180deg)}
+      .fwd-cond-body{padding:0 12px 10px}
+      .fwd-cond-body[hidden]{display:none}
       .fwd-cond-text{font-size:13.5px;line-height:1.65;font-variant-numeric:tabular-nums}
       .fwd-cond-text .cn{display:block;margin-top:4px;color:var(--muted);font-size:13px;white-space:pre-wrap;word-break:break-word}
       .fwd-cond-text.is-empty{color:var(--muted);font-size:13px}
@@ -393,7 +404,14 @@
       .ship-note.warn{background:var(--amber-bg);border:1.5px solid var(--accent-2);color:var(--amber-ink);font-weight:700}
       .ship-note.warn b{color:var(--amber-ink)}
       /* .field／.bi 本身有 display:flex，會蓋掉 hidden 屬性，這幾列要明確隱藏 */
-      #airKindRow[hidden],#airOptRow[hidden],#seaFastCatRow[hidden],#dShipFeeRow[hidden],#dSeaRow[hidden],#dCustomsRow[hidden],#dOpRow[hidden]{display:none}
+      #airKindRow[hidden],#airOptRow[hidden],#seaFastCatRow[hidden],#formalCustomsRow[hidden],#dShipFeeRow[hidden],#dSeaRow[hidden],#dCustomsRow[hidden],#dOpRow[hidden]{display:none}
+      /* 條件式收費標籤：琥珀色小標籤，跟一般費率文字明顯分開 */
+      .cond-tag{
+        display:inline-block;font-size:11px;font-weight:900;line-height:1.5;letter-spacing:.02em;
+        background:var(--amber-bg);color:var(--amber-ink);
+        border:1.5px solid var(--accent-2);border-radius:999px;
+        padding:1px 8px;margin:0 2px;vertical-align:1px;white-space:nowrap;
+      }
       /* ---------- forwarder rate lists (editor) ---------- */
       .fwd-subhead{font-size:13.5px;font-weight:900;margin:16px 0 4px}
       .fwd-subhint{font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5}
@@ -576,7 +594,7 @@
       }
       .toast.show{opacity:1;transform:translate(-50%,0)}
       @media (prefers-reduced-motion: reduce){
-        .toast,.coef-marker,.margin-fill,.break-btn .chev,.sort-btn,.sort-arrow{transition:none}
+        .toast,.coef-marker,.margin-fill,.break-btn .chev,.sort-btn,.sort-arrow,.fwd-cond-chev{transition:none}
         .dash-status.warn,.dash-status.bad,.dash-status.warn svg,.dash-status.bad svg,.suggest-btn.attention,#btnAdd.is-new,#btnAdd.is-new .new-badge,input.just-filled{animation:none}
         #btnAdd.is-new{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
       }
@@ -934,7 +952,7 @@
               <div id="fwdAirOpts"></div>
               <button type="button" class="btn small" id="btnFwdAirOptAdd">＋ 新增一筆空運費率</button>
               <div class="fwd-subhead">海快品類費率清單 <span class="hint" style="font-weight:400;color:var(--muted)">（選配）</span></div>
-              <p class="fwd-subhint">這家如果依貨物品類分價，就在這裡逐筆加；有清單時，試算選海快會多出品類選擇器。報關費（每票）與操作費（每公斤）會另外計入成本。</p>
+              <p class="fwd-subhint">這家如果依貨物品類分價，就在這裡逐筆加；有清單時，試算選海快會多出品類選擇器。報關費（每票）與操作費（每公斤）是條件式收費：僅特殊商品正式報關時才計入成本，試算時打開海快下方的「特殊商品，需正式報關」開關才會算。</p>
               <div id="fwdSeaCats"></div>
               <button type="button" class="btn small" id="btnFwdSeaCatAdd">＋ 新增一筆海快品類</button>
               <div class="fwd-rates" style="margin-top:10px">
@@ -961,8 +979,13 @@
               </div>
             </div>
             <div class="fwd-cond-box" id="fwdCondBox">
-              <div class="fwd-cond-head">運送條件</div>
-              <div class="fwd-cond-text is-empty" id="fwdCondText">尚未填寫運送條件，按上方「編輯」補上。</div>
+              <button type="button" class="fwd-cond-head" id="fwdCondToggle" aria-expanded="false" aria-controls="fwdCondBody">
+                <span>運送條件</span>
+                <svg class="fwd-cond-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="fwd-cond-body" id="fwdCondBody" hidden>
+                <div class="fwd-cond-text is-empty" id="fwdCondText">尚未填寫運送條件，按上方「編輯」補上。</div>
+              </div>
             </div>
           </div>
 
@@ -996,6 +1019,10 @@
             <select id="pSeaFastCat" aria-label="選擇海快品類"></select>
             <div class="seg-note" id="seaFastCatNote" style="text-align:left" hidden></div>
           </div>
+          <label class="fwd-check" id="formalCustomsRow" for="pFormalCustoms" hidden>
+            <input type="checkbox" id="pFormalCustoms" />
+            <span>特殊商品，需正式報關 <span class="cond-tag">僅特殊商品正式報關時收取</span><span class="hint" id="formalCustomsHint">一般貨不收；打開才把報關費與操作費計入成本與最划算比較。</span></span>
+          </label>
           <div class="ship-note info" id="shipNote" hidden></div>
 
           <div class="fwd-addr-box" id="fwdAddrBox">
@@ -2115,7 +2142,7 @@
           ];
           var seedNote = "廣州普通食品（22→22.6 元/kg，4–5 天）：出貨前先詢問空運小組是否能出；一票不足10公斤加20元人民幣派送費；丟貨扣貨運費兩倍理賠。\n" +
             "廈門食品線：蛋類、肉類、活鮮、動物／植物／藥品等不接；所有食品必須獨立包裝，散裝不接；只能起付，不發到付；一票不足10公斤收20元派送費（不是單件）；出貨前先諮詢空運小組是否能出。\n" +
-            "海快：裝櫃每天，截單 15:00；大陸海快出口正式報關費 300元/票、操作費 0.8元/公斤（已計入成本）。\n" +
+            "海快：裝櫃每天，截單 15:00；大陸海快出口正式報關費 300元/票、操作費 0.8元/公斤，僅特殊商品必須嚴格走正規入關（正式報關）時才收取，一般貨不收（2026-10-23～11-09 七筆實際帳單 270kg 都沒收）；試算預設不計入，打開海快下方的「特殊商品，需正式報關」開關才計入成本。\n" +
             "費率表：空運 2026-10-19 起、海快 2026-08-15 起；每公斤報價已 +0.6 元存入（報關費與操作費不加）。海特、海運費率待補。";
           var idx = -1;
           for (var i = 0; i < forwarders.length; i++){
@@ -2214,7 +2241,7 @@
 
         var P = {
           size: "", film: "standard", rmbBase: 0.5, weight: 7,
-          rate: 4.6, ship: "sea_fast", airKind: "cargo", airOptIdx: 0, seaFastCatIdx: 0, totalQty: 1000,
+          rate: 4.6, ship: "sea_fast", airKind: "cargo", airOptIdx: 0, seaFastCatIdx: 0, formalCustoms: false, totalQty: 1000,
           weightMode: true, packTarget: 500, sellQty: 71,
           margin: 35, basePrice: 250,
           fee: 8.5, tax: 5, includeTax: true, localShip: 60,
@@ -2325,8 +2352,10 @@
             var sf = "海快（依品類）：" + seaCats.map(function(c){
               return c.category + " ¥" + fmtPriceVal(c.price) + "/kg";
             }).join("、");
-            if (typeof f.seaFastCustomsFee === "number") sf += "，另加報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票";
-            if (typeof f.seaFastOpFee === "number") sf += "＋操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg";
+            var condFees = [];
+            if (typeof f.seaFastCustomsFee === "number") condFees.push("報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票");
+            if (typeof f.seaFastOpFee === "number") condFees.push("操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg");
+            if (condFees.length) sf += "；" + condFees.join("、") + " [[COND_TAG]]";
             parts.push(sf);
           } else if (typeof r.sea_fast === "number"){
             parts.push("海快 ¥" + fmtPriceVal(r.sea_fast) + "/kg");
@@ -2390,7 +2419,7 @@
           var condText = $("fwdCondText");
           if (f && fwdHasCond(f)){
             condText.className = "fwd-cond-text";
-            condText.innerHTML = esc(fwdCondSummary(f)) +
+            condText.innerHTML = esc(fwdCondSummary(f)).replace("[[COND_TAG]]", '<span class="cond-tag">僅特殊商品正式報關時收取</span>') +
               (f.markupNote ? '<span class="cn">' + esc(f.markupText || "費率已含 +0.6 元/kg 加價（海快 9→9.6、空運普貨 13→13.6、空運食品 23→23.6）。") + "</span>" : "") +
               (f.note && f.note.trim() ? '<span class="cn">備註：' + esc(f.note.trim()) + "</span>" : "");
           } else {
@@ -2513,13 +2542,14 @@
           } else if (shipKey === "sea_fast"){
             var cat = f ? effectiveSeaFastCatAt(f, seaFastCatIdx) : null;
             if (cat){
-              /* 有品類清單：品類單價 × 重量 ＋ 報關費/票 ＋ 操作費/kg，都不另加價 */
+              /* 有品類清單：品類單價 × 重量；報關費/票與操作費/kg 只在「特殊商品，需正式報關」
+                 開關打開時才計入（一般貨實測帳單沒收這兩筆），都不另加價 */
               res.seaFastCat = cat;
               res.rateUsed = cat.price;
-              if (f && typeof f.seaFastCustomsFee === "number" && P.totalQty > 0 && totalKg > 0){
+              if (P.formalCustoms && f && typeof f.seaFastCustomsFee === "number" && P.totalQty > 0 && totalKg > 0){
                 res.customsRmb = f.seaFastCustomsFee;
               }
-              if (f && typeof f.seaFastOpFee === "number"){
+              if (P.formalCustoms && f && typeof f.seaFastOpFee === "number"){
                 res.opRmb = totalKg * f.seaFastOpFee;
               }
             } else {
@@ -2891,12 +2921,28 @@
             ssel.value = String(P.seaFastCatIdx);
             var sn = $("seaFastCatNote");
             var sNote = [];
-            if (f && typeof f.seaFastCustomsFee === "number") sNote.push("另加報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票");
+            if (f && typeof f.seaFastCustomsFee === "number") sNote.push("報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票");
             if (f && typeof f.seaFastOpFee === "number") sNote.push("操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg");
             sn.hidden = !sNote.length;
-            sn.textContent = sNote.length ? "成本另計：" + sNote.join("、") + "（已計入下方成本）。" : "";
+            sn.textContent = sNote.length
+              ? (P.formalCustoms
+                  ? "特殊商品正式報關：" + sNote.join("、") + "，已計入下方成本。"
+                  : sNote.join("、") + "僅特殊商品正式報關時收取，一般貨不收，目前未計入成本。")
+              : "";
+            /* 正式報關開關：只有這家有報關費／操作費這組條件費用時才出現，跟著品類選擇器一起顯示 */
+            var fcr = $("formalCustomsRow");
+            var hasCondFees = !!(f && (typeof f.seaFastCustomsFee === "number" || typeof f.seaFastOpFee === "number"));
+            fcr.hidden = !hasCondFees;
+            if (hasCondFees){
+              $("pFormalCustoms").checked = !!P.formalCustoms;
+              var fh = [];
+              if (typeof f.seaFastCustomsFee === "number") fh.push("報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票");
+              if (typeof f.seaFastOpFee === "number") fh.push("操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg");
+              $("formalCustomsHint").textContent = "一般貨不收；打開才把" + fh.join("與") + "計入成本與最划算比較。";
+            }
           } else {
             scr.hidden = true;
+            $("formalCustomsRow").hidden = true;
           }
           if (isAir && !airOpts.length){
             $("airKindCargo").classList.toggle("active", P.airKind === "cargo");
@@ -3231,6 +3277,10 @@
           renderForwarders();
           renderPricing();
         });
+        $("pFormalCustoms").addEventListener("change", function(){
+          P.formalCustoms = this.checked;
+          renderPricing();
+        });
 
         /* -------- 集運站：切換 / 新增 / 編輯 / 刪除 / 複製地址 -------- */
         var fwdEditingId = null;
@@ -3338,7 +3388,24 @@
           $("fwdForm").hidden = true;
           fwdEditingId = null;
         }
+        function setFwdCondOpen(open){
+          var toggle = $("fwdCondToggle");
+          var body = $("fwdCondBody");
+          var box = $("fwdCondBox");
+          if (!toggle || !body) return;
+          body.hidden = !open;
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          if (box) box.classList.toggle("is-open", open);
+        }
+        var fwdCondToggleEl = $("fwdCondToggle");
+        if (fwdCondToggleEl){
+          fwdCondToggleEl.addEventListener("click", function(){
+            var isOpen = this.getAttribute("aria-expanded") === "true";
+            setFwdCondOpen(!isOpen);
+          });
+        }
         $("fwdSelect").addEventListener("change", function(){
+          setFwdCondOpen(false);
           activeFwdId = this.value;
           P.airOptIdx = 0;
           P.seaFastCatIdx = 0;
