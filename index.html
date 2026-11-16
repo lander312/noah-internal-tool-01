@@ -107,6 +107,33 @@
       .field label{font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:5px}
       .field label svg{width:14px;height:14px;flex:none}
       .field .hint{font-size:12px;color:var(--muted);font-weight:400}
+      .src-tag{
+        align-self:flex-start;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 9px;
+      }
+      .src-tag.auto{background:var(--accent-2-soft);color:var(--accent-2-dark)}
+      .static-note{
+        margin:0;background:var(--surface-2);color:var(--muted);border-radius:10px;
+        padding:8px 12px;font-size:12.5px;line-height:1.6;font-variant-numeric:tabular-nums;
+      }
+      .static-note b{color:var(--ink)}
+      .src-tag.manual{background:var(--surface-2);color:var(--muted)}
+      .src-tag.none{background:var(--danger-soft);color:var(--danger)}
+      .src-tag{white-space:nowrap}
+      .src-row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:9px}
+      .src-row:not(:has(.src-item:not([hidden]))){display:none}
+      .src-item{display:inline-flex;align-items:center;gap:6px}
+      .src-item[hidden]{display:none}
+      .src-k{font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+      @keyframes fillFlash{0%{background:var(--accent-2-soft)}100%{background:var(--surface)}}
+      input.just-filled{animation:fillFlash 1.2s ease-out}
+      .weight-check{
+        margin-top:10px;font-size:13px;line-height:1.6;border-radius:10px;padding:9px 12px;
+        font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:flex-start;
+      }
+      .weight-check svg{width:16px;height:16px;flex:none;margin-top:2px}
+      .weight-check.ok{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+      .weight-check.ok b{color:var(--ink)}
+      .weight-check.warn{background:var(--danger-soft);border:1.5px solid var(--danger);color:var(--danger);font-weight:700}
       .input-row{display:flex;align-items:center;gap:6px}
       input[type="number"],input[type="text"],select{
         width:100%;min-width:0;padding:10px 12px;font:inherit;font-size:16.5px;
@@ -203,8 +230,16 @@
       }
       .quick:hover{border-color:var(--accent)}
       .quick.active{border-color:var(--ink);background:var(--surface-2)}
-      .quick .qs{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+      .quick .qs{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums;padding-right:24px}
       .quick .qn{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+      .quick{position:relative}
+      .quick-del{
+        position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;
+        appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);
+        cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;
+      }
+      .quick-del svg{width:13px;height:13px}
+      .quick-del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
       /* ---------- table ---------- */
       .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
       .toolbar .spacer{flex:1}
@@ -250,6 +285,17 @@
       @media (max-width:680px){.price-grid{grid-template-columns:1fr}}
       .price-grid .card{margin-bottom:0}
       .pick-box{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+      .search-hint{margin-top:6px;font-size:13px;line-height:1.55;color:var(--muted)}
+      .search-hint b{color:var(--ink)}
+      .search-hint.alert{
+        margin-top:8px;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:700;line-height:1.5;
+        background:var(--amber-bg);color:var(--amber-ink);border:1.5px solid var(--accent-2);
+      }
+      .search-hint.alert b{color:var(--amber-ink)}
+      .search-hint.pick{
+        margin-top:8px;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:700;line-height:1.5;
+        background:var(--accent-soft);color:var(--ink);border:1.5px solid var(--accent);
+      }
       .pick-info{font-size:13px;color:var(--muted);margin-top:10px;font-variant-numeric:tabular-nums}
       .pick-info b{color:var(--ink)}
       .cross-ref{
@@ -257,6 +303,7 @@
         border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums;
       }
       .cross-ref svg{width:15px;height:15px;color:var(--muted);flex:none}
+      .cross-ref[hidden]{display:none}
       .seg{display:flex;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:3px;gap:3px}
       .seg button{
         flex:1;appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;
@@ -274,8 +321,85 @@
       .ship-btn .sl{font-size:13.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}
       .ship-btn .sl svg{width:14px;height:14px}
       .ship-btn .sr{font-size:11.5px;font-variant-numeric:tabular-nums}
-      .ship-btn.active{border-color:var(--ink);background:var(--surface-2);color:var(--ink)}
+      .ship-btn{position:relative}
+      .ship-btn.active{border-color:var(--fwd,var(--ink));background:var(--fwd-soft,var(--surface-2));color:var(--ink)}
+      .ship-btn.is-best{border-color:#b7791f;box-shadow:0 0 0 1.5px #b7791f}
+      .best-badge{
+        position:absolute;top:-9px;right:-3px;z-index:2;
+        display:inline-flex;align-items:center;gap:3px;
+        background:#b7791f;color:#fff;font-size:10.5px;font-weight:900;line-height:1;
+        border-radius:999px;padding:3px 7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25);
+      }
+      .best-badge svg{width:11px;height:11px;flex:none}
+      .best-summary{
+        margin-top:12px;display:flex;gap:8px;align-items:flex-start;
+        background:var(--fwd-soft,var(--surface-2));border:1.5px solid var(--fwd,var(--line));
+        border-radius:10px;padding:9px 12px;font-size:13px;line-height:1.6;font-variant-numeric:tabular-nums;
+      }
+      .best-summary[hidden]{display:none}
+      .best-summary svg{width:17px;height:17px;flex:none;margin-top:2px;color:#b7791f}
+      .best-summary b{color:var(--ink)}
+      .best-summary .best-ex{color:var(--muted)}
+      .fwd-dot{width:15px;height:15px;border-radius:50%;flex:none;border:2px solid rgba(0,0,0,.14);background:var(--muted)}
+      .fwd-section select#fwdSelect{border-color:var(--fwd,var(--line));border-width:2px}
       .mini-meta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums;flex-wrap:wrap}
+      /* ---------- saved price ---------- */
+      .src-tag.saved{background:var(--accent-soft);color:var(--accent)}
+      .btn:disabled{opacity:.45;cursor:not-allowed}
+      .btn:disabled:hover{border-color:var(--line);filter:none}
+      .btn.primary:disabled:hover{border-color:var(--accent)}
+      .price-save-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+      .price-save-note{font-size:12px;line-height:1.5;color:var(--muted)}
+      .price-save-note.is-saved{color:var(--good);font-weight:700}
+      /* ---------- forwarders ---------- */
+      .fwd-section{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+      .fwd-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+      .fwd-row select{flex:1;min-width:130px}
+      .fwd-hint{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+      .fwd-form{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px}
+      .fwd-form-title{font-size:14.5px;font-weight:900;margin-bottom:10px}
+      .fwd-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+      .fwd-form textarea{
+        width:100%;min-width:0;padding:10px 12px;font:inherit;font-size:15px;line-height:1.55;
+        background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;outline:none;resize:vertical;
+      }
+      .fwd-form textarea:focus{border-color:var(--accent)}
+      .fwd-form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      .fwd-addr-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+      .fwd-addr-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+      .fwd-addr-head span{font-size:12.5px;font-weight:700;color:var(--muted)}
+      .fwd-addr-text{font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;font-variant-numeric:tabular-nums}
+      .fwd-addr-text.is-empty{color:var(--muted);font-size:13px}
+      .fwd-contact{font-size:13px;color:var(--muted);margin-bottom:3px;font-variant-numeric:tabular-nums}
+      .fwd-contact[hidden]{display:none}
+      /* ---------- forwarder conditions ---------- */
+      .fwd-cond-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+      .fwd-cond-head{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
+      .fwd-cond-text{font-size:13.5px;line-height:1.65;font-variant-numeric:tabular-nums}
+      .fwd-cond-text .cn{display:block;margin-top:4px;color:var(--muted);font-size:13px;white-space:pre-wrap;word-break:break-word}
+      .fwd-cond-text.is-empty{color:var(--muted);font-size:13px}
+      .fwd-check{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:14px;font-weight:700;cursor:pointer}
+      .fwd-check input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--accent);cursor:pointer}
+      .fwd-check .hint{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+      /* ---------- shipping condition notes ---------- */
+      .ship-note{
+        margin-top:10px;font-size:13px;line-height:1.6;border-radius:10px;padding:9px 12px;
+        font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:flex-start;
+      }
+      .ship-note[hidden]{display:none}
+      .ship-note svg{width:16px;height:16px;flex:none;margin-top:2px}
+      .ship-note.info{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+      .ship-note.info b{color:var(--ink)}
+      .ship-note.warn{background:var(--amber-bg);border:1.5px solid var(--accent-2);color:var(--amber-ink);font-weight:700}
+      .ship-note.warn b{color:var(--amber-ink)}
+      /* .field／.bi 本身有 display:flex，會蓋掉 hidden 屬性，這幾列要明確隱藏 */
+      #airKindRow[hidden],#airOptRow[hidden],#seaFastCatRow[hidden],#dShipFeeRow[hidden],#dSeaRow[hidden],#dCustomsRow[hidden],#dOpRow[hidden]{display:none}
+      /* ---------- forwarder rate lists (editor) ---------- */
+      .fwd-subhead{font-size:13.5px;font-weight:900;margin:16px 0 4px}
+      .fwd-subhint{font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5}
+      .fwd-opt-row{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--surface)}
+      .fwd-opt-row .fwd-rates{margin-top:0}
+      .fwd-opt-del{margin-top:8px}
       .pack-out{
         background:var(--surface);border:1.5px solid var(--line);border-radius:10px;
         padding:9px 12px;font-size:16.5px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink);
@@ -319,6 +443,13 @@
       }
       .tier .td{font-size:11px;background:rgba(255,255,255,.14);border-radius:5px;padding:1px 6px;font-variant-numeric:tabular-nums}
       .tier.active{border-color:rgba(255,255,255,.55);color:#fff;background:rgba(255,255,255,.14)}
+      .tier{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;text-align:left}
+      .tier .tr{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+      /* 級距下方淨利率：靜態小字、只用顏色區分狀態，不做任何閃爍動畫 */
+      .tier .tm{font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--panel-muted);animation:none}
+      .tier .tm.ok{color:var(--panel-good)}
+      .tier .tm.warn{color:#facc15}
+      .tier .tm.bad{color:var(--panel-bad)}
       .dash-body{padding:18px}
       .dash-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}
       .dash-top .k{font-size:12px;color:var(--panel-muted);margin-bottom:3px}
@@ -446,7 +577,7 @@
       .toast.show{opacity:1;transform:translate(-50%,0)}
       @media (prefers-reduced-motion: reduce){
         .toast,.coef-marker,.margin-fill,.break-btn .chev,.sort-btn,.sort-arrow{transition:none}
-        .dash-status.warn,.dash-status.bad,.dash-status.warn svg,.dash-status.bad svg,.suggest-btn.attention,#btnAdd.is-new,#btnAdd.is-new .new-badge{animation:none}
+        .dash-status.warn,.dash-status.bad,.dash-status.warn svg,.dash-status.bad svg,.suggest-btn.attention,#btnAdd.is-new,#btnAdd.is-new .new-badge,input.just-filled{animation:none}
         #btnAdd.is-new{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
       }
     </style>
@@ -497,27 +628,33 @@
             <div class="fields">
               <div class="field">
                 <label for="inW">寬度</label>
-                <div class="input-row"><input type="number" id="inW" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
+                <div class="input-row"><input type="text" id="inW" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
               </div>
               <div class="field">
                 <label for="inH">長度</label>
-                <div class="input-row"><input type="number" id="inH" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
+                <div class="input-row"><input type="text" id="inH" inputmode="decimal" step="0.1" min="0" value="15" /><span class="unit">cm</span></div>
+              </div>
+              <div class="field full">
+                <p class="static-note"><b>提醒：寬＋長總和不是面積，膜重是跟面積走的。</b>例：5×41 總和 46、面積 205 cm²；20×25 總和 45、面積 500 cm²——總和接近，重量差兩倍多，比對重量時要看面積，不要只看總和。</p>
               </div>
               <div class="field">
                 <label for="inCount">秤了幾張 <span class="hint">（建議 10 張以上）</span></label>
-                <div class="input-row"><input type="number" id="inCount" inputmode="numeric" step="1" min="0" value="10" /><span class="unit">張</span></div>
+                <div class="input-row"><input type="text" id="inCount" inputmode="numeric" step="1" min="0" value="10" /><span class="unit">張</span></div>
               </div>
               <div class="field">
                 <label for="inTotal">秤到的總重量 <span class="hint">（電子秤讀數）</span></label>
-                <div class="input-row"><input type="number" id="inTotal" inputmode="decimal" step="0.1" min="0" value="6.7" /><span class="unit">g</span></div>
+                <div class="input-row"><input type="text" id="inTotal" inputmode="decimal" step="0.1" min="0" value="6.7" /><span class="unit">g</span></div>
+              </div>
+              <div class="field full">
+                <p class="static-note"><b>單位先確認：</b>廠商報的重量先確認單位——10 張 0.007g 不合理，很可能是 0.007kg＝7g。單張重量若算出來小於 0.01g、或一包張數大到不合理，先檢查單位再存。</p>
               </div>
               <div class="field">
                 <label for="inPack">一包重量</label>
-                <div class="input-row"><input type="number" id="inPack" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g / 包</span></div>
+                <div class="input-row"><input type="text" id="inPack" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g / 包</span></div>
               </div>
               <div class="field">
                 <label for="inMeasured">實測一包張數 <span class="hint">（有填就用它）</span></label>
-                <div class="input-row"><input type="number" id="inMeasured" inputmode="numeric" step="1" min="0" placeholder="例：641" /><span class="unit">張</span></div>
+                <div class="input-row"><input type="text" id="inMeasured" inputmode="numeric" step="1" min="0" placeholder="例：641" /><span class="unit">張</span></div>
               </div>
             </div>
             <div class="calc-actions">
@@ -547,6 +684,7 @@
             <div class="result-range" id="resRange">—</div>
             <div class="result-meta" id="resMeta">—</div>
             <p class="result-note" id="resNote">還沒填實測，先用單張重量自動換算。</p>
+            <div class="weight-check ok" id="weightCheck" hidden></div>
             <div class="detail-grid">
               <div class="detail"><div class="k">單張重量</div><div class="v" id="resSingle">—</div></div>
               <div class="detail"><div class="k">自動係數</div><div class="v" id="resCoef">—</div></div>
@@ -566,7 +704,7 @@
       <!-- Quick sizes -->
       <section class="card" aria-label="常用尺寸">
         <div class="sec-head"><span class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><h2>常用尺寸</h2></div>
-        <p class="sub">點一張卡片，就把那個尺寸和秤重帶進換算器。</p>
+        <p class="sub">點一張卡片，就把那個尺寸和秤重帶進換算器；卡片右上角的 × 可以直接刪除那個尺寸。</p>
         <div class="sort-bar">
           <span class="sort-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/></svg>排序依據</span>
           <div class="sort-group" id="sortGroup" role="group" aria-label="排序依據，點同一個按鈕可反向排序">
@@ -662,7 +800,8 @@
           <div class="pick-box">
             <div class="field">
               <label for="pSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>搜尋尺寸</label>
-              <div class="input-row"><input type="text" id="pSearch" placeholder="例：15 或 30*45" /></div>
+              <div class="input-row"><input type="text" id="pSearch" placeholder="例：1515、5x41 或 30*45 都可以" /><button type="button" class="btn primary" id="btnSearch">搜尋</button></div>
+              <div class="search-hint" id="searchHint" hidden></div>
             </div>
             <div class="field" style="margin-top:10px">
               <label for="pProduct">快速選取尺寸（定價資料庫 53 筆＋換算表）</label>
@@ -686,15 +825,144 @@
           <div class="fields">
             <div class="field full">
               <label for="pRate">匯率（人民幣 → 台幣）</label>
-              <div class="input-row"><input type="number" id="pRate" inputmode="decimal" step="0.1" min="0" value="4.6" /><span class="unit">TWD</span></div>
+              <div class="input-row"><input type="text" id="pRate" inputmode="decimal" step="0.1" min="0" value="4.6" /><span class="unit">TWD</span></div>
             </div>
             <div class="field">
               <label for="pRmb">單價（人民幣）</label>
-              <div class="input-row"><input type="number" id="pRmb" inputmode="decimal" step="0.001" min="0" value="0.5" /><span class="unit">¥</span></div>
+              <div class="input-row"><input type="text" id="pRmb" inputmode="decimal" step="0.001" min="0" value="0.5" /><span class="unit">¥</span></div>
+              <div class="price-save-actions">
+                <button type="button" class="btn small primary" id="btnSavePrice" disabled>儲存單價</button>
+                <button type="button" class="btn small ghost danger" id="btnClearPrice" hidden>清除已儲存</button>
+              </div>
+              <div class="price-save-note" id="priceSaveNote">先選擇尺寸，才能儲存這個尺寸的單價。</div>
             </div>
             <div class="field">
-              <label for="pWeight">單張重量 <span class="hint">（選換算表尺寸會自動帶入）</span></label>
-              <div class="input-row"><input type="number" id="pWeight" inputmode="decimal" step="0.001" min="0" value="7" /><span class="unit">g</span></div>
+              <label for="pWeight">單張重量</label>
+              <div class="input-row"><input type="text" id="pWeight" inputmode="decimal" step="0.001" min="0" value="7" /><span class="unit">g</span></div>
+            </div>
+          </div>
+          <div class="src-row" id="srcRow">
+            <span class="src-item" id="pRmbSrcItem" hidden><span class="src-k">單價</span><span class="src-tag auto" id="pRmbSrc"></span></span>
+            <span class="src-item" id="pWeightSrcItem" hidden><span class="src-k">單重</span><span class="src-tag auto" id="pWeightSrc"></span></span>
+          </div>
+          <p class="static-note" style="margin-top:10px">提醒：膜重看面積，不是寬＋長總和；總和接近的尺寸，重量可能差兩倍多。</p>
+
+          <div class="fwd-section">
+            <div class="field">
+              <label for="fwdSelect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M16 13a2 2 0 1 1-4 0"/></svg>集運站</label>
+              <div class="fwd-row">
+                <span class="fwd-dot" id="fwdDot" aria-hidden="true"></span>
+                <select id="fwdSelect" aria-label="選擇集運站"></select>
+                <button type="button" class="btn small" id="btnFwdAdd">新增</button>
+                <button type="button" class="btn small" id="btnFwdEdit">編輯</button>
+                <button type="button" class="btn small danger" id="btnFwdDel">刪除</button>
+              </div>
+              <p class="fwd-hint">合作的集運站各存一家：名稱、聯絡人、電話、地址與運送條件分開存；切換後，下方四種物流費率、條件判斷與成本計算會跟著換，已選的物流方式會保留。</p>
+            </div>
+            <div class="fwd-form" id="fwdForm" hidden>
+              <div class="fwd-form-title" id="fwdFormTitle">新增集運站</div>
+              <div class="field">
+                <label for="fwdName">集運站名稱</label>
+                <input type="text" id="fwdName" placeholder="例：深圳集運 A" />
+              </div>
+              <div class="fwd-rates">
+                <div class="field">
+                  <label for="fwdContact">聯絡人</label>
+                  <input type="text" id="fwdContact" placeholder="例：王小明轉業務" />
+                </div>
+                <div class="field">
+                  <label for="fwdPhone">電話</label>
+                  <input type="text" id="fwdPhone" inputmode="tel" placeholder="例：0912-345-678" />
+                </div>
+              </div>
+              <div class="fwd-rates">
+                <div class="field">
+                  <label for="fwdRecipient">收件人 <span class="hint">（寄到集運倉要寫的名字）</span></label>
+                  <input type="text" id="fwdRecipient" placeholder="還沒確定可先留空" />
+                </div>
+                <div class="field">
+                  <label for="fwdPostal">郵編</label>
+                  <input type="text" id="fwdPostal" inputmode="numeric" placeholder="例：518103" />
+                </div>
+              </div>
+              <div class="fwd-rates">
+                <div class="field">
+                  <label for="fwdRateAir">空運普貨單價</label>
+                  <div class="input-row"><input type="text" id="fwdRateAir" inputmode="decimal" step="0.1" min="0" /><span class="unit">¥ / kg</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdRateAirFood">空運食品單價 <span class="hint">（沒有可留空）</span></label>
+                  <div class="input-row"><input type="text" id="fwdRateAirFood" inputmode="decimal" step="0.1" min="0" /><span class="unit">¥ / kg</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdRateSeaExpress">海特費率</label>
+                  <div class="input-row"><input type="text" id="fwdRateSeaExpress" inputmode="decimal" step="0.1" min="0" /><span class="unit">¥ / kg</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdRateSeaFast">海快費率</label>
+                  <div class="input-row"><input type="text" id="fwdRateSeaFast" inputmode="decimal" step="0.1" min="0" /><span class="unit">¥ / kg</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdRateSea">海運費率 <span class="hint">（看貨報價可留空）</span></label>
+                  <div class="input-row"><input type="text" id="fwdRateSea" inputmode="decimal" step="0.1" min="0" /><span class="unit">¥ / kg</span></div>
+                </div>
+              </div>
+              <div class="fwd-rates">
+                <div class="field">
+                  <label for="fwdAirFee">普貨派送費 <span class="hint">（未滿門檻時加收）</span></label>
+                  <div class="input-row"><input type="text" id="fwdAirFee" inputmode="decimal" step="1" min="0" placeholder="例：20" /><span class="unit">¥ / 票</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdAirThreshold">免派送費門檻 <span class="hint">（總重達此重量免收）</span></label>
+                  <div class="input-row"><input type="text" id="fwdAirThreshold" inputmode="decimal" step="1" min="0" placeholder="例：10" /><span class="unit">kg</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdFoodFee">食品每票派送費</label>
+                  <div class="input-row"><input type="text" id="fwdFoodFee" inputmode="decimal" step="1" min="0" placeholder="例：18" /><span class="unit">¥ / 票</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdSeaMin">海運最低消費</label>
+                  <div class="input-row"><input type="text" id="fwdSeaMin" inputmode="decimal" step="1" min="0" placeholder="例：200" /><span class="unit">kg 起</span></div>
+                </div>
+              </div>
+              <label class="fwd-check" for="fwdSeaQuote">
+                <input type="checkbox" id="fwdSeaQuote" />
+                <span>海運需看貨報價<span class="hint">勾選後，選海運時物流費顯示「待人工報價」，成本不含海運費，不會用假數字計算。</span></span>
+              </label>
+              <div class="fwd-subhead">空運站點費率清單 <span class="hint" style="font-weight:400;color:var(--muted)">（選配）</span></div>
+              <p class="fwd-subhint">這家如果依出貨站點／航線分價，就在這裡逐筆加；有清單時，試算選空運會多出站點選擇器，費率、時效與派送費跟著該筆走。沒有就留空，維持上面的普貨／食品單價。</p>
+              <div id="fwdAirOpts"></div>
+              <button type="button" class="btn small" id="btnFwdAirOptAdd">＋ 新增一筆空運費率</button>
+              <div class="fwd-subhead">海快品類費率清單 <span class="hint" style="font-weight:400;color:var(--muted)">（選配）</span></div>
+              <p class="fwd-subhint">這家如果依貨物品類分價，就在這裡逐筆加；有清單時，試算選海快會多出品類選擇器。報關費（每票）與操作費（每公斤）會另外計入成本。</p>
+              <div id="fwdSeaCats"></div>
+              <button type="button" class="btn small" id="btnFwdSeaCatAdd">＋ 新增一筆海快品類</button>
+              <div class="fwd-rates" style="margin-top:10px">
+                <div class="field">
+                  <label for="fwdSeaFastCustoms">海快報關費 <span class="hint">（沒有可留空）</span></label>
+                  <div class="input-row"><input type="text" id="fwdSeaFastCustoms" inputmode="decimal" step="1" min="0" placeholder="例：300" /><span class="unit">¥ / 票</span></div>
+                </div>
+                <div class="field">
+                  <label for="fwdSeaFastOp">海快操作費 <span class="hint">（沒有可留空）</span></label>
+                  <div class="input-row"><input type="text" id="fwdSeaFastOp" inputmode="decimal" step="0.1" min="0" placeholder="例：0.8" /><span class="unit">¥ / kg</span></div>
+                </div>
+              </div>
+              <div class="field" style="margin-top:10px">
+                <label for="fwdNote">條件備註 <span class="hint">（其他寫不進欄位的條件）</span></label>
+                <textarea id="fwdNote" rows="2" placeholder="例：偏遠地區另加派送費、食品需附檢驗文件…"></textarea>
+              </div>
+              <div class="field" style="margin-top:10px">
+                <label for="fwdAddress">集運地址 <span class="hint">（只填倉庫地址，條件請填上方欄位）</span></label>
+                <textarea id="fwdAddress" rows="3" placeholder="省／市／區／街道／倉庫地址…"></textarea>
+              </div>
+              <div class="fwd-form-actions">
+                <button type="button" class="btn small primary" id="btnFwdSave">儲存集運站</button>
+                <button type="button" class="btn small" id="btnFwdCancel">取消</button>
+              </div>
+            </div>
+            <div class="fwd-cond-box" id="fwdCondBox">
+              <div class="fwd-cond-head">運送條件</div>
+              <div class="fwd-cond-text is-empty" id="fwdCondText">尚未填寫運送條件，按上方「編輯」補上。</div>
             </div>
           </div>
 
@@ -708,9 +976,37 @@
             </div>
           </div>
 
+          <div class="best-summary" id="bestSummary" hidden></div>
+
+          <div class="field" id="airKindRow" style="margin-top:12px" hidden>
+            <label>空運貨物類型</label>
+            <div class="seg" role="group" aria-label="空運貨物類型">
+              <button type="button" id="airKindCargo" class="active">普貨</button>
+              <button type="button" id="airKindFood">食品</button>
+            </div>
+            <div class="seg-note" id="airKindNote" hidden></div>
+          </div>
+          <div class="field" id="airOptRow" style="margin-top:12px" hidden>
+            <label for="pAirOpt">空運站點／類型（這家集運站依站點計價）</label>
+            <select id="pAirOpt" aria-label="選擇空運站點與類型"></select>
+            <div class="seg-note" id="airOptNote" style="text-align:left" hidden></div>
+          </div>
+          <div class="field" id="seaFastCatRow" style="margin-top:12px" hidden>
+            <label for="pSeaFastCat">海快品類（這家集運站依品類計價）</label>
+            <select id="pSeaFastCat" aria-label="選擇海快品類"></select>
+            <div class="seg-note" id="seaFastCatNote" style="text-align:left" hidden></div>
+          </div>
+          <div class="ship-note info" id="shipNote" hidden></div>
+
+          <div class="fwd-addr-box" id="fwdAddrBox">
+            <div class="fwd-addr-head"><span id="fwdAddrTitle">集運地址</span><button type="button" class="btn small" id="btnCopyAddr" disabled>複製地址</button></div>
+            <div class="fwd-contact" id="fwdContactLine" hidden></div>
+            <div class="fwd-addr-text is-empty" id="fwdAddrText">尚未填寫地址，按上方「編輯」補上。</div>
+          </div>
+
           <div class="field" style="margin-top:14px">
             <label for="pTotalQty">採購總庫存</label>
-            <div class="input-row"><input type="number" id="pTotalQty" inputmode="numeric" step="1" min="0" value="1000" /><span class="unit">張</span></div>
+            <div class="input-row"><input type="text" id="pTotalQty" inputmode="numeric" step="1" min="0" value="1000" /><span class="unit">張</span></div>
             <div class="mini-meta"><span id="pTotalWeight">總重 7.0 kg</span><span id="pTotalInvest">總投入 NT$ 0</span></div>
           </div>
         </section>
@@ -732,7 +1028,7 @@
               <div class="fields">
                 <div class="field">
                   <label for="pPackTarget">目標重量</label>
-                  <div class="input-row"><input type="number" id="pPackTarget" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g</span></div>
+                  <div class="input-row"><input type="text" id="pPackTarget" inputmode="decimal" step="1" min="0" value="500" /><span class="unit">g</span></div>
                 </div>
                 <div class="field">
                   <label>自動換算</label>
@@ -743,7 +1039,7 @@
             <div id="packDirectRow" style="margin-top:12px" hidden>
               <div class="field">
                 <label for="pSellQty">每組銷售張數</label>
-                <div class="input-row"><input type="number" id="pSellQty" inputmode="numeric" step="1" min="0" value="71" /><span class="unit">張</span></div>
+                <div class="input-row"><input type="text" id="pSellQty" inputmode="numeric" step="1" min="0" value="71" /><span class="unit">張</span></div>
               </div>
             </div>
             <div class="pack-split">
@@ -754,14 +1050,14 @@
           </div>
 
           <div class="field">
-            <label for="pMargin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>期望淨利 <span class="badge auto" id="pMarginLabel">20%</span></label>
-            <input type="range" id="pMargin" min="0" max="100" step="1" value="20" />
+            <label for="pMargin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>期望淨利 <span class="badge auto" id="pMarginLabel">35%</span></label>
+            <input type="range" id="pMargin" min="0" max="100" step="5" value="35" />
           </div>
 
           <div class="price-row">
             <div class="field">
               <label for="pBasePrice">標準售價（每包 <span id="pPriceQtyLabel">71</span> 張）</label>
-              <div class="input-row"><input type="number" id="pBasePrice" inputmode="decimal" step="1" min="0" value="250" /><span class="unit">元</span></div>
+              <div class="input-row"><input type="text" id="pBasePrice" inputmode="decimal" step="1" min="0" value="250" /><span class="unit">元</span></div>
             </div>
             <button type="button" class="suggest-btn" id="btnSuggest"><span class="sk">建議售價</span><span class="sv" id="pSuggested">NT$ 0</span></button>
           </div>
@@ -770,15 +1066,15 @@
           <div class="fee-grid" style="margin-top:16px">
             <div class="field">
               <label for="pFeeRate">平台費 %</label>
-              <input type="number" id="pFeeRate" inputmode="decimal" step="0.1" min="0" value="8.5" />
+              <input type="text" id="pFeeRate" inputmode="decimal" step="0.1" min="0" value="8.5" />
             </div>
             <div class="field">
               <label for="pTaxRate">稅率 %</label>
-              <input type="number" id="pTaxRate" inputmode="decimal" step="0.1" min="0" value="5" />
+              <input type="text" id="pTaxRate" inputmode="decimal" step="0.1" min="0" value="5" />
             </div>
             <div class="field">
               <label for="pLocalShip">台灣運費</label>
-              <input type="number" id="pLocalShip" inputmode="decimal" step="1" min="0" value="60" />
+              <input type="text" id="pLocalShip" inputmode="decimal" step="1" min="0" value="60" />
             </div>
           </div>
           <div class="field" style="margin-top:12px">
@@ -795,10 +1091,10 @@
           <div class="dash-tiers">
             <div class="dt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>客戶等級試算</div>
             <div class="tier-grid" id="tierGrid">
-              <button type="button" class="tier active" data-tier="standard">標準售價</button>
-              <button type="button" class="tier" data-tier="general">一般<span class="td">95折</span></button>
-              <button type="button" class="tier" data-tier="member">會員<span class="td">85折</span></button>
-              <button type="button" class="tier" data-tier="corporate">企業<span class="td">8折</span></button>
+              <button type="button" class="tier active" data-tier="standard"><span class="tr"><span>標準售價</span></span><span class="tm" data-tm="standard">淨利率 —</span></button>
+              <button type="button" class="tier" data-tier="general"><span class="tr"><span>一般</span><span class="td">95折</span></span><span class="tm" data-tm="general">淨利率 —</span></button>
+              <button type="button" class="tier" data-tier="member"><span class="tr"><span>會員</span><span class="td">85折</span></span><span class="tm" data-tm="member">淨利率 —</span></button>
+              <button type="button" class="tier" data-tier="corporate"><span class="tr"><span>企業</span><span class="td">8折</span></span><span class="tm" data-tm="corporate">淨利率 —</span></button>
             </div>
           </div>
           <div class="dash-body">
@@ -823,6 +1119,10 @@
                 <div class="bt"><span>硬成本合計</span><span id="dHardTotal">NT$ 0</span></div>
                 <div class="bi"><span>進貨成本（<span id="dQtyLabel">71</span> 張）</span><span id="dUnitCost">NT$ 0</span></div>
                 <div class="bn" id="dUnitCostNote"></div>
+                <div class="bi" id="dShipFeeRow" hidden><span>└ 派送費攤提（每票 ¥<span id="dShipFeeRmb">0</span>，已計入進貨成本）</span><span id="dShipFee">NT$ 0</span></div>
+                <div class="bi" id="dCustomsRow" hidden><span>└ 報關費攤提（每票 ¥<span id="dCustomsRmb">0</span>，已計入進貨成本）</span><span id="dCustomsFee">NT$ 0</span></div>
+                <div class="bi" id="dOpRow" hidden><span>└ 操作費攤提（¥<span id="dOpRmb">0</span> / kg，已計入進貨成本）</span><span id="dOpFee">NT$ 0</span></div>
+                <div class="bi" id="dSeaRow" hidden><span id="dSeaLabel">國際物流（海運）</span><span id="dSeaValue">待人工報價 · 未含海運費</span></div>
                 <div class="bi"><span>台灣運費</span><span id="dLocalShip">NT$ 60</span></div>
                 <div class="bt"><span>交易成本</span><span id="dDynTotal">NT$ 0</span></div>
                 <div class="bi"><span>平台手續費（<span id="dFeeLabel">8.5</span>%）</span><span id="dFee">NT$ 0</span></div>
@@ -845,7 +1145,7 @@
       </div>
       </div><!-- /panelPrice -->
 
-      <footer>換算表的匯入與修改、定價試算的數字都只在這次開啟有效，重新整理會回到預設值；換算表匯出的 CSV / JSON 可以直接再匯回來。</footer>
+      <footer>已儲存的單價與集運站資料會存在這台裝置的瀏覽器裡，重新整理後仍在；換算表的匯入與修改、其他定價數字只在這次開啟有效，重新整理會回到預設值；換算表匯出的 CSV / JSON 可以直接再匯回來。</footer>
     </div>
 
     <div class="toast" id="toast" role="status"></div>
@@ -856,7 +1156,14 @@
 
         /* ---------------- helpers ---------------- */
         function $(id){ return document.getElementById(id); }
-        function num(v){ var n = parseFloat(v); return isFinite(n) ? n : NaN; }
+        function num(v){
+          /* 全形數字／小數點先轉半形，讓中文輸入法打出的數字也能解析 */
+          if (typeof v === "string"){
+            v = v.replace(/[！-～]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); }).replace(/　/g, " ");
+          }
+          var n = parseFloat(v);
+          return isFinite(n) ? n : NaN;
+        }
         function fmtDim(n){ return isFinite(n) ? String(parseFloat(n.toFixed(4))) : "—"; }
         function fmt2(n){ return isFinite(n) ? n.toFixed(2) : "—"; }
         function fmtInt(n){ return isFinite(n) ? String(Math.round(n)) : "—"; }
@@ -867,6 +1174,77 @@
         function esc(s){
           return String(s).replace(/[&<>"']/g, function(c){
             return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+          });
+        }
+        /* 繁→簡轉換（只用在「複製地址」複製出去的文字；儲存與畫面顯示維持繁體）。
+           對照表涵蓋大陸地址常用字：行政區、街道、門牌、倉庫與聯絡用字。 */
+        var SIMP_MAP = {
+          "廣":"广","東":"东","寶":"宝","區":"区","悅":"悦","興":"兴","園":"园","號":"号","倉":"仓","庫":"库",
+          "羅":"罗","轉":"转","締":"缔","郵":"邮","編":"编","電":"电","話":"话","聯":"联","絡":"络","臺":"台",
+          "灣":"湾","縣":"县","鎮":"镇","鄉":"乡","裡":"里","門":"门","橋":"桥","龍":"龙","鳳":"凤","龜":"龟",
+          "雲":"云","陽":"阳","陰":"阴","雙":"双","隻":"只","場":"场","邊":"边","這":"这","點":"点","線":"线",
+          "頭":"头","島":"岛","嶼":"屿","嶺":"岭","岡":"冈","巖":"岩","灘":"滩","溝":"沟","圍":"围","廳":"厅",
+          "樓":"楼","棟":"栋","戶":"户","間":"间","層":"层","頂":"顶","側":"侧","後":"后","內":"内","鄰":"邻",
+          "條":"条","緯":"纬","經":"经","廠":"厂","莊":"庄","為":"为","國":"国","碼":"码","員":"员","務":"务",
+          "業":"业","發":"发","達":"达","運":"运","貨":"货","艙":"舱","櫃":"柜","櫥":"橱","檯":"台","鐵":"铁",
+          "銅":"铜","銀":"银","鋁":"铝","鋼":"钢","鋅":"锌","錫":"锡","鎳":"镍","鉛":"铅","銘":"铭","錦":"锦",
+          "鍾":"钟","錢":"钱","鋒":"锋","銳":"锐","錶":"表","鐘":"钟","鑄":"铸","鏈":"链","鍵":"键","鑲":"镶",
+          "長":"长","開":"开","關":"关","閥":"阀","閘":"闸","閣":"阁","閱":"阅","闊":"阔","閃":"闪","閉":"闭",
+          "問":"问","聞":"闻","潤":"润","閏":"闰","閒":"闲","隊":"队","階":"阶","際":"际","隨":"随","隱":"隐",
+          "隴":"陇","隸":"隶","雞":"鸡","離":"离","難":"难","霧":"雾","靈":"灵","靜":"静","麼":"么","單":"单",
+          "實":"实","應":"应","當":"当","還":"还","進":"进","遠":"远","過":"过","違":"违","遞":"递","連":"连",
+          "週":"周","遊":"游","車":"车","輛":"辆","馬":"马","駕":"驾","駛":"驶","駐":"驻","驗":"验","體":"体",
+          "總":"总","績":"绩","織":"织","繡":"绣","繩":"绳","纜":"缆","紀":"纪","約":"约","紅":"红","紋":"纹",
+          "納":"纳","紐":"纽","紗":"纱","紙":"纸","級":"级","紹":"绍","結":"结","絕":"绝","絲":"丝","縫":"缝",
+          "縮":"缩","縱":"纵","繁":"繁","繫":"系","繞":"绕","繪":"绘","繼":"继","續":"续","纏":"缠","纖":"纤",
+          "讓":"让","讀":"读","變":"变","貝":"贝","貞":"贞","負":"负","財":"财","貢":"贡","賢":"贤","敗":"败",
+          "販":"贩","貪":"贪","貧":"贫","賓":"宾","賦":"赋","賴":"赖","賺":"赚","購":"购","賽":"赛","贈":"赠",
+          "贏":"赢","趙":"赵","趕":"赶","趨":"趋","躍":"跃","蹤":"踪","軀":"躯","農":"农","醫":"医","釋":"释",
+          "釐":"厘","針":"针","釣":"钓","鈔":"钞","鈉":"钠","鈍":"钝","鈐":"钤","鈑":"钣","鈕":"钮","鈞":"钧",
+          "鈣":"钙","鈦":"钛","鈺":"钰","鈾":"铀","鉀":"钾","鉅":"钜","鉈":"铊","鉉":"铉","鉍":"铋","鉑":"铂",
+          "鉗":"钳","鉚":"铆","鉞":"钺","鉢":"钵","鉤":"钩","鉬":"钼","鉭":"钽","鉸":"铰","鉺":"铒","鉻":"铬",
+          "鋇":"钡","鋌":"铤","鋏":"铗","鋪":"铺","鋭":"锐","鋰":"锂","鋸":"锯","錐":"锥","錘":"锤","錙":"锱",
+          "錚":"铮","錠":"锭","錡":"锜","錳":"锰","鍊":"炼","鍍":"镀","鍔":"锷","鍘":"铡","鍛":"锻","鍥":"锲",
+          "鍬":"锹","鑰":"钥","鑼":"锣","鑽":"钻","鑾":"銮","鑿":"凿","闆":"板","闇":"暗","闞":"阚","悶":"闷",
+          "閡":"阂","閔":"闵","閧":"哄","隗":"隗","隘":"隘","隤":"隤","隧":"隧","隩":"隩","險":"险","隳":"隳",
+          "雛":"雏","雜":"杂","雖":"虽","靄":"霭","靚":"靓","靛":"靛","韌":"韧","韓":"韩","韜":"韬","韞":"韫",
+          "韻":"韵","響":"响","頁":"页","頃":"顷","項":"项","順":"顺","頌":"颂","預":"预","頑":"顽","頒":"颁",
+          "頓":"顿","頗":"颇","領":"领","頡":"颉","頰":"颊","頤":"颐","頦":"颏","頷":"颔","頸":"颈","頹":"颓",
+          "頻":"频","顆":"颗","題":"题","額":"额","顎":"颚","顏":"颜","顒":"颙","顓":"颛","顯":"显","願":"愿",
+          "顙":"颡","顛":"颠","類":"类","顢":"颟","顥":"颢","顧":"顾","顫":"颤","顰":"颦","顱":"颅","顳":"颞",
+          "顴":"颧","風":"风","颯":"飒","颱":"台","颳":"刮","颶":"飓","颼":"飕","飄":"飘","飆":"飙","飛":"飞",
+          "飢":"饥","飣":"饤","飤":"饲","飩":"饨","飪":"饪","飫":"饫","飭":"饬","飯":"饭","飲":"饮","飴":"饴",
+          "飼":"饲","飽":"饱","飾":"饰","餃":"饺","餄":"饸","餅":"饼","餉":"饷","養":"养","餌":"饵","餛":"馄",
+          "餞":"饯","餡":"馅","館":"馆","餬":"糊","餭":"饽","餮":"饕","餵":"喂","餾":"馏","餿":"馊","饃":"馍",
+          "饅":"馒","饈":"馐","饉":"馑","饊":"馓","饋":"馈","饌":"馔","饑":"饥","饒":"饶","饗":"飨","饞":"馋",
+          "饢":"馕","馭":"驭","馮":"冯","馱":"驮","馳":"驰","馴":"驯","駑":"驽","駒":"驹","駝":"驼","駟":"驷",
+          "駡":"骂","駢":"骈","駭":"骇","駮":"驳","駱":"骆","駿":"骏","騁":"骋","騏":"骐","騍":"骒","騙":"骗",
+          "騖":"骛","騠":"骝","騫":"骞","騭":"骘","騮":"骝","騰":"腾","騶":"邹","騷":"骚","騾":"骡","驀":"蓦",
+          "驁":"骜","驂":"骖","驃":"骠","驄":"骢","驅":"驱","驊":"骅","驌":"骕","驍":"骁","驕":"骄","驚":"惊",
+          "驛":"驿","驟":"骤","驢":"驴","驤":"骧","驥":"骥","驪":"骊","骯":"肮","骰":"骰","骸":"骸","骼":"骼",
+          "髀":"髀","髁":"髁","髏":"髅","髒":"脏","髕":"髌","髖":"髋","髮":"发","鬍":"胡","鬢":"鬓","鬣":"鬣",
+          "鬥":"斗","鬧":"闹","鬨":"哄","鬩":"阋","鬱":"郁","魚":"鱼","魯":"鲁","魴":"鲂","魷":"鱿","鮁":"鲅",
+          "鮃":"鲆","鮎":"鲶","鮐":"鲐","鮑":"鲍","鮒":"鲋","鮫":"鲛","鮭":"鲑","鮮":"鲜","鯉":"鲤","鯊":"鲨",
+          "鯛":"鲷","鯡":"鲱","鯢":"鲵","鯤":"鲲","鯧":"鲳","鯨":"鲸","鯪":"鲮","鯰":"鲶","鯽":"鲫","鯿":"鳊",
+          "鰂":"鲫","鰆":"鳈","鰈":"鲽","鰉":"鳇","鰍":"鳅","鰏":"鲏","鰐":"鳄","鰓":"鳃","鰟":"鳑","鰠":"鳋",
+          "鰣":"鲥","鰤":"鲔","鰥":"鳏","鰨":"鳎","鰩":"鳐","鰭":"鳍","鰯":"鳂","鰱":"鲢","鰲":"鳌","鰳":"鳓",
+          "鰵":"鳘","鰷":"鲦","鰹":"鲣","鰻":"鳗","鰼":"鳙","鰾":"鳔","鱈":"鳕","鱉":"鳖","鱒":"鳟","鱔":"鳝",
+          "鱖":"鳜","鱗":"鳞","鱘":"鲟","鱠":"鲙","鱧":"鳢","鱨":"鲿","鱭":"鲚","鱯":"鳠","鱸":"鲈","鱺":"鲡",
+          "鳥":"鸟","鳧":"凫","鳩":"鸠","鳴":"鸣","鳶":"鸢","鴆":"鸩","鴇":"鸨","鴈":"雁","鴉":"鸦","鴎":"鸥",
+          "鴒":"鸰","鴕":"鸵","鴛":"鸳","鴞":"鸮","鴟":"鸱","鴣":"鸪","鴥":"鸽","鴦":"鸯","鴨":"鸭","鴫":"鸿",
+          "鴬":"莺","鴯":"鸸","鴰":"鸹","鴻":"鸿","鴿":"鸽","鵀":"鹅","鵃":"鸨","鵄":"鸱","鵑":"鹃","鵒":"鹆",
+          "鵓":"鹁","鵝":"鹅","鵠":"鹄","鵡":"鹉","鵪":"鹌","鵬":"鹏","鵯":"鹎","鵰":"雕","鵲":"鹊","鵶":"鸦",
+          "鵷":"鸳","鵜":"鹈","鶉":"鹑","鶊":"鹍","鶑":"莺","鶒":"鸧","鶖":"鹙","鶘":"鹕","鶚":"鹗","鶡":"鹖",
+          "鶤":"鹍","鶩":"鹜","鶯":"莺","鶴":"鹤","鶵":"雏","鶻":"鹘","鶼":"鹣","鷂":"鹞","鷄":"鸡","鷓":"鹧",
+          "鷗":"鸥","鷙":"鸷","鷥":"鸶","鷦":"鹪","鷯":"鹩","鷰":"燕","鷲":"鹫","鷳":"鹇","鷸":"鹬","鷹":"鹰",
+          "鷺":"鹭","鸇":"鹯","鸌":"鹱","鸕":"鸬","鸚":"鹦","鸛":"鹳","鸝":"鹂","鸞":"鸾","鹵":"卤","鹹":"咸",
+          "鹼":"碱","鹽":"盐","麗":"丽","麥":"麦","麵":"面","黃":"黄","黨":"党","黴":"霉","黽":"黾","鼂":"鼂",
+          "鼄":"鼄","鼅":"鼅","鼇":"鳌","鼈":"鳖","鼉":"鼍","鼩":"鼩","鼬":"鼬","齊":"齐","齋":"斋","齏":"齑",
+          "齜":"齜","齟":"龃","齠":"龆","齡":"龄","齣":"出","齦":"龈","齧":"啮","齪":"龊","齬":"龉","齲":"龋"
+        };
+        function toSimplified(text){
+          return String(text == null ? "" : text).replace(/./g, function(c){
+            return SIMP_MAP[c] || c;
           });
         }
         var toastTimer = null;
@@ -990,6 +1368,45 @@
         }
         var ICON_SPARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>';
         var ICON_CHECK_CIRCLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+        var ICON_WARN_TRI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
+        function fmtW(v){
+          if (!isFinite(v)) return "—";
+          return v < 0.1 ? String(parseFloat(v.toFixed(4))) : fmt2(v);
+        }
+        function nearestRefSingle(w, h){
+          var area = w * h, best = null;
+          function consider(rw, rh, s, label){
+            if (!isFinite(s) || s <= 0) return;
+            if (rw === w && rh === h) return;
+            var d = Math.abs(rw * rh - area) / area;
+            if (!best || d < best.d) best = {d:d, w:rw, h:rh, s:s, label:label};
+          }
+          rows.forEach(function(r){ consider(r.w, r.h, compute(r).single, "對照表"); });
+          PRODUCT_DB.forEach(function(p){ var sp = sizeParts(p.size); consider(sp.w, sp.h, p.weight, "定價資料庫"); });
+          return best;
+        }
+        function updateWeightCheck(r, c){
+          var box = $("weightCheck");
+          if (!box) return;
+          if (!isFinite(r.w) || !isFinite(r.h) || !(r.w > 0) || !(r.h > 0) || !isFinite(c.single) || !(c.single > 0)){
+            box.hidden = true;
+            box.innerHTML = "";
+            return;
+          }
+          var ref = nearestRefSingle(r.w, r.h);
+          if (!ref){ box.hidden = true; box.innerHTML = ""; return; }
+          var ratio = c.single / ref.s;
+          var refHtml = "比對參考：面積最接近的 <b>" + esc(fmtDim(ref.w)) + " × " + esc(fmtDim(ref.h)) + "</b>（面積 " + esc(fmtDim(ref.w * ref.h)) + " cm² · " + esc(ref.label) + "）單張約 <b>" + esc(fmtW(ref.s)) + "g</b>，你這筆單張 <b>" + esc(fmtW(c.single)) + "g</b>";
+          box.hidden = false;
+          if (ratio >= 2 || ratio <= 0.5){
+            var times = ratio >= 2 ? ratio : 1 / ratio;
+            box.className = "weight-check warn";
+            box.innerHTML = ICON_WARN_TRI + "<span>" + refHtml + "，相差約 <b>" + esc(times.toFixed(1)) + " 倍</b>，差距很大 — 秤的張數或重量可能輸入錯了，先確認再加入對照表。</span>";
+          } else {
+            box.className = "weight-check ok";
+            box.innerHTML = ICON_CHECK_CIRCLE + "<span>" + refHtml + "，差距不大。</span>";
+          }
+        }
         function updateAddState(r, c){
           var btn = $("btnAdd");
           var badge = $("addNewBadge");
@@ -1050,7 +1467,7 @@
             $("resNote").textContent = "還沒填實測，先用單張重量自動換算。";
             $("resSource").textContent = isFinite(c.converted) ? "自動換算" : "—";
           }
-          $("resSingle").textContent = isFinite(c.single) ? fmt2(c.single) + "g" : "—";
+          $("resSingle").textContent = isFinite(c.single) ? fmtW(c.single) + "g" : "—";
           $("resCoef").textContent = fmt2(c.coef);
           $("resTheory").textContent = isFinite(c.theory) ? fmtInt(c.theory) + " 張" : "—";
           $("resConverted").textContent = isFinite(c.converted) ? fmtInt(c.converted) + " 張" : "—";
@@ -1062,6 +1479,7 @@
           }
           $("coefMarker").style.left = pct + "%";
           $("coefMarkerLabel").textContent = fmt2(c.coef);
+          updateWeightCheck(r, c);
           markActiveQuick(r);
           updateAddState(r, c);
         }
@@ -1123,6 +1541,7 @@
           }
         }
 
+        var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
         var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
         var ICON_PRICE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
         var ICON_LOAD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>';
@@ -1162,9 +1581,10 @@
           order.forEach(function(i){
             var r = rows[i];
             var c = compute(r);
-            qh += '<button type="button" class="quick" data-idx="' + i + '">' +
+            qh += '<div class="quick" data-idx="' + i + '">' +
                   '<div class="qs">' + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + '</div>' +
-                  '<div class="qn">約 ' + esc(fmtInt(c.main)) + ' 張 / 包</div></button>';
+                  '<div class="qn">約 ' + esc(fmtInt(c.main)) + ' 張 / 包</div>' +
+                  '<button type="button" class="quick-del" data-del="' + i + '" aria-label="刪除 ' + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + '" title="刪除這個尺寸">' + ICON_X + '</button></div>';
           });
           $("quickGrid").innerHTML = qh || '<p class="empty-note">目前沒有任何尺寸。</p>';
 
@@ -1190,7 +1610,7 @@
                   ' · 秤重 ' + esc(fmtDim(r.count)) + ' 張共 ' + esc(fmtDim(r.total)) + 'g</div>' +
                 '<div class="row-bottom">' +
                   '<div class="row-measured"><label for="m-' + i + '">實測一包張數</label>' +
-                  '<input type="number" id="m-' + i + '" data-measured="' + i + '" inputmode="numeric" step="1" min="0" placeholder="未填" value="' + (r.measured !== null && r.measured !== undefined ? esc(fmtDim(r.measured)) : "") + '" /></div>' +
+                  '<input type="text" id="m-' + i + '" data-measured="' + i + '" inputmode="numeric" step="1" min="0" placeholder="未填" value="' + (r.measured !== null && r.measured !== undefined ? esc(fmtDim(r.measured)) : "") + '" /></div>' +
                   '<div class="row-actions">' +
                     (c.hasMeasured ? '<button type="button" class="btn small" data-act="clear" data-idx="' + i + '">清除實測</button>' : '') +
                     '<button type="button" class="btn small" data-act="copy" data-idx="' + i + '">' + ICON_COPY + '複製</button>' +
@@ -1224,6 +1644,17 @@
         updateSortUI();
 
         $("quickGrid").addEventListener("click", function(e){
+          var del = e.target.closest("[data-del]");
+          if (del){
+            var di = parseInt(del.getAttribute("data-del"), 10);
+            var dr = rows[di];
+            if (dr){
+              rows.splice(di, 1);
+              renderTable();
+              toast("已刪除 " + fmtDim(dr.w) + " × " + fmtDim(dr.h));
+            }
+            return;
+          }
           var btn = e.target.closest("[data-idx]");
           if (!btn) return;
           var r = rows[parseInt(btn.getAttribute("data-idx"), 10)];
@@ -1471,22 +1902,751 @@
           {sum:120, weight:5.184, size:"30*90", cost:0.19},
           {sum:125, weight:6.840, size:"35*90", cost:0.25}
         ];
+        var DEFAULT_SHIP_RATES = {air:13.6, sea_express:15, sea_fast:10, sea:9.5};
         var SHIP_RATES = {air:13.6, sea_express:15, sea_fast:10, sea:9.5};
         var TIERS = {standard:1.0, general:0.95, member:0.85, corporate:0.80};
 
+        /* -------- localStorage：已儲存單價 / 集運站（重新整理後保留） -------- */
+        var LS_PRICES_KEY = "pof_saved_prices_v1";
+        var LS_FWD_KEY = "pof_forwarders_v1";
+        function lsGet(key){
+          try {
+            var v = window.localStorage.getItem(key);
+            return v ? JSON.parse(v) : null;
+          } catch(e){ return null; }
+        }
+        function lsSet(key, val){
+          try { window.localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+        }
+        function fmtPriceVal(v){ return String(parseFloat(Number(v).toFixed(4))); }
+
+        /* 已儲存單價：{ "5*41": 0.035(基準單價，不含低溫膜加價), ... } */
+        var savedPrices = lsGet(LS_PRICES_KEY);
+        if (!savedPrices || typeof savedPrices !== "object" || Array.isArray(savedPrices)) savedPrices = {};
+        function getSavedPrice(size){
+          if (!size) return null;
+          var v = num(savedPrices[size]);
+          return isFinite(v) ? v : null;
+        }
+        function savedFinalPrice(size){
+          var s = getSavedPrice(size);
+          if (s === null) return null;
+          return s + (P.film === "low_temp" ? 0.025 : 0);
+        }
+
+        /* 集運站：{ list:[{id,name,contact,phone,rates:{air,sea_express,sea_fast,sea},address,
+             airFoodRate,airDeliveryFee,airFreeThreshold,foodDeliveryFee,seaMinKg,seaQuoteOnly,note}], selectedId }
+           條件欄位是後來加的：舊資料沒有就給 null／空字串，不解析、不改寫使用者已存的費率與地址 */
+        function optNum(v){
+          var n = num(v);
+          return isFinite(n) && n >= 0 ? n : null;
+        }
+        /* 空運站點費率清單：[{station,type,price,transit,note,deliveryFee,deliveryThreshold}]，沒有就回空陣列 */
+        function saneAirOptions(v){
+          if (!Array.isArray(v)) return [];
+          var out = [];
+          v.forEach(function(o){
+            if (!o || typeof o !== "object") return;
+            var price = optNum(o.price);
+            if (price === null) return;
+            out.push({
+              station: String(o.station || ""),
+              type: String(o.type || ""),
+              price: price,
+              transit: String(o.transit || ""),
+              note: String(o.note || ""),
+              deliveryFee: optNum(o.deliveryFee),
+              deliveryThreshold: optNum(o.deliveryThreshold)
+            });
+          });
+          return out;
+        }
+        /* 海快品類費率清單：[{category,price}]，沒有就回空陣列 */
+        function saneSeaFastCats(v){
+          if (!Array.isArray(v)) return [];
+          var out = [];
+          v.forEach(function(o){
+            if (!o || typeof o !== "object") return;
+            var price = optNum(o.price);
+            if (price === null) return;
+            out.push({category: String(o.category || ""), price: price});
+          });
+          return out;
+        }
+        function fwdAirOptions(f){ return f ? saneAirOptions(f.airOptions) : []; }
+        function fwdSeaFastCats(f){ return f ? saneSeaFastCats(f.seaFastOptions) : []; }
+        function blankCond(){
+          return {airFoodRate:null, airDeliveryFee:null, airFreeThreshold:null,
+                  foodDeliveryFee:null, seaMinKg:null, seaQuoteOnly:false, note:""};
+        }
+        function defaultForwarders(){
+          return [Object.assign({id:"fwd-default", name:"預設集運", contact:"", phone:"", recipient:"", postalCode:"",
+                   rates:{air:13.6, sea_express:15, sea_fast:10, sea:9.5}, address:"", markupNote:false,
+                   airOptions:[], seaFastOptions:[], seaFastCustomsFee:null, seaFastOpFee:null}, blankCond())];
+        }
+        function saneRates(r){
+          r = r || {};
+          /* 費率存成 null 代表「沒有費率」（例如海運看貨報價），要原樣保留，不要補上預設假數字 */
+          function rv(k){ if (r[k] === null) return null; var v = num(r[k]); return isFinite(v) && v >= 0 ? v : DEFAULT_SHIP_RATES[k]; }
+          return {air:rv("air"), sea_express:rv("sea_express"), sea_fast:rv("sea_fast"), sea:rv("sea")};
+        }
+        var forwarders = defaultForwarders();
+        var activeFwdId = "fwd-default";
+        (function loadForwarders(){
+          var data = lsGet(LS_FWD_KEY);
+          if (data && Array.isArray(data.list) && data.list.length){
+            var list = [];
+            data.list.forEach(function(f, i){
+              if (!f || typeof f !== "object") return;
+              list.push(Object.assign({
+                id: String(f.id || ("fwd-" + i)),
+                name: String(f.name || "集運站 " + (i + 1)),
+                contact: String(f.contact || ""),
+                phone: String(f.phone || ""),
+                recipient: String(f.recipient || ""),
+                postalCode: String(f.postalCode || ""),
+                rates: saneRates(f.rates),
+                address: String(f.address || ""),
+                markupNote: !!f.markupNote,
+                markupText: String(f.markupText || ""),
+                airOptions: saneAirOptions(f.airOptions),
+                seaFastOptions: saneSeaFastCats(f.seaFastOptions),
+                seaFastCustomsFee: optNum(f.seaFastCustomsFee),
+                seaFastOpFee: optNum(f.seaFastOpFee)
+              }, {
+                airFoodRate: optNum(f.airFoodRate),
+                airDeliveryFee: optNum(f.airDeliveryFee),
+                airFreeThreshold: optNum(f.airFreeThreshold),
+                foodDeliveryFee: optNum(f.foodDeliveryFee),
+                seaMinKg: optNum(f.seaMinKg),
+                seaQuoteOnly: !!f.seaQuoteOnly,
+                note: String(f.note || "")
+              }));
+            });
+            if (list.length){
+              forwarders = list;
+              activeFwdId = list[0].id;
+              for (var i = 0; i < list.length; i++){
+                if (list[i].id === data.selectedId){ activeFwdId = data.selectedId; break; }
+              }
+            }
+          }
+        })();
+        function activeForwarder(){
+          for (var i = 0; i < forwarders.length; i++){
+            if (forwarders[i].id === activeFwdId) return forwarders[i];
+          }
+          return forwarders[0] || null;
+        }
+        function currentShipRates(){
+          var f = activeForwarder();
+          return f ? f.rates : DEFAULT_SHIP_RATES;
+        }
+        function persistForwarders(){
+          lsSet(LS_FWD_KEY, {list: forwarders, selectedId: activeFwdId});
+        }
+
+        /* -------- 內建種子：冠婕丹丹（使用者 2026-11-13 直接提供的資料） --------
+           費率已含每公斤 +0.6 元加價：海快 9→9.6、空運普貨 13→13.6、空運食品 23→23.6；
+           海特這次沒給報價，沿用 15；海運看貨報價，費率留空不用假數字。
+           使用者已存的集運站在他瀏覽器的 localStorage，改版碰不到，所以載入時做一次性合併：
+           名字是「冠婕丹舟」或「冠婕丹丹」的就更新成種子值（名稱統一為冠婕丹丹），沒有就新增一家。
+           用版本旗標記住已合併過，之後使用者在頁面上自己改的優先，不會每次載入都被覆寫。 */
+        var LS_FWD_SEED_KEY = "pof_fwd_seed_guanjie_v1";
+        (function seedGuanjie(){
+          if (lsGet(LS_FWD_SEED_KEY)) return;
+          var seedRates = {air:13.6, sea_express:15, sea_fast:9.6, sea:null};
+          var seedCond = {airFoodRate:23.6, airDeliveryFee:20, airFreeThreshold:10,
+                          foodDeliveryFee:18, seaMinKg:200, seaQuoteOnly:true};
+          var seedAddr = "廣東省深圳市寶安區福海街道悅盛三路新興工業園八區3號101倉庫";
+          var idx = -1;
+          for (var i = 0; i < forwarders.length; i++){
+            if (forwarders[i].name === "冠婕丹舟" || forwarders[i].name === "冠婕丹丹"){ idx = i; break; }
+          }
+          if (idx >= 0){
+            var f = forwarders[idx];
+            f.name = "冠婕丹丹";
+            f.rates = seedRates;
+            Object.assign(f, seedCond);
+            f.phone = "15080909242";
+            f.address = seedAddr;
+            f.postalCode = "518103";
+            f.recipient = "";
+            if (!f.contact) f.contact = "羅丹丹轉冠冠";
+            f.markupNote = true;
+            activeFwdId = f.id;
+          } else {
+            var nf = Object.assign({
+              id: "fwd-guanjie", name: "冠婕丹丹", contact: "羅丹丹轉冠冠", phone: "15080909242",
+              recipient: "", postalCode: "518103", rates: seedRates, address: seedAddr, markupNote: true, note: ""
+            }, seedCond);
+            forwarders.push(nf);
+            activeFwdId = nf.id;
+          }
+          persistForwarders();
+          lsSet(LS_FWD_SEED_KEY, 1);
+        })();
+
+        /* -------- 內建種子：締惠盛合（使用者 2026-11-13 提供的兩張費率表） --------
+           每公斤報價一律 +0.6 元後存入（空運 21→21.6、22→22.6、20→20.6、23→23.6、32→32.6；
+           海快 8→8.6、8.5→9.1、7→7.6）；報關費 300/票與操作費 0.8/kg 不加。
+           廣州普通食品表格有價（22 元、4–5 天），照樣 +0.6 存入並列入空運選項。
+           海特、海運這次沒給，費率留空（null），不用假數字。地址／電話／聯絡人／收件人／郵編待補。
+           一次性合併：已有同名就更新，沒有就新增；之後使用者自己改的優先。 */
+        var LS_FWD_SEED2_KEY = "pof_fwd_seed_dihui_v2";
+        (function seedDihui(){
+          if (lsGet(LS_FWD_SEED2_KEY)) return;
+          var airOptions = [
+            {station:"廣州", type:"正常航班・普貨", price:21.6, transit:"2–3 天",
+             note:"普貨，可走大陸正式報關；粉末／液體／電池不能出", deliveryFee:null, deliveryThreshold:null},
+            {station:"廣州", type:"普通食品", price:22.6, transit:"4–5 天",
+             note:"普通食品，出貨前先詢問空運小組是否能出；丟貨扣貨運費兩倍理賠", deliveryFee:20, deliveryThreshold:10},
+            {station:"義烏", type:"正常航班・普貨", price:20.6, transit:"3–5 天",
+             note:"普貨；粉末／液體／電池不能出", deliveryFee:null, deliveryThreshold:null},
+            {station:"廈門", type:"食品航線・普貨", price:23.6, transit:"4–5 天",
+             note:"辣條／火鍋底料／糖果／餅乾／紅棗／花椒／花生等各種食品", deliveryFee:20, deliveryThreshold:10},
+            {station:"廈門", type:"食品航線・特貨", price:32.6, transit:"4–5 天",
+             note:"螺螄粉（有限制，大批量出的先諮詢）", deliveryFee:20, deliveryThreshold:10}
+          ];
+          var seaFastOptions = [
+            {category:"普貨包稅／鞋子類", price:8.6},
+            {category:"插電類／紡織類／汽配類", price:9.1},
+            {category:"不包稅（任何貨物）", price:7.6}
+          ];
+          var seedNote = "廣州普通食品（22→22.6 元/kg，4–5 天）：出貨前先詢問空運小組是否能出；一票不足10公斤加20元人民幣派送費；丟貨扣貨運費兩倍理賠。\n" +
+            "廈門食品線：蛋類、肉類、活鮮、動物／植物／藥品等不接；所有食品必須獨立包裝，散裝不接；只能起付，不發到付；一票不足10公斤收20元派送費（不是單件）；出貨前先諮詢空運小組是否能出。\n" +
+            "海快：裝櫃每天，截單 15:00；大陸海快出口正式報關費 300元/票、操作費 0.8元/公斤（已計入成本）。\n" +
+            "費率表：空運 2026-10-19 起、海快 2026-08-15 起；每公斤報價已 +0.6 元存入（報關費與操作費不加）。海特、海運費率待補。";
+          var idx = -1;
+          for (var i = 0; i < forwarders.length; i++){
+            if (forwarders[i].name === "締惠盛合"){ idx = i; break; }
+          }
+          if (idx >= 0){
+            var f = forwarders[idx];
+            f.airOptions = airOptions;
+            f.seaFastOptions = seaFastOptions;
+            f.seaFastCustomsFee = 300;
+            f.seaFastOpFee = 0.8;
+            f.rates = {air:21.6, sea_express:null, sea_fast:8.6, sea:null};
+            /* v1 種子留下的舊備註寫著廣州食品「價格待確認」，與新增的 22.6 選項矛盾，整段換成新備註 */
+            if (!f.note || f.note.indexOf("價格待確認") !== -1) f.note = seedNote;
+          } else {
+            forwarders.push(Object.assign({
+              id: "fwd-dihui", name: "締惠盛合", contact: "", phone: "",
+              recipient: "", postalCode: "", rates: {air:21.6, sea_express:null, sea_fast:8.6, sea:null},
+              address: "", markupNote: false,
+              airOptions: airOptions, seaFastOptions: seaFastOptions,
+              seaFastCustomsFee: 300, seaFastOpFee: 0.8, note: seedNote
+            }, blankCond()));
+          }
+          persistForwarders();
+          lsSet(LS_FWD_SEED2_KEY, 1);
+        })();
+
+        /* -------- 內建種子：補上締惠盛合聯絡資料（使用者 2026-11-16 提供） --------
+           一次性合併：只填目前空白的欄位，不改寫使用者已填的其他資料；
+           郵編使用者留空，維持空白待補，不猜。 */
+        var LS_FWD_SEED4_KEY = "pof_fwd_seed_dihui_contact_v1";
+        (function seedDihuiContact(){
+          if (lsGet(LS_FWD_SEED4_KEY)) return;
+          for (var i = 0; i < forwarders.length; i++){
+            var f = forwarders[i];
+            if (f.name !== "締惠盛合") continue;
+            if (!f.recipient || !String(f.recipient).trim()) f.recipient = "冠冠62127";
+            if (!f.phone || !String(f.phone).trim()) f.phone = "13533555010";
+            if (!f.address || !String(f.address).trim()) f.address = "广东省 广州市 白云区 均禾街道罗岗村耙田头路12号A102-62127 冠转高稳";
+          }
+          persistForwarders();
+          lsSet(LS_FWD_SEED4_KEY, 1);
+        })();
+
+        /* -------- 內建種子：新遞國際（使用者 2026-11-16 提供的價目表） --------
+           每公斤報價一律 +0.6 元後存入（空運 25→25.6、食品 35→35.6、義烏普貨 21→21.6；
+           海快包稅 8.5→9.1、不包稅 7.5→8.1；漳州包稅 8→8.6、不包稅 7→7.6）；派送費 20 不加。
+           空運不足 10 公斤加收 20 元派件費（沿用站點費率的派送費邏輯）。
+           海特沒給，費率留空；海運另外詢價（看貨報價、費率留空）。
+           台灣段由新竹物流派件。地址／電話／聯絡人／收件人／郵編待補。
+           一次性合併：已有同名就更新費率清單，沒有就新增；之後使用者自己改的優先。 */
+        var LS_FWD_SEED3_KEY = "pof_fwd_seed_xindi_v1";
+        (function seedXindi(){
+          if (lsGet(LS_FWD_SEED3_KEY)) return;
+          var airOptions = [
+            {station:"廣州、深圳", type:"不分普特貨", price:25.6, transit:"3–5 天",
+             note:"包稅；食品等特殊物品除外", deliveryFee:20, deliveryThreshold:10},
+            {station:"廣州、深圳", type:"食品", price:35.6, transit:"3–5 天",
+             note:"包稅", deliveryFee:20, deliveryThreshold:10},
+            {station:"義烏", type:"只能發普貨", price:21.6, transit:"3–5 天",
+             note:"包稅；只能發普貨", deliveryFee:20, deliveryThreshold:10}
+          ];
+          var seaFastOptions = [
+            {category:"義烏/深圳/廣州・包稅（5–7天）", price:9.1},
+            {category:"義烏/深圳/廣州・不包稅（5–7天）", price:8.1},
+            {category:"漳州・包稅（5天左右）", price:8.6},
+            {category:"漳州・不包稅（5天左右，不可走海運）", price:7.6}
+          ];
+          var seedMarkup = "費率已含 +0.6 元/kg 加價（空運 25→25.6、食品 35→35.6、義烏普貨 21→21.6；海快包稅 8.5→9.1、不包稅 7.5→8.1；漳州包稅 8→8.6、不包稅 7→7.6）。";
+          var seedNote = "台灣段由新竹物流派件。空運不足 10 公斤加收 20 元派件費（已計入成本）。海運另外詢價；漳州海快不可走海運。海特費率待補；地址、電話、收件人、郵編待補。";
+          var idx = -1;
+          for (var i = 0; i < forwarders.length; i++){
+            if (forwarders[i].name === "新遞國際"){ idx = i; break; }
+          }
+          if (idx >= 0){
+            var f = forwarders[idx];
+            f.airOptions = airOptions;
+            f.seaFastOptions = seaFastOptions;
+            f.rates = {air:25.6, sea_express:null, sea_fast:9.1, sea:null};
+            f.seaQuoteOnly = true;
+            f.markupNote = true;
+            f.markupText = seedMarkup;
+            if (!f.note || !String(f.note).trim()) f.note = seedNote;
+          } else {
+            forwarders.push(Object.assign(Object.assign({}, blankCond(), {seaQuoteOnly:true}), {
+              id: "fwd-xindi", name: "新遞國際", contact: "", phone: "",
+              recipient: "", postalCode: "", rates: {air:25.6, sea_express:null, sea_fast:9.1, sea:null},
+              address: "", markupNote: true, markupText: seedMarkup,
+              airOptions: airOptions, seaFastOptions: seaFastOptions,
+              seaFastCustomsFee: null, seaFastOpFee: null, note: seedNote
+            }));
+          }
+          persistForwarders();
+          lsSet(LS_FWD_SEED3_KEY, 1);
+        })();
+
         var P = {
           size: "", film: "standard", rmbBase: 0.5, weight: 7,
-          rate: 4.6, ship: "sea_fast", totalQty: 1000,
+          rate: 4.6, ship: "sea_fast", airKind: "cargo", airOptIdx: 0, seaFastCatIdx: 0, totalQty: 1000,
           weightMode: true, packTarget: 500, sellQty: 71,
-          margin: 20, basePrice: 250,
+          margin: 35, basePrice: 250,
           fee: 8.5, tax: 5, includeTax: true, localShip: 60,
           tier: "standard"
         };
 
         function finalRmb(){ return P.rmbBase + (P.film === "low_temp" ? 0.025 : 0); }
 
+        /* -------- auto-fill source tags (單價 / 單重 來源提示) -------- */
+        function setSrcTag(id, kind, text){
+          var el = $(id);
+          if (!el) return;
+          var item = $(id + "Item");
+          if (!text){
+            el.textContent = "";
+            if (item) item.hidden = true;
+            return;
+          }
+          el.className = "src-tag " + kind;
+          el.textContent = text;
+          if (item) item.hidden = false;
+        }
+        function flashInput(el){
+          if (!el) return;
+          el.classList.remove("just-filled");
+          void el.offsetWidth;
+          el.classList.add("just-filled");
+        }
+        function dispSize(sizeStr){ return String(sizeStr).replace("*", " × "); }
+
+        /* -------- 儲存單價：按鈕狀態 / 帶入 -------- */
+        function updateSavePriceUI(){
+          var btn = $("btnSavePrice"), clear = $("btnClearPrice"), note = $("priceSaveNote");
+          if (!btn) return;
+          var size = P.size;
+          var cur = num($("pRmb").value);
+          if (!size){
+            btn.disabled = true;
+            btn.textContent = "儲存單價";
+            clear.hidden = true;
+            note.className = "price-save-note";
+            note.textContent = "先選擇尺寸，才能儲存這個尺寸的單價。";
+            return;
+          }
+          var savedFin = savedFinalPrice(size);
+          if (savedFin === null){
+            btn.textContent = "儲存單價";
+            btn.disabled = !isFinite(cur);
+            clear.hidden = true;
+            note.className = "price-save-note";
+            note.textContent = "這個尺寸還沒有儲存過單價，填好按「儲存單價」就會記住。";
+            return;
+          }
+          clear.hidden = false;
+          var dirty = isFinite(cur) && Math.abs(cur - savedFin) > 1e-9;
+          btn.textContent = dirty ? "更新單價" : "已儲存";
+          btn.disabled = !dirty;
+          note.className = "price-save-note is-saved";
+          note.textContent = dirty
+            ? "已儲存 ¥" + fmtPriceVal(savedFin) + "，欄位已改成 ¥" + fmtPriceVal(cur) + "，按「更新單價」覆蓋。"
+            : "已儲存：" + dispSize(size) + " 單價 ¥" + fmtPriceVal(savedFin) + "，下次選到會自動帶入。";
+        }
+        /* 有已儲存單價就覆蓋目前單價並改來源標籤；回傳是否帶入 */
+        function applySavedPrice(){
+          var saved = getSavedPrice(P.size);
+          if (saved === null) return false;
+          P.rmbBase = saved;
+          setSrcTag("pRmbSrc", "saved", "由已儲存單價帶入（" + dispSize(P.size) + "）");
+          flashInput($("pRmb"));
+          return true;
+        }
+
+        /* -------- 集運站：條件摘要（結構化顯示，不再塞進地址） -------- */
+        function fwdHasCond(f){
+          return !!f && (typeof f.airFoodRate === "number" || typeof f.airDeliveryFee === "number" ||
+            typeof f.airFreeThreshold === "number" || typeof f.foodDeliveryFee === "number" ||
+            typeof f.seaMinKg === "number" || f.seaQuoteOnly || f.markupNote ||
+            fwdAirOptions(f).length > 0 || fwdSeaFastCats(f).length > 0 ||
+            typeof f.seaFastCustomsFee === "number" || typeof f.seaFastOpFee === "number" ||
+            (f.note && f.note.trim()));
+        }
+        function fwdCondSummary(f){
+          if (!f) return "";
+          var r = f.rates;
+          var parts = [];
+          var airOpts = fwdAirOptions(f);
+          if (airOpts.length){
+            parts.push("空運（依站點）：" + airOpts.map(function(o){
+              return o.station + " " + o.type + " ¥" + fmtPriceVal(o.price) + "/kg" + (o.transit ? "（" + o.transit + "）" : "");
+            }).join("、"));
+          } else {
+            var air = "空運普貨 ¥" + fmtPriceVal(r.air) + "/kg";
+            if (typeof f.airFreeThreshold === "number" && typeof f.airDeliveryFee === "number"){
+              air += "，未滿 " + fmtDim(f.airFreeThreshold) + "kg +¥" + fmtPriceVal(f.airDeliveryFee) + " 派送費";
+            } else if (typeof f.airDeliveryFee === "number"){
+              air += "，派送費 ¥" + fmtPriceVal(f.airDeliveryFee) + "/票";
+            }
+            parts.push(air);
+            if (typeof f.airFoodRate === "number"){
+              var food = "食品 ¥" + fmtPriceVal(f.airFoodRate) + "/kg";
+              if (typeof f.foodDeliveryFee === "number") food += "，+¥" + fmtPriceVal(f.foodDeliveryFee) + "/票";
+              parts.push(food);
+            }
+          }
+          if (typeof r.sea_express === "number") parts.push("海特 ¥" + fmtPriceVal(r.sea_express) + "/kg");
+          var seaCats = fwdSeaFastCats(f);
+          if (seaCats.length){
+            var sf = "海快（依品類）：" + seaCats.map(function(c){
+              return c.category + " ¥" + fmtPriceVal(c.price) + "/kg";
+            }).join("、");
+            if (typeof f.seaFastCustomsFee === "number") sf += "，另加報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票";
+            if (typeof f.seaFastOpFee === "number") sf += "＋操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg";
+            parts.push(sf);
+          } else if (typeof r.sea_fast === "number"){
+            parts.push("海快 ¥" + fmtPriceVal(r.sea_fast) + "/kg");
+          }
+          var sea = f.seaQuoteOnly ? "海運看貨報價" : (typeof r.sea === "number" ? "海運 ¥" + fmtPriceVal(r.sea) + "/kg" : "海運未設定費率");
+          if (typeof f.seaMinKg === "number") sea += "，最低 " + fmtDim(f.seaMinKg) + "kg 起";
+          parts.push(sea);
+          return parts.join("／");
+        }
+        /* 目前有效的空運／海快單價（有清單時跟著所選站點／品類走） */
+        function effectiveAirOptAt(f, idx){
+          var opts = fwdAirOptions(f);
+          if (!opts.length) return null;
+          var i = Math.min(Math.max(idx || 0, 0), opts.length - 1);
+          return opts[i];
+        }
+        function effectiveAirOpt(f){ return effectiveAirOptAt(f, P.airOptIdx); }
+        function effectiveSeaFastCatAt(f, idx){
+          var cats = fwdSeaFastCats(f);
+          if (!cats.length) return null;
+          var i = Math.min(Math.max(idx || 0, 0), cats.length - 1);
+          return cats[i];
+        }
+        function effectiveSeaFastCat(f){ return effectiveSeaFastCatAt(f, P.seaFastCatIdx); }
+
+        /* -------- 集運站：渲染選擇器 / 費率 / 地址 -------- */
+        function renderForwarders(){
+          var sel = $("fwdSelect");
+          if (!sel) return;
+          var html = "";
+          forwarders.forEach(function(f){
+            html += '<option value="' + esc(f.id) + '">' + esc(f.name) + "</option>";
+          });
+          sel.innerHTML = html;
+          sel.value = activeFwdId;
+          SHIP_RATES = currentShipRates();
+          var f0 = activeForwarder();
+          document.querySelectorAll("#shipGrid .ship-btn").forEach(function(b){
+            var sr = b.querySelector(".sr");
+            if (!sr) return;
+            var key = b.getAttribute("data-ship");
+            /* 海運勾了看貨報價就不要顯示假費率，副標改「待人工報價」；取消勾選才恢復已存費率 */
+            if (key === "sea" && f0 && f0.seaQuoteOnly){
+              sr.textContent = "待人工報價";
+              return;
+            }
+            /* 有站點／品類清單時，副標跟著目前所選的那一筆走 */
+            if (key === "air" && f0 && effectiveAirOpt(f0)){
+              sr.textContent = "¥" + fmtPriceVal(effectiveAirOpt(f0).price);
+              return;
+            }
+            if (key === "sea_fast" && f0 && effectiveSeaFastCat(f0)){
+              sr.textContent = "¥" + fmtPriceVal(effectiveSeaFastCat(f0).price);
+              return;
+            }
+            var rv = SHIP_RATES[key];
+            sr.textContent = (typeof rv === "number") ? "¥" + fmtPriceVal(rv) : "未設定";
+          });
+          var f = activeForwarder();
+          /* 條件摘要：有填條件才顯示結構化摘要（含備註），沒填就提示去編輯補上 */
+          var condText = $("fwdCondText");
+          if (f && fwdHasCond(f)){
+            condText.className = "fwd-cond-text";
+            condText.innerHTML = esc(fwdCondSummary(f)) +
+              (f.markupNote ? '<span class="cn">' + esc(f.markupText || "費率已含 +0.6 元/kg 加價（海快 9→9.6、空運普貨 13→13.6、空運食品 23→23.6）。") + "</span>" : "") +
+              (f.note && f.note.trim() ? '<span class="cn">備註：' + esc(f.note.trim()) + "</span>" : "");
+          } else {
+            condText.className = "fwd-cond-text is-empty";
+            condText.textContent = "尚未填寫運送條件，按上方「編輯」補上（派送費、最低公斤數等）。";
+          }
+          var addr = f && f.address ? f.address.trim() : "";
+          var contactLine = $("fwdContactLine");
+          var cParts = [];
+          if (f && f.contact && f.contact.trim()) cParts.push("聯絡人：" + f.contact.trim());
+          if (f && f.phone && f.phone.trim()) cParts.push("電話：" + f.phone.trim());
+          if (f && f.recipient && f.recipient.trim()) cParts.push("收件人：" + f.recipient.trim());
+          if (f && f.postalCode && f.postalCode.trim()) cParts.push("郵編：" + f.postalCode.trim());
+          contactLine.hidden = !cParts.length;
+          contactLine.textContent = cParts.join(" · ");
+          var addrText = $("fwdAddrText");
+          addrText.textContent = addr || "尚未填寫地址，按上方「編輯」補上。";
+          addrText.classList.toggle("is-empty", !addr);
+          $("fwdAddrTitle").textContent = f ? f.name + " · 集運地址" : "集運地址";
+          $("btnCopyAddr").disabled = !addr && !cParts.length;
+          $("btnFwdDel").disabled = forwarders.length <= 1;
+          $("btnFwdEdit").disabled = !f;
+          /* 每家集運站專屬配色：色點、條件／地址卡片底色與邊框、物流區強調色跟著目前這家走 */
+          var col = fwdColor(f);
+          var dot = $("fwdDot");
+          if (dot) dot.style.background = col.main;
+          var card = $("fwdSelect").closest(".card");
+          if (card){
+            card.style.setProperty("--fwd", col.main);
+            card.style.setProperty("--fwd-soft", col.soft);
+            card.style.setProperty("--fwd-ink", col.ink);
+          }
+          var condBox = $("fwdCondBox");
+          if (condBox){ condBox.style.background = col.soft; condBox.style.borderColor = col.main; }
+          var addrBox = $("fwdAddrBox");
+          if (addrBox){ addrBox.style.background = col.soft; addrBox.style.borderColor = col.main; }
+          var addrTitle = $("fwdAddrTitle");
+          if (addrTitle) addrTitle.style.color = col.ink;
+          var fwdLabelSvg = document.querySelector('label[for="fwdSelect"] svg');
+          if (fwdLabelSvg) fwdLabelSvg.style.color = col.main;
+        }
+
+        /* -------- 集運站專屬配色（固定色板，依名稱／id 指派；使用者新增的依序輪替） -------- */
+        var FWD_COLOR_BY_NAME = {
+          "冠婕丹丹": {main:"#147a5c", soft:"#e3f2ea", ink:"#0d4d39"},
+          "冠婕丹舟": {main:"#147a5c", soft:"#e3f2ea", ink:"#0d4d39"},
+          "締惠盛合": {main:"#1d6fb8", soft:"#e4effa", ink:"#144a7a"},
+          "新遞國際": {main:"#c2620f", soft:"#fbeedd", ink:"#7e3f08"},
+          "預設集運": {main:"#64748b", soft:"#eef1f5", ink:"#3c4a5c"}
+        };
+        var FWD_COLOR_BY_ID = {
+          "fwd-guanjie": FWD_COLOR_BY_NAME["冠婕丹丹"],
+          "fwd-dihui": FWD_COLOR_BY_NAME["締惠盛合"],
+          "fwd-xindi": FWD_COLOR_BY_NAME["新遞國際"],
+          "fwd-default": FWD_COLOR_BY_NAME["預設集運"]
+        };
+        var FWD_COLOR_CYCLE = [
+          {main:"#0e7490", soft:"#e2f2f7", ink:"#0a4f63"},
+          {main:"#be3455", soft:"#fbe7ec", ink:"#7c1f36"},
+          {main:"#5f7a1e", soft:"#eff4dc", ink:"#3d4f12"},
+          {main:"#8a5a2b", soft:"#f6ecdd", ink:"#5c3b1a"},
+          {main:"#147a5c", soft:"#e3f2ea", ink:"#0d4d39"},
+          {main:"#1d6fb8", soft:"#e4effa", ink:"#144a7a"}
+        ];
+        function fwdColor(f){
+          if (!f) return FWD_COLOR_CYCLE[0];
+          if (FWD_COLOR_BY_NAME[f.name]) return FWD_COLOR_BY_NAME[f.name];
+          if (FWD_COLOR_BY_ID[f.id]) return FWD_COLOR_BY_ID[f.id];
+          var idx = 0;
+          for (var i = 0; i < forwarders.length; i++){
+            if (forwarders[i].id === f.id){ idx = i; break; }
+          }
+          return FWD_COLOR_CYCLE[idx % FWD_COLOR_CYCLE.length];
+        }
+
+        /* -------- 國際物流試算（含集運站條件判斷） --------
+           回傳整票（依採購總庫存的總重）的人民幣物流費，並攤回每張：
+           - 空運普貨：費率 × 總重；總重未滿免派送費門檻時，整票加一次派送費
+           - 空運食品：食品費率 × 總重；每票固定加食品派送費
+           - 海運且勾了「看貨報價」：known=false，不用假數字算，成本標註未含海運費
+           - 海特／海快／海運（未勾看貨報價）：費率 × 總重，維持原算法 */
+        function shipCalc(){ return shipCalcWith(P.ship, P.airOptIdx, P.seaFastCatIdx, P.airKind); }
+        /* 可指定物流方式／站點／品類的試算版本，供「最划算」比較逐一計算各方式總物流費；
+           shipCalc() 就是用目前選擇呼叫它，原有計算結果不變 */
+        function shipCalcWith(shipKey, airOptIdx, seaFastCatIdx, airKind){
+          var f = activeForwarder();
+          var rates = currentShipRates();
+          var totalKg = P.weight * P.totalQty / 1000;
+          var res = {known:true, totalKg:totalKg, rateUsed:0, freightRmb:0, deliveryRmb:0,
+                     customsRmb:0, opRmb:0, totalRmb:0, perSheetRmb:0, airOpt:null, seaFastCat:null};
+          if (shipKey === "sea" && f && f.seaQuoteOnly){
+            res.known = false;
+            return res;
+          }
+          /* 海運／海特費率留空（未設定）時不要用 0 元假裝免費：比照看貨報價，成本標註未含該物流費 */
+          if ((shipKey === "sea" || shipKey === "sea_express") && !(typeof rates[shipKey] === "number")){
+            res.known = false;
+            return res;
+          }
+          if (shipKey === "air"){
+            var opt = f ? effectiveAirOptAt(f, airOptIdx) : null;
+            if (opt){
+              /* 有站點清單：費率跟著所選站點／類型走，派送費按該筆自己的規則（一票未滿門檻才收） */
+              res.airOpt = opt;
+              res.rateUsed = opt.price;
+              if (typeof opt.deliveryFee === "number" && typeof opt.deliveryThreshold === "number" &&
+                  P.totalQty > 0 && totalKg > 0 && totalKg < opt.deliveryThreshold){
+                res.deliveryRmb = opt.deliveryFee;
+              }
+            } else if (airKind === "food"){
+              res.rateUsed = (f && typeof f.airFoodRate === "number") ? f.airFoodRate : rates.air;
+              if (f && typeof f.foodDeliveryFee === "number" && totalKg > 0) res.deliveryRmb = f.foodDeliveryFee;
+            } else {
+              res.rateUsed = rates.air;
+              if (f && typeof f.airFreeThreshold === "number" && f.airFreeThreshold > 0 &&
+                  typeof f.airDeliveryFee === "number" && P.totalQty > 0 && totalKg < f.airFreeThreshold){
+                res.deliveryRmb = f.airDeliveryFee;
+              }
+            }
+          } else if (shipKey === "sea_fast"){
+            var cat = f ? effectiveSeaFastCatAt(f, seaFastCatIdx) : null;
+            if (cat){
+              /* 有品類清單：品類單價 × 重量 ＋ 報關費/票 ＋ 操作費/kg，都不另加價 */
+              res.seaFastCat = cat;
+              res.rateUsed = cat.price;
+              if (f && typeof f.seaFastCustomsFee === "number" && P.totalQty > 0 && totalKg > 0){
+                res.customsRmb = f.seaFastCustomsFee;
+              }
+              if (f && typeof f.seaFastOpFee === "number"){
+                res.opRmb = totalKg * f.seaFastOpFee;
+              }
+            } else {
+              res.rateUsed = rates.sea_fast || 0;
+            }
+          } else {
+            res.rateUsed = rates[shipKey] || 0;
+          }
+          res.freightRmb = totalKg * res.rateUsed;
+          res.totalRmb = res.freightRmb + res.deliveryRmb + res.customsRmb + res.opRmb;
+          res.perSheetRmb = P.totalQty > 0 ? res.totalRmb / P.totalQty : (P.weight / 1000) * res.rateUsed;
+          return res;
+        }
+
+        /* -------- 「最划算」比較：目前這家集運站、用目前總重，逐一算各物流方式的總物流費 --------
+           空運有站點清單就逐站點比、沒有就比普貨（有食品價再加比食品）；海快有品類清單就逐品類比。
+           看貨報價／未設定費率／未達海運最低公斤數的方式不列入比較，改列在小結註明無法比較。 */
+        var ICON_AWARD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17.5 22l-5.5-3-5.5 3L8.5 13"/></svg>';
+        var ICON_STAR = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2.5l2.95 6.36 6.55.57-4.95 4.37 1.45 6.45L12 16.9l-6 3.35 1.45-6.45L2.5 9.43l6.55-.57z"/></svg>';
+        function shipCandidates(){
+          var f = activeForwarder();
+          var list = [], excluded = [];
+          if (!f) return {list:list, excluded:excluded};
+          var rates = f.rates;
+          var totalKg = P.weight * P.totalQty / 1000;
+          var airOpts = fwdAirOptions(f);
+          if (airOpts.length){
+            airOpts.forEach(function(o, i){
+              var r = shipCalcWith("air", i, P.seaFastCatIdx, P.airKind);
+              if (r.known) list.push({ship:"air", label:"空運（" + o.station + "・" + o.type + "）", total:r.totalRmb});
+            });
+          } else if (typeof rates.air === "number"){
+            var rc = shipCalcWith("air", 0, P.seaFastCatIdx, "cargo");
+            if (rc.known) list.push({ship:"air", label:"空運（普貨）", total:rc.totalRmb});
+            if (typeof f.airFoodRate === "number"){
+              var rf = shipCalcWith("air", 0, P.seaFastCatIdx, "food");
+              if (rf.known) list.push({ship:"air", label:"空運（食品）", total:rf.totalRmb});
+            }
+          } else {
+            excluded.push("空運未設定費率");
+          }
+          if (typeof rates.sea_express === "number"){
+            var re = shipCalcWith("sea_express", P.airOptIdx, P.seaFastCatIdx, P.airKind);
+            if (re.known) list.push({ship:"sea_express", label:"海特", total:re.totalRmb});
+          } else {
+            excluded.push("海特未設定費率");
+          }
+          var cats = fwdSeaFastCats(f);
+          if (cats.length){
+            cats.forEach(function(cat, i){
+              var r = shipCalcWith("sea_fast", P.airOptIdx, i, P.airKind);
+              if (r.known) list.push({ship:"sea_fast", label:"海快（" + cat.category + "）", total:r.totalRmb});
+            });
+          } else if (typeof rates.sea_fast === "number"){
+            var rsf = shipCalcWith("sea_fast", P.airOptIdx, P.seaFastCatIdx, P.airKind);
+            if (rsf.known) list.push({ship:"sea_fast", label:"海快", total:rsf.totalRmb});
+          } else {
+            excluded.push("海快未設定費率");
+          }
+          if (f.seaQuoteOnly){
+            excluded.push("海運待人工報價");
+          } else if (typeof rates.sea === "number"){
+            if (typeof f.seaMinKg === "number" && totalKg < f.seaMinKg){
+              excluded.push("海運未達最低 " + fmtDim(f.seaMinKg) + "kg");
+            } else {
+              var rsea = shipCalcWith("sea", P.airOptIdx, P.seaFastCatIdx, P.airKind);
+              if (rsea.known) list.push({ship:"sea", label:"海運", total:rsea.totalRmb});
+            }
+          } else {
+            excluded.push("海運未設定費率");
+          }
+          return {list:list, excluded:excluded};
+        }
+        function renderBestShip(){
+          var box = $("bestSummary");
+          if (!box) return;
+          document.querySelectorAll("#shipGrid .ship-btn").forEach(function(b){
+            var bd = b.querySelector(".best-badge");
+            if (bd) bd.remove();
+            b.classList.remove("is-best");
+          });
+          var totalKg = P.weight * P.totalQty / 1000;
+          if (!(totalKg > 0) || !(P.totalQty > 0)){ box.hidden = true; box.innerHTML = ""; return; }
+          var data = shipCandidates();
+          var kgTxt = String(parseFloat(totalKg.toFixed(2)));
+          if (!data.list.length){
+            box.hidden = false;
+            box.innerHTML = ICON_AWARD + "<span>以目前總重 <b>" + esc(kgTxt) + " kg</b> 計，這家目前沒有可比較的物流費率" +
+              (data.excluded.length ? "（" + esc(data.excluded.join("、")) + "）" : "") + "。</span>";
+            return;
+          }
+          var best = data.list[0];
+          data.list.forEach(function(x){ if (x.total < best.total - 1e-9) best = x; });
+          var btn = document.querySelector('#shipGrid .ship-btn[data-ship="' + best.ship + '"]');
+          if (btn){
+            btn.classList.add("is-best");
+            var badge = document.createElement("span");
+            badge.className = "best-badge";
+            badge.innerHTML = ICON_STAR + "最划算";
+            btn.appendChild(badge);
+          }
+          var cur = shipCalc();
+          var curTxt = "";
+          if (cur.known && cur.totalRmb - best.total > 0.005){
+            curTxt = "；目前所選方式總物流費 ¥" + fmtPriceVal(cur.totalRmb) + "，比最划算貴 ¥" + fmtPriceVal(cur.totalRmb - best.total);
+          }
+          box.hidden = false;
+          box.innerHTML = ICON_AWARD + "<span>以目前總重 <b>" + esc(kgTxt) + " kg</b> 計，這家最划算：<b>" + esc(best.label) + "</b>，總物流費 <b>¥" + esc(fmtPriceVal(best.total)) + "</b>（約 " + esc(fmtMoney(best.total * P.rate)) + "）" + esc(curTxt) +
+            (data.excluded.length ? '。<span class="best-ex">未列入比較：' + esc(data.excluded.join("、")) + "。</span>" : "。") + "</span>";
+        }
+
+        /* 單一級距的淨利試算（用目前成本參數，只換成交價折扣） */
+        function tierMargin(tier){
+          var shipRmbPerSheet = shipCalc().perSheetRmb;
+          var singleTWD = (finalRmb() + shipRmbPerSheet) * P.rate;
+          var unitCost = singleTWD * P.sellQty;
+          var effective = P.basePrice * TIERS[tier];
+          if (!(effective > 0)) return {profit: NaN, marginPct: NaN};
+          var feeAmt = effective * P.fee / 100;
+          var taxAmt = P.includeTax ? (effective / (1 + P.tax / 100)) * (P.tax / 100) : 0;
+          var profit = effective - unitCost - P.localShip - feeAmt - taxAmt;
+          return {profit: profit, marginPct: profit / effective * 100};
+        }
+
         function calcPricing(){
-          var shipRmbPerSheet = (P.weight / 1000) * SHIP_RATES[P.ship];
+          var sc = shipCalc();
+          var shipRmbPerSheet = sc.perSheetRmb;
           var singleTWD = (finalRmb() + shipRmbPerSheet) * P.rate;
           var unitCost = singleTWD * P.sellQty;
           var totalInvest = singleTWD * P.totalQty;
@@ -1503,7 +2663,7 @@
           var packs = (P.totalQty > 0 && P.sellQty > 0) ? Math.floor(P.totalQty / P.sellQty) : 0;
           var leftover = (P.totalQty > 0 && P.sellQty > 0) ? P.totalQty % P.sellQty : 0;
           return {
-            shipRmbPerSheet: shipRmbPerSheet, singleTWD: singleTWD, unitCost: unitCost,
+            shipRmbPerSheet: shipRmbPerSheet, ship: sc, singleTWD: singleTWD, unitCost: unitCost,
             totalInvest: totalInvest, hard: hard, suggested: suggested,
             effective: effective, feeAmt: feeAmt, taxAmt: taxAmt,
             profit: profit, marginPct: marginPct, packs: packs, leftover: leftover
@@ -1519,12 +2679,40 @@
           return {w: parseFloat(p[0]), h: parseFloat(p[1])};
         }
 
+        /* 搜尋正規化：全形字元（＊、ｘ、數字）先轉半形，×、x、*、空白一律視為分隔符，
+           連續分隔符合併成一個 *，查詢字與選項尺寸兩邊都用同一支函式再比對 */
+        function normSizeKey(s){
+          return String(s == null ? "" : s)
+            .replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+            .replace(/　/g, " ")
+            .toLowerCase()
+            .replace(/[\s*x×]+/g, "*")
+            .replace(/^\*+/, "")
+            .replace(/\*+$/, "");
+        }
+
+        /* 純數字查詢（如 1515、541）沒有分隔符，改列出所有寬×長切分鍵：
+           1515 → 1*515、15*15、151*5，541 → 5*41、54*1，再拿去跟已知尺寸的鍵比對 */
+        function digitSplitKeys(term){
+          if (!/^\d{2,}$/.test(term)) return [];
+          var keys = [];
+          for (var i = 1; i < term.length; i++){
+            var k = String(parseFloat(term.slice(0, i))) + "*" + String(parseFloat(term.slice(i)));
+            if (keys.indexOf(k) === -1) keys.push(k);
+          }
+          return keys;
+        }
+
         function renderProductOptions(){
-          var term = $("pSearch").value.trim();
+          var term = normSizeKey($("pSearch").value);
+          var splitKeys = digitSplitKeys(term);
           var sel = $("pProduct");
+          var matches = [];
           var dbHtml = "";
           PRODUCT_DB.forEach(function(p){
-            if (term && p.size.indexOf(term) === -1 && String(p.sum).indexOf(term) === -1) return;
+            var key = normSizeKey(p.size);
+            if (term && key.indexOf(term) === -1 && String(p.sum).indexOf(term) === -1 && splitKeys.indexOf(key) === -1) return;
+            matches.push({value: p.size, key: key, label: p.size, exact: key === term || splitKeys.indexOf(key) !== -1});
             dbHtml += '<option value="' + esc(p.size) + '">' +
                       esc(p.size) + "（總和 " + esc(fmtDim(p.sum)) + "cm）</option>";
           });
@@ -1532,28 +2720,115 @@
           rows.forEach(function(r){
             var sizeStr = fmtDim(r.w) + "*" + fmtDim(r.h);
             if (findProduct(sizeStr)) return;
-            if (term && sizeStr.indexOf(term) === -1) return;
+            var key = normSizeKey(sizeStr);
+            if (term && key.indexOf(term) === -1 && splitKeys.indexOf(key) === -1) return;
+            matches.push({value: "conv:" + sizeStr, key: key, label: sizeStr, exact: key === term || splitKeys.indexOf(key) !== -1});
             var c = compute(r);
             convHtml += '<option value="conv:' + esc(sizeStr) + '">' +
                         esc(sizeStr) + "（換算表 · 單重 " + esc(fmt2(c.single)) + "g）</option>";
           });
+          /* 已儲存單價、但不在資料庫也不在換算表的尺寸（例如重新整理後換算表已還原）：
+             仍列在選單，選了就帶回已儲存單價，單重請手動輸入 */
+          var savedHtml = "";
+          Object.keys(savedPrices).forEach(function(sizeStr){
+            if (getSavedPrice(sizeStr) === null) return;
+            if (findProduct(sizeStr)) return;
+            var ssp = sizeParts(sizeStr);
+            if (isFinite(ssp.w) && isFinite(ssp.h) && findRow(ssp.w, ssp.h) >= 0) return;
+            var key = normSizeKey(sizeStr);
+            if (term && key.indexOf(term) === -1 && splitKeys.indexOf(key) === -1) return;
+            matches.push({value: "saved:" + sizeStr, key: key, label: sizeStr, exact: key === term || splitKeys.indexOf(key) !== -1});
+            savedHtml += '<option value="saved:' + esc(sizeStr) + '">' +
+                         esc(sizeStr) + "（已儲存單價 ¥" + esc(fmtPriceVal(getSavedPrice(sizeStr))) + "）</option>";
+          });
           var html = '<option value="">-- 手動輸入或選擇 --</option>';
           if (dbHtml) html += '<optgroup label="定價資料庫">' + dbHtml + "</optgroup>";
           if (convHtml) html += '<optgroup label="尺寸換算表（選了自動帶入單張重量）">' + convHtml + "</optgroup>";
+          if (savedHtml) html += '<optgroup label="已儲存單價">' + savedHtml + "</optgroup>";
           sel.innerHTML = html;
           if (P.size && findProduct(P.size)){
             sel.value = P.size;
           } else if (P.size){
             var sp = sizeParts(P.size);
-            sel.value = findRow(sp.w, sp.h) >= 0 ? "conv:" + P.size : "";
+            if (findRow(sp.w, sp.h) >= 0) sel.value = "conv:" + P.size;
+            else if (getSavedPrice(P.size) !== null) sel.value = "saved:" + P.size;
+            else sel.value = "";
           } else {
             sel.value = "";
           }
+          return matches;
+        }
+
+        /* 搜尋挑選：完全吻合（含純數字切分吻合）只有一筆才自動帶入；
+           有多筆完全吻合（如 1515 同時對到兩個尺寸）就不猜，列在選單讓使用者選；
+           只剩一筆且查詢已含分隔符（像完整尺寸）時也自動帶入 */
+        function pickFromMatches(matches, term){
+          if (!term || !matches.length) return null;
+          var exacts = [];
+          for (var i = 0; i < matches.length; i++){
+            if (matches[i].exact) exacts.push(matches[i]);
+          }
+          if (exacts.length === 1) return exacts[0];
+          if (exacts.length > 1) return null;
+          if (matches.length === 1 && term.indexOf("*") !== -1) return matches[0];
+          return null;
+        }
+        function applySearchPick(pick){
+          var sel = $("pProduct");
+          if (sel.value === pick.value && P.size) return;
+          sel.value = pick.value;
+          applyProductSelection(pick.value);
+          var hint = $("searchHint");
+          hint.className = "search-hint";
+          hint.hidden = false;
+          if (pick.value.indexOf("conv:") === 0){
+            hint.innerHTML = "已帶入 <b>" + esc(dispSize(pick.label)) + "</b>：單重已自動帶入" +
+              (getSavedPrice(pick.label) !== null ? "，單價已帶入已儲存的 ¥" + esc(fmtPriceVal(savedFinalPrice(pick.label))) + "。" : "，單價請手動輸入。");
+          } else if (pick.value.indexOf("saved:") === 0){
+            hint.innerHTML = "已帶入 <b>" + esc(dispSize(pick.label)) + "</b>：單價已帶入已儲存的 ¥" + esc(fmtPriceVal(savedFinalPrice(pick.label))) + "，單張重量請手動輸入。";
+          } else {
+            hint.innerHTML = "已帶入 <b>" + esc(dispSize(pick.label)) + "</b>，單價與單重已自動填入" +
+              (getSavedPrice(pick.label) !== null ? "（單價為已儲存的 ¥" + esc(fmtPriceVal(savedFinalPrice(pick.label))) + "）" : "") + "。";
+          }
+        }
+        function updateSearchHint(matches, term){
+          var hint = $("searchHint");
+          if (!term){ hint.hidden = true; hint.innerHTML = ""; hint.className = "search-hint"; return; }
+          var raw = $("pSearch").value.trim();
+          var exacts = [];
+          matches.forEach(function(m){ if (m.exact) exacts.push(m); });
+          hint.hidden = false;
+          if (!matches.length){
+            /* 找不到要一眼看得到：琥珀色提示框，寫出使用者實際打的字，不再只有一行小字 */
+            hint.className = "search-hint alert";
+            hint.innerHTML = "找不到「<b>" + esc(raw) + "</b>」這個尺寸，請確認輸入是否正確，或直接在下方手動輸入單價與單重。";
+          } else if (exacts.length > 1){
+            hint.className = "search-hint pick";
+            hint.innerHTML = "「<b>" + esc(raw) + "</b>」可能對應 " +
+              exacts.map(function(m){ return "<b>" + esc(dispSize(m.label)) + "</b>"; }).join("、") +
+              "，請從下方選單點選要帶入的尺寸。";
+          } else {
+            hint.className = "search-hint";
+            hint.innerHTML = "找到 <b>" + matches.length + "</b> 筆符合" +
+              (matches.length > 1 ? "，可從下方選單選取，或把尺寸打完整自動帶入。" : "。");
+          }
+        }
+        function runSearch(forceFirst){
+          var term = normSizeKey($("pSearch").value);
+          var matches = renderProductOptions();
+          var pick = pickFromMatches(matches, term);
+          if (!pick && forceFirst && matches.length === 1) pick = matches[0];
+          if (pick){ applySearchPick(pick); return; }
+          if (!term) return;
+          updateSearchHint(matches, term);
+          if (matches.length > 1) $("pProduct").focus();
         }
 
         function renderCrossRef(){
           var box = $("crossRef");
           if (!P.size){ box.hidden = true; return; }
+          /* 選到的尺寸本身就來自換算表時，上方資訊框已經寫了一包幾張，這裡不再重複顯示 */
+          if (!findProduct(P.size)){ box.hidden = true; return; }
           var sp = sizeParts(P.size);
           var w = sp.w, h = sp.h;
           if (!isFinite(w) || !isFinite(h)){ box.hidden = true; return; }
@@ -1568,10 +2843,129 @@
           box.hidden = false;
         }
 
+        /* 物流條件 UI：空運普貨／食品切換、派送費與海運狀態提醒（跟著目前集運站與總重判斷） */
+        function renderShipUI(c){
+          var f = activeForwarder();
+          var sc = c.ship;
+          var isAir = P.ship === "air";
+          var airOpts = fwdAirOptions(f);
+          var seaCats = fwdSeaFastCats(f);
+          /* 空運站點選擇器：有清單才出現，並取代普貨／食品切換 */
+          var aor = $("airOptRow");
+          if (isAir && airOpts.length){
+            aor.hidden = false;
+            var asel = $("pAirOpt");
+            var aHtml = "";
+            airOpts.forEach(function(o, i){
+              aHtml += '<option value="' + i + '">' + esc(o.station + "・" + o.type + " ¥" + fmtPriceVal(o.price) + "/kg" + (o.transit ? "（" + o.transit + "）" : "")) + "</option>";
+            });
+            if (asel.innerHTML !== aHtml) asel.innerHTML = aHtml;
+            if (P.airOptIdx >= airOpts.length) P.airOptIdx = 0;
+            asel.value = String(P.airOptIdx);
+            var aopt = airOpts[P.airOptIdx];
+            var an = $("airOptNote");
+            var aNote = [];
+            if (aopt.transit) aNote.push("時效 " + aopt.transit);
+            if (aopt.note) aNote.push(aopt.note);
+            if (typeof aopt.deliveryFee === "number" && typeof aopt.deliveryThreshold === "number"){
+              aNote.push("一票未滿 " + fmtDim(aopt.deliveryThreshold) + "kg 收派送費 ¥" + fmtPriceVal(aopt.deliveryFee));
+            }
+            an.hidden = !aNote.length;
+            an.textContent = aNote.join("；");
+            $("airKindRow").hidden = true;
+          } else {
+            aor.hidden = true;
+            $("airKindRow").hidden = !isAir;
+          }
+          /* 海快品類選擇器：有清單才出現 */
+          var scr = $("seaFastCatRow");
+          if (P.ship === "sea_fast" && seaCats.length){
+            scr.hidden = false;
+            var ssel = $("pSeaFastCat");
+            var sHtml = "";
+            seaCats.forEach(function(cat, i){
+              sHtml += '<option value="' + i + '">' + esc(cat.category + " ¥" + fmtPriceVal(cat.price) + "/kg") + "</option>";
+            });
+            if (ssel.innerHTML !== sHtml) ssel.innerHTML = sHtml;
+            if (P.seaFastCatIdx >= seaCats.length) P.seaFastCatIdx = 0;
+            ssel.value = String(P.seaFastCatIdx);
+            var sn = $("seaFastCatNote");
+            var sNote = [];
+            if (f && typeof f.seaFastCustomsFee === "number") sNote.push("另加報關費 ¥" + fmtPriceVal(f.seaFastCustomsFee) + "/票");
+            if (f && typeof f.seaFastOpFee === "number") sNote.push("操作費 ¥" + fmtPriceVal(f.seaFastOpFee) + "/kg");
+            sn.hidden = !sNote.length;
+            sn.textContent = sNote.length ? "成本另計：" + sNote.join("、") + "（已計入下方成本）。" : "";
+          } else {
+            scr.hidden = true;
+          }
+          if (isAir && !airOpts.length){
+            $("airKindCargo").classList.toggle("active", P.airKind === "cargo");
+            $("airKindFood").classList.toggle("active", P.airKind === "food");
+            var kn = $("airKindNote");
+            if (P.airKind === "food" && !(f && typeof f.airFoodRate === "number")){
+              kn.hidden = false;
+              kn.textContent = "這家集運站未設定食品單價，暫用普貨單價估算；按集運站「編輯」補上食品單價後會改用食品價。";
+            } else { kn.hidden = true; }
+          }
+          var note = $("shipNote");
+          var kgTxt = isFinite(sc.totalKg) ? String(parseFloat(sc.totalKg.toFixed(2))) : "—";
+          if (P.ship === "sea" && f && f.seaQuoteOnly){
+            var underMin = typeof f.seaMinKg === "number" && sc.totalKg < f.seaMinKg;
+            note.className = "ship-note warn";
+            note.innerHTML = ICON_WARN_TRI + "<span>海運費<b>待人工報價</b>：下方成本與總投入<b>未含海運費</b>。" +
+              (underMin ? "目前總重 <b>" + esc(kgTxt) + " kg</b>，<b>未達海運最低消費 " + esc(fmtDim(f.seaMinKg)) + " 公斤</b>。" : "") + "</span>";
+            note.hidden = false;
+          } else if (P.ship === "sea" && f && typeof f.seaMinKg === "number" && sc.totalKg < f.seaMinKg){
+            note.className = "ship-note warn";
+            note.innerHTML = ICON_WARN_TRI + "<span>目前總重 <b>" + esc(kgTxt) + " kg</b>，<b>未達海運最低消費 " + esc(fmtDim(f.seaMinKg)) + " 公斤</b>，實際出貨可能要併貨或補足重量。</span>";
+            note.hidden = false;
+          } else if (isAir && P.airKind === "cargo" && f && typeof f.airFreeThreshold === "number" && typeof f.airDeliveryFee === "number"){
+            if (sc.deliveryRmb > 0){
+              note.className = "ship-note info";
+              note.innerHTML = ICON_WARN_TRI + "<span>空運普貨總重 <b>" + esc(kgTxt) + " kg</b>，未滿免派送費門檻 " + esc(fmtDim(f.airFreeThreshold)) + " kg，本票加派送費 <b>¥" + esc(fmtPriceVal(f.airDeliveryFee)) + "</b>（已攤入成本）。</span>";
+            } else {
+              note.className = "ship-note info";
+              note.innerHTML = ICON_CHECK_CIRCLE + "<span>空運普貨總重 <b>" + esc(kgTxt) + " kg</b>，已達免派送費門檻 " + esc(fmtDim(f.airFreeThreshold)) + " kg，不加派送費。</span>";
+            }
+            note.hidden = false;
+          } else if (isAir && P.airKind === "food" && f && typeof f.foodDeliveryFee === "number"){
+            note.className = "ship-note info";
+            note.innerHTML = ICON_CHECK_CIRCLE + "<span>空運食品：費率 <b>¥" + esc(fmtPriceVal(sc.rateUsed)) + "/kg</b> × 總重 " + esc(kgTxt) + " kg，每票另加派送費 <b>¥" + esc(fmtPriceVal(f.foodDeliveryFee)) + "</b>（已攤入成本）。</span>";
+            note.hidden = false;
+          } else if (isAir && sc.airOpt){
+            note.className = "ship-note info";
+            note.innerHTML = ICON_CHECK_CIRCLE + "<span>空運 <b>" + esc(sc.airOpt.station) + "・" + esc(sc.airOpt.type) + "</b>：費率 <b>¥" + esc(fmtPriceVal(sc.rateUsed)) + "/kg</b> × 總重 " + esc(kgTxt) + " kg" +
+              (sc.airOpt.transit ? "，時效 <b>" + esc(sc.airOpt.transit) + "</b>" : "") +
+              (sc.deliveryRmb > 0 ? "；本票未滿 " + esc(fmtDim(sc.airOpt.deliveryThreshold)) + "kg，加派送費 <b>¥" + esc(fmtPriceVal(sc.deliveryRmb)) + "</b>（已攤入成本）" : "") + "。</span>";
+            note.hidden = false;
+          } else if (P.ship === "sea_fast" && sc.seaFastCat){
+            note.className = "ship-note info";
+            note.innerHTML = ICON_CHECK_CIRCLE + "<span>海快 <b>" + esc(sc.seaFastCat.category) + "</b>：費率 <b>¥" + esc(fmtPriceVal(sc.rateUsed)) + "/kg</b> × 總重 " + esc(kgTxt) + " kg" +
+              (sc.customsRmb > 0 ? "，另加報關費 <b>¥" + esc(fmtPriceVal(sc.customsRmb)) + "/票</b>" : "") +
+              (sc.opRmb > 0 ? "、操作費 <b>¥" + esc(fmtPriceVal(sc.opRmb / (sc.totalKg || 1))) + "/kg</b>（本票 ¥" + esc(fmtPriceVal(sc.opRmb)) + "）" : "") + "，都已計入成本。</span>";
+            note.hidden = false;
+          } else if (!sc.known && (P.ship === "sea" || P.ship === "sea_express")){
+            note.className = "ship-note warn";
+            note.innerHTML = ICON_WARN_TRI + "<span>這家集運站<b>尚未設定" + (P.ship === "sea" ? "海運" : "海特") + "費率</b>：下方成本與總投入<b>未含該物流費</b>，按集運站「編輯」補上費率後會自動計算。</span>";
+            note.hidden = false;
+          } else {
+            note.hidden = true;
+            note.innerHTML = "";
+          }
+        }
+
         function renderPricing(){
           var c = calcPricing();
-          /* inputs that mirror state */
-          $("pRmb").value = String(parseFloat(finalRmb().toFixed(4)));
+          /* 單價欄位：數值沒變就不回寫，避免把使用者輸入的 0.035 這種三位小數改掉；
+             真的變了（選尺寸帶入、低溫膜切換）才用最多四位小數回寫 */
+          var frNow = finalRmb();
+          var rmbEl = $("pRmb");
+          var rmbCur = num(rmbEl.value);
+          /* 使用者正在單價欄位打字時絕不回寫：0.、0.0 這類中間狀態要原樣保留，
+             否則小數點會被吃掉；離開欄位後由 blur 處理再格式化 */
+          if (document.activeElement !== rmbEl && (!isFinite(rmbCur) || Math.abs(rmbCur - frNow) > 1e-9)){
+            rmbEl.value = String(parseFloat(frNow.toFixed(4)));
+          }
           /* dashboard */
           $("dEffective").textContent = fmtMoney(c.effective);
           var note = $("dEffectiveNote");
@@ -1585,8 +2979,46 @@
           $("dHardTotal").textContent = fmtMoney(c.hard);
           $("dUnitCost").textContent = fmtMoney(c.unitCost);
           $("dQtyLabel").textContent = fmtInt(P.sellQty);
-          $("dUnitCostNote").textContent =
-            "└（單價 ¥" + finalRmb().toFixed(3) + " + 物流 ¥" + c.shipRmbPerSheet.toFixed(2) + "）× 匯率 " + fmtDim(P.rate);
+          if (c.ship.known){
+            $("dUnitCostNote").textContent =
+              "└（單價 ¥" + finalRmb().toFixed(3) + " + 物流 ¥" + c.shipRmbPerSheet.toFixed(2) + "）× 匯率 " + fmtDim(P.rate) +
+              (c.ship.deliveryRmb > 0 ? "；物流含派送費 ¥" + fmtPriceVal(c.ship.deliveryRmb) + " / 票攤提" : "") +
+              (c.ship.customsRmb > 0 ? "；物流含報關費 ¥" + fmtPriceVal(c.ship.customsRmb) + " / 票攤提" : "") +
+              (c.ship.opRmb > 0 ? "；物流含操作費 ¥" + fmtPriceVal(c.ship.opRmb) + " / 票攤提" : "");
+          } else {
+            $("dUnitCostNote").textContent =
+              "└（單價 ¥" + finalRmb().toFixed(3) + " × 匯率 " + fmtDim(P.rate) + "）；" +
+              (P.ship === "sea" && activeForwarder() && activeForwarder().seaQuoteOnly
+                ? "海運待人工報價，未含海運費"
+                : "這家集運站未設定此物流費率，未含該物流費");
+          }
+          /* 派送費、報關費、操作費在成本明細各單獨列一行（每包攤提，已計入進貨成本，不重複加總） */
+          var feeRow = $("dShipFeeRow");
+          if (c.ship.known && c.ship.deliveryRmb > 0){
+            feeRow.hidden = false;
+            $("dShipFeeRmb").textContent = fmtPriceVal(c.ship.deliveryRmb);
+            $("dShipFee").textContent = fmtMoney(P.totalQty > 0 ? c.ship.deliveryRmb * P.rate / P.totalQty * P.sellQty : 0);
+          } else { feeRow.hidden = true; }
+          var customsRow = $("dCustomsRow");
+          if (c.ship.known && c.ship.customsRmb > 0){
+            customsRow.hidden = false;
+            $("dCustomsRmb").textContent = fmtPriceVal(c.ship.customsRmb);
+            $("dCustomsFee").textContent = fmtMoney(P.totalQty > 0 ? c.ship.customsRmb * P.rate / P.totalQty * P.sellQty : 0);
+          } else { customsRow.hidden = true; }
+          var opRow = $("dOpRow");
+          if (c.ship.known && c.ship.opRmb > 0){
+            opRow.hidden = false;
+            var fNow = activeForwarder();
+            $("dOpRmb").textContent = (fNow && typeof fNow.seaFastOpFee === "number") ? fmtPriceVal(fNow.seaFastOpFee) : "0";
+            $("dOpFee").textContent = fmtMoney(P.totalQty > 0 ? c.ship.opRmb * P.rate / P.totalQty * P.sellQty : 0);
+          } else { opRow.hidden = true; }
+          $("dSeaRow").hidden = c.ship.known;
+          if (!c.ship.known){
+            var seaNames = {sea:"海運", sea_express:"海特"};
+            $("dSeaLabel").textContent = "國際物流（" + (seaNames[P.ship] || "海運") + "）";
+            $("dSeaValue").textContent = (P.ship === "sea" && activeForwarder() && activeForwarder().seaQuoteOnly)
+              ? "待人工報價 · 未含海運費" : "費率未設定 · 未含該物流費";
+          }
           $("dLocalShip").textContent = fmtMoney(P.localShip);
           $("dDynTotal").textContent = fmtMoney(c.feeAmt + (P.includeTax ? c.taxAmt : 0));
           $("dFee").textContent = fmtMoney(c.feeAmt);
@@ -1594,6 +3026,21 @@
           $("dTaxRow").style.display = P.includeTax ? "" : "none";
           $("dTax").textContent = fmtMoney(c.taxAmt);
           $("dTaxLabel").textContent = fmtDim(P.tax);
+          /* 各級距下方靜態淨利率（顏色區分達標／低於目標／虧損，不閃爍） */
+          ["standard", "general", "member", "corporate"].forEach(function(t){
+            var el = document.querySelector('[data-tm="' + t + '"]');
+            if (!el) return;
+            var tm = tierMargin(t);
+            if (!isFinite(tm.marginPct)){
+              el.className = "tm";
+              el.textContent = "淨利率 —";
+              return;
+            }
+            var state = tm.profit < 0 ? "bad" : (tm.marginPct >= P.margin ? "ok" : "warn");
+            el.className = "tm " + state;
+            el.textContent = "淨利率 " + tm.marginPct.toFixed(1) + "%" +
+              (state === "ok" ? " · 達標" : state === "warn" ? " · 低於目標" : " · 虧損");
+          });
           var mp = $("dMarginPct");
           mp.textContent = isFinite(c.marginPct) ? c.marginPct.toFixed(1) + "%" : "—";
           mp.className = "mv " + (c.profit > 0 ? "pos" : "neg");
@@ -1622,11 +3069,14 @@
           $("pPriceQtyLabel").textContent = fmtInt(P.sellQty);
           $("pMarginLabel").textContent = fmtDim(P.margin) + "%";
           $("pTotalWeight").textContent = "總重 " + (P.weight * P.totalQty / 1000).toFixed(1) + " kg";
-          $("pTotalInvest").textContent = "總投入 " + fmtMoney(c.totalInvest);
+          $("pTotalInvest").textContent = "總投入 " + fmtMoney(c.totalInvest) + (c.ship.known ? "" : (P.ship === "sea" ? "（未含海運費）" : "（未含該物流費）"));
           $("pPacks").textContent = fmtInt(c.packs) + " 包";
           $("pLeftover").textContent = "餘 " + fmtInt(c.leftover) + " 張";
           $("pAutoQty").textContent = fmtInt(P.sellQty) + " 張";
+          renderShipUI(c);
+          renderBestShip();
           renderCrossRef();
+          updateSavePriceUI();
         }
 
         function syncSellQtyFromWeight(){
@@ -1637,9 +3087,29 @@
         }
 
         /* pricing events */
-        $("pSearch").addEventListener("input", renderProductOptions);
-        $("pProduct").addEventListener("change", function(){
-          var val = this.value;
+        $("pSearch").addEventListener("input", function(){
+          var term = normSizeKey(this.value);
+          var matches = renderProductOptions();
+          var pick = pickFromMatches(matches, term);
+          if (pick) applySearchPick(pick);
+          else updateSearchHint(matches, term);
+        });
+        $("pSearch").addEventListener("keydown", function(e){
+          if (e.key === "Enter"){ e.preventDefault(); runSearch(true); }
+        });
+        $("btnSearch").addEventListener("click", function(){ runSearch(true); });
+        $("pProduct").addEventListener("change", function(){ applyProductSelection(this.value); });
+        function applyProductSelection(val){
+          if (val.indexOf("saved:") === 0){
+            var sSize = val.slice(6);
+            P.size = sSize;
+            applySavedPrice();
+            $("prodInfo").innerHTML = "已帶入有儲存單價的尺寸 <b>" + esc(dispSize(sSize)) + "</b>：單價 <b>¥" + esc(fmtPriceVal(savedFinalPrice(sSize))) + "</b> 已自動帶入；單張重量請手動輸入（或先到「尺寸換算」秤重後帶入）。";
+            setSrcTag("pWeightSrc", "none", "單重請手動輸入");
+            syncSellQtyFromWeight();
+            renderPricing();
+            return;
+          }
           if (val.indexOf("conv:") === 0){
             var sizeStr = val.slice(5);
             var sp = sizeParts(sizeStr);
@@ -1655,6 +3125,12 @@
               P.packTarget = r.pack;
               $("pPackTarget").value = String(r.pack);
               $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：單張重量 <b>" + esc(fmt2(cc.single)) + " g</b> · 一包約 <b>" + esc(fmtInt(cc.main)) + " 張</b>（" + esc(fmtDim(r.pack)) + "g / 包）；單價請手動輸入。";
+              setSrcTag("pWeightSrc", "auto", "由換算表帶入（" + dispSize(sizeStr) + "）");
+              setSrcTag("pRmbSrc", "none", "沒有價格，請手動輸入");
+              if (applySavedPrice()){
+                $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：單張重量 <b>" + esc(fmt2(cc.single)) + " g</b> · 一包約 <b>" + esc(fmtInt(cc.main)) + " 張</b>（" + esc(fmtDim(r.pack)) + "g / 包）；單價已帶入已儲存的 <b>¥" + esc(fmtPriceVal(savedFinalPrice(sizeStr))) + "</b>。";
+              }
+              flashInput($("pWeight"));
               setPackMode(true);
               return;
             }
@@ -1666,12 +3142,21 @@
             P.weight = prod.weight;
             $("pWeight").value = String(prod.weight);
             $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 進貨單價 <b>¥" + esc(fmtDim(prod.cost)) + "</b>";
+            setSrcTag("pRmbSrc", "auto", "由定價資料庫帶入（" + dispSize(prod.size) + "）");
+            setSrcTag("pWeightSrc", "auto", "由定價資料庫帶入（" + dispSize(prod.size) + "）");
+            if (applySavedPrice()){
+              $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 單價已帶入已儲存的 <b>¥" + esc(fmtPriceVal(savedFinalPrice(prod.size))) + "</b>（資料庫原價 ¥" + esc(fmtDim(prod.cost)) + "）";
+            }
+            flashInput($("pRmb"));
+            flashInput($("pWeight"));
           } else {
             $("prodInfo").textContent = "尚未選尺寸，可直接手動輸入單價與單重；在「尺寸換算」新增的尺寸也會出現在上方選單，選了就自動帶入單張重量。";
+            setSrcTag("pRmbSrc", null);
+            setSrcTag("pWeightSrc", null);
           }
           syncSellQtyFromWeight();
           renderPricing();
-        });
+        }
         function setFilm(f){
           P.film = f;
           $("filmStd").classList.toggle("active", f === "standard");
@@ -1686,10 +3171,38 @@
         $("pRmb").addEventListener("input", function(){
           var v = num(this.value);
           P.rmbBase = isFinite(v) ? v - (P.film === "low_temp" ? 0.025 : 0) : 0;
+          var savedFin = savedFinalPrice(P.size);
+          if (savedFin !== null && isFinite(v) && Math.abs(v - savedFin) <= 1e-9){
+            setSrcTag("pRmbSrc", "saved", "由已儲存單價帶入（" + dispSize(P.size) + "）");
+          } else {
+            setSrcTag("pRmbSrc", "manual", "手動輸入");
+          }
           renderPricingNoRmb();
+        });
+        /* 儲存 / 更新 / 清除單價（存 localStorage，依目前選取的尺寸） */
+        $("btnSavePrice").addEventListener("click", function(){
+          if (!P.size){ toast("請先選擇尺寸，再儲存單價"); return; }
+          var v = num($("pRmb").value);
+          if (!isFinite(v)){ toast("請先輸入單價"); return; }
+          var isUpdate = getSavedPrice(P.size) !== null;
+          P.rmbBase = v - (P.film === "low_temp" ? 0.025 : 0);
+          savedPrices[P.size] = P.rmbBase;
+          lsSet(LS_PRICES_KEY, savedPrices);
+          setSrcTag("pRmbSrc", "saved", "由已儲存單價帶入（" + dispSize(P.size) + "）");
+          renderPricing();
+          toast((isUpdate ? "已更新 " : "已儲存 ") + dispSize(P.size) + " 的單價 ¥" + fmtPriceVal(v));
+        });
+        $("btnClearPrice").addEventListener("click", function(){
+          if (!P.size || getSavedPrice(P.size) === null) return;
+          delete savedPrices[P.size];
+          lsSet(LS_PRICES_KEY, savedPrices);
+          setSrcTag("pRmbSrc", "manual", "手動輸入");
+          renderPricing();
+          toast("已清除 " + dispSize(P.size) + " 的已儲存單價");
         });
         $("pWeight").addEventListener("input", function(){
           P.weight = num(this.value) || 0;
+          setSrcTag("pWeightSrc", "manual", "手動輸入");
           syncSellQtyFromWeight();
           renderPricing();
         });
@@ -1705,6 +3218,247 @@
           P.ship = b.getAttribute("data-ship");
           this.querySelectorAll(".ship-btn").forEach(function(x){ x.classList.toggle("active", x === b); });
           renderPricing();
+        });
+        $("airKindCargo").addEventListener("click", function(){ P.airKind = "cargo"; renderPricing(); });
+        $("airKindFood").addEventListener("click", function(){ P.airKind = "food"; renderPricing(); });
+        $("pAirOpt").addEventListener("change", function(){
+          P.airOptIdx = parseInt(this.value, 10) || 0;
+          renderForwarders();
+          renderPricing();
+        });
+        $("pSeaFastCat").addEventListener("change", function(){
+          P.seaFastCatIdx = parseInt(this.value, 10) || 0;
+          renderForwarders();
+          renderPricing();
+        });
+
+        /* -------- 集運站：切換 / 新增 / 編輯 / 刪除 / 複製地址 -------- */
+        var fwdEditingId = null;
+        function fmtOpt(v){ return typeof v === "number" ? fmtPriceVal(v) : ""; }
+        /* 編輯表單裡的空運站點列（可增刪） */
+        function addAirOptRow(o){
+          o = o || {};
+          var wrap = document.createElement("div");
+          wrap.className = "fwd-opt-row";
+          wrap.innerHTML =
+            '<div class="fwd-rates">' +
+              '<div class="field"><label>站點</label><input type="text" class="ao-station" placeholder="例：廣州" value="' + esc(o.station || "") + '" /></div>' +
+              '<div class="field"><label>類型</label><input type="text" class="ao-type" placeholder="例：正常航班・普貨" value="' + esc(o.type || "") + '" /></div>' +
+              '<div class="field"><label>單價</label><div class="input-row"><input type="text" class="ao-price" inputmode="decimal" placeholder="例：21.6" value="' + esc(fmtOpt(o.price)) + '" /><span class="unit">¥ / kg</span></div></div>' +
+              '<div class="field"><label>時效</label><input type="text" class="ao-transit" placeholder="例：2–3 天" value="' + esc(o.transit || "") + '" /></div>' +
+              '<div class="field"><label>派送費 <span class="hint">（未滿門檻收，沒有留空）</span></label><div class="input-row"><input type="text" class="ao-fee" inputmode="decimal" placeholder="例：20" value="' + esc(fmtOpt(o.deliveryFee)) + '" /><span class="unit">¥ / 票</span></div></div>' +
+              '<div class="field"><label>派送費門檻</label><div class="input-row"><input type="text" class="ao-threshold" inputmode="decimal" placeholder="例：10" value="' + esc(fmtOpt(o.deliveryThreshold)) + '" /><span class="unit">kg</span></div></div>' +
+            '</div>' +
+            '<div class="field" style="margin-top:8px"><label>備註</label><input type="text" class="ao-note" placeholder="例：粉末／液體／電池不能出" value="' + esc(o.note || "") + '" /></div>' +
+            '<button type="button" class="btn small danger fwd-opt-del">刪除這筆</button>';
+          wrap.querySelector(".fwd-opt-del").addEventListener("click", function(){ wrap.remove(); });
+          $("fwdAirOpts").appendChild(wrap);
+        }
+        function collectAirOpts(){
+          var out = [];
+          $("fwdAirOpts").querySelectorAll(".fwd-opt-row").forEach(function(row){
+            var price = optNum(row.querySelector(".ao-price").value);
+            var station = row.querySelector(".ao-station").value.trim();
+            var type = row.querySelector(".ao-type").value.trim();
+            if (price === null && !station && !type) return;
+            if (price === null) return;
+            out.push({station: station, type: type, price: price,
+                      transit: row.querySelector(".ao-transit").value.trim(),
+                      note: row.querySelector(".ao-note").value.trim(),
+                      deliveryFee: optNum(row.querySelector(".ao-fee").value),
+                      deliveryThreshold: optNum(row.querySelector(".ao-threshold").value)});
+          });
+          return out;
+        }
+        /* 編輯表單裡的海快品類列（可增刪） */
+        function addSeaCatRow(o){
+          o = o || {};
+          var wrap = document.createElement("div");
+          wrap.className = "fwd-opt-row";
+          wrap.innerHTML =
+            '<div class="fwd-rates">' +
+              '<div class="field"><label>品類</label><input type="text" class="sc-cat" placeholder="例：普貨包稅／鞋子類" value="' + esc(o.category || "") + '" /></div>' +
+              '<div class="field"><label>單價</label><div class="input-row"><input type="text" class="sc-price" inputmode="decimal" placeholder="例：8.6" value="' + esc(fmtOpt(o.price)) + '" /><span class="unit">¥ / kg</span></div></div>' +
+            '</div>' +
+            '<button type="button" class="btn small danger fwd-opt-del">刪除這筆</button>';
+          wrap.querySelector(".fwd-opt-del").addEventListener("click", function(){ wrap.remove(); });
+          $("fwdSeaCats").appendChild(wrap);
+        }
+        function collectSeaCats(){
+          var out = [];
+          $("fwdSeaCats").querySelectorAll(".fwd-opt-row").forEach(function(row){
+            var price = optNum(row.querySelector(".sc-price").value);
+            var cat = row.querySelector(".sc-cat").value.trim();
+            if (price === null && !cat) return;
+            if (price === null) return;
+            out.push({category: cat, price: price});
+          });
+          return out;
+        }
+        $("btnFwdAirOptAdd").addEventListener("click", function(){ addAirOptRow(); });
+        $("btnFwdSeaCatAdd").addEventListener("click", function(){ addSeaCatRow(); });
+        function fillFwdForm(f){
+          $("fwdName").value = f ? f.name : "";
+          $("fwdContact").value = f ? (f.contact || "") : "";
+          $("fwdPhone").value = f ? (f.phone || "") : "";
+          $("fwdRecipient").value = f ? (f.recipient || "") : "";
+          $("fwdPostal").value = f ? (f.postalCode || "") : "";
+          var r = f ? f.rates : currentShipRates();
+          $("fwdRateAir").value = fmtOpt(r.air);
+          $("fwdRateSeaExpress").value = fmtOpt(r.sea_express);
+          $("fwdRateSeaFast").value = fmtOpt(r.sea_fast);
+          $("fwdRateSea").value = fmtOpt(r.sea);
+          /* 條件欄位：舊集運站沒存過就留空白，由使用者填一次；不猜測、不解析地址文字 */
+          $("fwdRateAirFood").value = f ? fmtOpt(f.airFoodRate) : "";
+          $("fwdAirFee").value = f ? fmtOpt(f.airDeliveryFee) : "";
+          $("fwdAirThreshold").value = f ? fmtOpt(f.airFreeThreshold) : "";
+          $("fwdFoodFee").value = f ? fmtOpt(f.foodDeliveryFee) : "";
+          $("fwdSeaMin").value = f ? fmtOpt(f.seaMinKg) : "";
+          $("fwdSeaQuote").checked = f ? !!f.seaQuoteOnly : false;
+          $("fwdNote").value = f ? (f.note || "") : "";
+          $("fwdAddress").value = f ? f.address : "";
+          /* 站點／品類清單：逐筆填回編輯列；沒有清單就清空，讓使用者從零新增 */
+          $("fwdAirOpts").innerHTML = "";
+          (f ? fwdAirOptions(f) : []).forEach(function(o){ addAirOptRow(o); });
+          $("fwdSeaCats").innerHTML = "";
+          (f ? fwdSeaFastCats(f) : []).forEach(function(o){ addSeaCatRow(o); });
+          $("fwdSeaFastCustoms").value = f ? fmtOpt(f.seaFastCustomsFee) : "";
+          $("fwdSeaFastOp").value = f ? fmtOpt(f.seaFastOpFee) : "";
+        }
+        function openFwdForm(editing){
+          var f = editing ? activeForwarder() : null;
+          if (editing && !f) return;
+          fwdEditingId = f ? f.id : null;
+          $("fwdFormTitle").textContent = f ? "編輯集運站：" + f.name : "新增集運站";
+          fillFwdForm(f);
+          $("fwdForm").hidden = false;
+          $("fwdName").focus();
+        }
+        function closeFwdForm(){
+          $("fwdForm").hidden = true;
+          fwdEditingId = null;
+        }
+        $("fwdSelect").addEventListener("change", function(){
+          activeFwdId = this.value;
+          P.airOptIdx = 0;
+          P.seaFastCatIdx = 0;
+          persistForwarders();
+          closeFwdForm();
+          renderForwarders();
+          renderPricing();
+          var f = activeForwarder();
+          toast("已切換集運站：" + (f ? f.name : "") + "，物流費率已更新");
+        });
+        $("btnFwdAdd").addEventListener("click", function(){ openFwdForm(false); });
+        $("btnFwdEdit").addEventListener("click", function(){ openFwdForm(true); });
+        $("btnFwdCancel").addEventListener("click", closeFwdForm);
+        $("btnFwdSave").addEventListener("click", function(){
+          var name = $("fwdName").value.trim();
+          if (!name){ toast("請先填集運站名稱"); $("fwdName").focus(); return; }
+          var seaQuoteChecked = $("fwdSeaQuote").checked;
+          /* 費率欄位：有填就必須是數字；留空存 null（未設定，不用假數字），之後補填即可。
+             若有空運站點清單／海快品類清單，對應的單一費率欄位可留空，改用清單計價。 */
+          var airOptsSave = collectAirOpts();
+          var seaCatsSave = collectSeaCats();
+          function rateOrNull(id){
+            var raw = $(id).value.trim();
+            if (raw === "") return null;
+            var v = num(raw);
+            return (isFinite(v) && v >= 0) ? v : NaN;
+          }
+          var rates = {
+            air: rateOrNull("fwdRateAir"),
+            sea_express: rateOrNull("fwdRateSeaExpress"),
+            sea_fast: rateOrNull("fwdRateSeaFast"),
+            sea: rateOrNull("fwdRateSea")
+          };
+          var keys = ["air", "sea_express", "sea_fast", "sea"];
+          for (var i = 0; i < keys.length; i++){
+            if (typeof rates[keys[i]] === "number" && isNaN(rates[keys[i]])){ toast("費率要填數字（人民幣 / kg），或留空之後再補"); return; }
+          }
+          if (rates.air === null && !airOptsSave.length){ toast("空運費率要填數字，或在下方新增空運站點費率清單"); return; }
+          if (rates.sea_fast === null && !seaCatsSave.length){ toast("海快費率要填數字，或在下方新增海快品類費率清單"); return; }
+          if (rates.sea === null && !seaQuoteChecked && $("fwdRateSea").value.trim() !== ""){
+            toast("海運費率要填數字，或勾選「海運需看貨報價」"); return;
+          }
+          /* 有清單時，單一費率欄位留空就用清單第一筆當按鈕副標基準；站點／品類選擇仍以清單為準 */
+          if (rates.air === null && airOptsSave.length) rates.air = airOptsSave[0].price;
+          if (rates.sea_fast === null && seaCatsSave.length) rates.sea_fast = seaCatsSave[0].price;
+          var prevMarkup = false;
+          var prevMarkupText = "";
+          if (fwdEditingId){
+            for (var m = 0; m < forwarders.length; m++){
+              if (forwarders[m].id === fwdEditingId){ prevMarkup = !!forwarders[m].markupNote; prevMarkupText = forwarders[m].markupText || ""; }
+            }
+          }
+          var addr = $("fwdAddress").value.trim();
+          var extra = {
+            contact: $("fwdContact").value.trim(),
+            phone: $("fwdPhone").value.trim(),
+            recipient: $("fwdRecipient").value.trim(),
+            postalCode: $("fwdPostal").value.trim(),
+            airOptions: airOptsSave,
+            seaFastOptions: seaCatsSave,
+            seaFastCustomsFee: optNum($("fwdSeaFastCustoms").value),
+            seaFastOpFee: optNum($("fwdSeaFastOp").value),
+            markupNote: prevMarkup,
+            markupText: prevMarkupText,
+            airFoodRate: optNum($("fwdRateAirFood").value),
+            airDeliveryFee: optNum($("fwdAirFee").value),
+            airFreeThreshold: optNum($("fwdAirThreshold").value),
+            foodDeliveryFee: optNum($("fwdFoodFee").value),
+            seaMinKg: optNum($("fwdSeaMin").value),
+            seaQuoteOnly: $("fwdSeaQuote").checked,
+            note: $("fwdNote").value.trim()
+          };
+          if (fwdEditingId){
+            for (var j = 0; j < forwarders.length; j++){
+              if (forwarders[j].id === fwdEditingId){
+                forwarders[j].name = name;
+                forwarders[j].rates = rates;
+                forwarders[j].address = addr;
+                Object.assign(forwarders[j], extra);
+              }
+            }
+            toast("已更新集運站：" + name);
+          } else {
+            var nf = Object.assign({id: "fwd-" + Date.now(), name: name, rates: rates, address: addr}, extra);
+            forwarders.push(nf);
+            activeFwdId = nf.id;
+            toast("已新增集運站：" + name);
+          }
+          persistForwarders();
+          closeFwdForm();
+          renderForwarders();
+          renderPricing();
+        });
+        $("btnFwdDel").addEventListener("click", function(){
+          if (forwarders.length <= 1){ toast("至少要保留一家集運站"); return; }
+          var f = activeForwarder();
+          if (!f) return;
+          forwarders = forwarders.filter(function(x){ return x.id !== f.id; });
+          activeFwdId = forwarders[0].id;
+          persistForwarders();
+          closeFwdForm();
+          renderForwarders();
+          renderPricing();
+          toast("已刪除集運站：" + f.name);
+        });
+        $("btnCopyAddr").addEventListener("click", function(){
+          var f = activeForwarder();
+          if (!f) return;
+          var lines = [];
+          if (f.name && f.name.trim()) lines.push(f.name.trim());
+          if (f.contact && f.contact.trim()) lines.push(f.contact.trim());
+          if (f.phone && f.phone.trim()) lines.push(f.phone.trim());
+          if (f.recipient && f.recipient.trim()) lines.push("收件人：" + f.recipient.trim());
+          var addr = f.address ? f.address.trim() : "";
+          if (addr) lines.push(addr);
+          if (f.postalCode && f.postalCode.trim()) lines.push("郵編：" + f.postalCode.trim());
+          if (!lines.length){ toast("這家集運站還沒有填聯絡資訊或地址"); return; }
+          /* 複製給大陸集運看：整份內容（站名、聯絡人、電話、收件人、地址、郵編）轉成簡體中文再複製；
+             儲存與畫面顯示維持繁體不動 */
+          copyText(toSimplified(lines.join("\n")), "已複製集運地址（簡體）");
         });
         $("pTotalQty").addEventListener("input", function(){ P.totalQty = num(this.value) || 0; renderPricing(); });
 
@@ -1738,7 +3492,7 @@
             var net = P.basePrice - c.hard - feeAmt - (P.includeTax ? taxAmt : 0);
             var nm = net / P.basePrice * 100;
             if (isFinite(nm)){
-              P.margin = Math.min(Math.max(0, Math.round(nm)), 100);
+              P.margin = Math.min(Math.max(0, Math.round(nm / 5) * 5), 100);
               $("pMargin").value = String(P.margin);
             }
           }
@@ -1755,6 +3509,35 @@
         $("pFeeRate").addEventListener("input", function(){ P.fee = num(this.value) || 0; renderPricing(); });
         $("pTaxRate").addEventListener("input", function(){ P.tax = num(this.value) || 0; renderPricing(); });
         $("pLocalShip").addEventListener("input", function(){ P.localShip = num(this.value) || 0; renderPricing(); });
+
+        /* 手輸數字欄位（已全改為 text）：打字過程不重寫、不格式化，
+           「0.」「0.0」這類中間狀態原樣保留；離開欄位（blur）才整理顯示，
+           尾數零去掉（0.040 → 0.04、4.60 → 4.6），有效小數不動（0.035 仍是 0.035） */
+        function fmtTyped(el){
+          var n = num(el.value);
+          if (!isFinite(n)) return;
+          el.value = String(parseFloat(n.toFixed(6)));
+        }
+        ["inW","inH","inCount","inTotal","inPack","inMeasured",
+         "pRate","pWeight","pTotalQty","pPackTarget","pSellQty",
+         "pBasePrice","pFeeRate","pTaxRate","pLocalShip"].forEach(function(id){
+          var el = $(id);
+          if (el) el.addEventListener("blur", function(){ fmtTyped(el); });
+        });
+        /* 單價欄位 blur：以最終單價（含量膜加價）回寫格式化，最多四位小數 */
+        $("pRmb").addEventListener("blur", function(){
+          var n = num(this.value);
+          if (isFinite(n)){
+            P.rmbBase = n - (P.film === "low_temp" ? 0.025 : 0);
+            var savedFin = savedFinalPrice(P.size);
+            if (savedFin !== null && Math.abs(n - savedFin) <= 1e-9){
+              setSrcTag("pRmbSrc", "saved", "由已儲存單價帶入（" + dispSize(P.size) + "）");
+            } else {
+              setSrcTag("pRmbSrc", "manual", "手動輸入");
+            }
+          }
+          renderPricing();
+        });
         function setTax(on){
           P.includeTax = on;
           $("taxOn").classList.toggle("active", on);
@@ -1835,13 +3618,26 @@
             P.weight = prod.weight;
             $("pWeight").value = String(prod.weight);
             $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 進貨單價 <b>¥" + esc(fmtDim(prod.cost)) + "</b>（由換算表帶入）";
+            setSrcTag("pRmbSrc", "auto", "由定價資料庫帶入（" + dispSize(prod.size) + "）");
+            setSrcTag("pWeightSrc", "auto", "由定價資料庫帶入（" + dispSize(prod.size) + "）");
+            if (applySavedPrice()){
+              $("prodInfo").innerHTML = "尺寸 <b>" + esc(prod.size) + "</b> · 長寬總和 <b>" + esc(fmtDim(prod.sum)) + " cm</b> · 單重 <b>" + esc(fmtDim(prod.weight)) + " g</b> · 單價已帶入已儲存的 <b>¥" + esc(fmtPriceVal(savedFinalPrice(prod.size))) + "</b>（資料庫原價 ¥" + esc(fmtDim(prod.cost)) + "）";
+            }
+            flashInput($("pRmb"));
+            flashInput($("pWeight"));
           } else {
-            P.size = "";
+            P.size = sizeStr;
             if (isFinite(c.single) && c.single > 0){
               P.weight = c.single;
               $("pWeight").value = String(parseFloat(c.single.toFixed(4)));
             }
-            $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：定價資料庫沒有這個尺寸，單重用換算表的單張重量 <b>" + esc(fmt2(c.single)) + " g</b>，單價請手動輸入。";
+            $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：單張重量 <b>" + esc(fmt2(c.single)) + " g</b> · 一包約 <b>" + esc(fmtInt(c.main)) + " 張</b>（" + esc(fmtDim(r.pack)) + "g / 包）；單價請手動輸入。";
+            setSrcTag("pWeightSrc", "auto", "由換算表帶入（" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "）");
+            setSrcTag("pRmbSrc", "none", "沒有價格，請手動輸入");
+            if (applySavedPrice()){
+              $("prodInfo").innerHTML = "由換算表帶入 <b>" + esc(fmtDim(r.w)) + " × " + esc(fmtDim(r.h)) + "</b>：單張重量 <b>" + esc(fmt2(c.single)) + " g</b> · 一包約 <b>" + esc(fmtInt(c.main)) + " 張</b>（" + esc(fmtDim(r.pack)) + "g / 包）；單價已帶入已儲存的 <b>¥" + esc(fmtPriceVal(savedFinalPrice(sizeStr))) + "</b>。";
+            }
+            flashInput($("pWeight"));
           }
           renderProductOptions();
           setPackMode(true);
@@ -1860,6 +3656,7 @@
         /* ---------------- init ---------------- */
         renderTable();
         renderProductOptions();
+        renderForwarders();
         syncSellQtyFromWeight();
         renderPricing();
       })();
